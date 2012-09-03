@@ -1,0 +1,8 @@
+[core]
+	editor = vim
+	excludesfile = /home/zack/.gitignore
+[user]
+	name = Zack Newman
+	email = znewman01@gmail.com
+[color]
+	ui = true
