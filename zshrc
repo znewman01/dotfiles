@@ -17,6 +17,7 @@ alias reboot='sudo /sbin/reboot'
 
 
 PS1='> '
-#PATH=$PATH:$HOME/bin:$HOME/.rvm/bin # Add RVM to PATH for scripting
-#EDITOR='vim'
+PATH=$PATH:$HOME/bin
+#PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+EDITOR='vim'
 

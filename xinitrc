@@ -6,4 +6,5 @@
 setxkbmap -option caps:swapescape
 
 dropboxd&
-exec ssh-agent i3
+xautolock -time 5 -locker i3lock&
+exec ssh-agent wmii
