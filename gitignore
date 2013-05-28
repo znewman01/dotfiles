@@ -5,3 +5,8 @@
 *.fas
 *.pyc
 *.swp
+*.swo
+venv
+node_modules
+secret*
+.rmvrc
