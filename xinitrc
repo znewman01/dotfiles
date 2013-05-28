@@ -4,6 +4,7 @@
 [ -f ~/.xprofile ] && . ~/.xprofile
 
 setxkbmap -option caps:swapescape
+setxkbmap -option compose:ralt
 
 dropboxd&
 xautolock -time 5 -locker i3lock&
