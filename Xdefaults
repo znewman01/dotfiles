@@ -1,0 +1,69 @@
+! tangoesque scheme
+!*background: #000000
+!*foreground: #babdb6
+!! Black (not tango) + DarkGrey
+!*color0:  #000000
+!*color8:  #555753
+!! DarkRed + Red
+!*color1:  #ff6565
+!*color9:  #ff8d8d
+!! DarkGreen + Green
+!*color2:  #93d44f
+!*color10: #c8e7a8
+!! DarkYellow + Yellow
+!*color3:  #eab93d
+!*color11: #ffc123
+!! DarkBlue + Blue
+!*color4:  #204a87
+!*color12: #3465a4
+!! DarkMangenta + Mangenta
+!*color5:  #ce5c00
+!*color13: #f57900
+!!DarkCyan + Cyan (both not tango)
+!*color6:  #89b6e2
+!*color14: #46a4ff
+!! LightGrey + White
+!*color7:  #cccccc
+!*color15: #ffffff
+*background: #000000
+*foreground: #c0c0c0
+
+! black
+*color0: #000000
+*color8: #2C2C2C
+! red
+*color1: #C42B2B
+*color9: #FF2929
+! green
+*color2: #3BD93B
+*color10: #28FC28
+! yellow
+*color3: #E3E336
+*color11: #FFEA1E
+! blue
+*color4: #4747BB
+*color12: #2121DE
+! magenta
+*color5: #CB40CB
+*color13: #FF00FF
+! cyan
+*color6: #6FD2D2
+*color14: #00FFFF
+! white
+*color7: #C0C0C0
+*color15: #FFFFFF
+
+! fonts
+! run "fc-list" for a list of available fonts
+!urxvt*font: xft:Terminus:size=12
+! for when you need big print
+!urxvt*font: xft:Courier New:size=18
+urxvt*font: xft:Inconsolata:size=10
+
+URxvt*scrollBar: False
+URxvt*scrollTtyOutput: False
+URxvt*scrollTtyKeypress: True
+URxvt*secondaryScroll: True
+URxvt*saveLines: 8000
+URxvt*cutchars: "\\ `\"\'()*;<>[]{|}&,=?@^\:"
+!URxvt*iso14755: false
