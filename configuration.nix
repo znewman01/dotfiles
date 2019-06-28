@@ -66,6 +66,8 @@
   services.xserver.layout = "us";
   # services.xserver.xkbOptions = "eurosign:e";
 
+  services.xserver.xkbOptions = "caps:swapescape";
+
   # Enable touchpad support.
   # services.xserver.libinput.enable = true;
 
