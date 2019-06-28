@@ -21,7 +21,9 @@
   time.timeZone = "America/New_York";
 
   environment.systemPackages = with pkgs; [
-    wget vim git
+    git
+    vim
+    wget
   ];
 
   # Enable sound.
