@@ -10,7 +10,7 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   networking.hostName = "zjn-x220"; # Define your hostname.
-  networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  networking.networkmanager.enable = true;
 
   i18n = {
     consoleFont = "Lat2-Terminus16";
@@ -36,7 +36,7 @@
 
   users.users.zjn = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" ];
   };
 
   system.stateVersion = "19.03";
