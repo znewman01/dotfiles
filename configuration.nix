@@ -33,7 +33,6 @@
   services.xserver.enable = true;
   services.xserver.layout = "us";
   services.xserver.xkbOptions = "caps:swapescape";
-  services.xserver.windowManager.xmonad.enable = true;
 
   users.users.zjn = {
     isNormalUser = true;
