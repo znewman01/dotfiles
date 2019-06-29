@@ -9,4 +9,8 @@
     userEmail = "z@znewman.net";
     userName = "Zachary Newman";
   };
+
+  programs.firefox = {
+    enable = true;
+  };
 }
