@@ -7,47 +7,11 @@ let
   fgColor = "#F8F8F2";
 in
 {
+  imports = [ ./xmonad.nix ];
+
   programs.home-manager.enable = true;
 
   xsession.enable = true;
-  xsession.windowManager.xmonad = {
-    enable = true;
-    enableContribAndExtras = true;
-    config = pkgs.writeText "xmonad.hs" ''
-      import XMonad
-      import XMonad.Layout.NoBorders
-      import XMonad.Layout.Spacing
-      import XMonad.Hooks.ManageDocks
-      import XMonad.Hooks.DynamicLog
-
-      myBorderSpacing = spacingRaw True (Border 4 4 4 4) True (Border 4 4 4 4) True
-
-      main = xmonad =<< statusBar "xmobar" myPP toggleStrutsKey myConfig
-
-      -- Command to launch the bar.
-      myPP = xmobarPP
-          { ppCurrent = xmobarColor "${fgColor}" ""
-          , ppHidden = xmobarColor "#6272A4" ""
-          , ppLayout = const ""
-          , ppTitle = const "" }
-      toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
-
-      -- Main configuration, override the defaults to your liking.
-      myConfig = defaultConfig
-          { terminal = "alacritty"
-          , borderWidth = 3
-          , layoutHook = avoidStruts $ smartBorders $ myBorderSpacing $ layoutHook defaultConfig
-          , manageHook=manageHook defaultConfig <+> manageDocks
-          , startupHook = startup
-          , normalBorderColor = "${bgColor}"
-          , focusedBorderColor = "${fgColor}" }
-
-      startup :: X ()
-      startup = do
-        spawn "xsetroot -solid '#44475A'"
-    '';
-  };
-  home.file.".xmobarrc".source = "${dots}/xmobarrc";
 
   home.packages = with pkgs; [
      haskellPackages.xmobar
