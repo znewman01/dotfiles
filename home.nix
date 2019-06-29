@@ -51,8 +51,15 @@ in
 
   home.packages = with pkgs; [
      haskellPackages.xmobar
+     # Fonts
      font-awesome_4
      hack-font
+     liberation_ttf
+     noto-fonts
+     noto-fonts-cjk
+     noto-fonts-emoji
+     noto-fonts-extra
+     ttf_bitstream_vera
   ];
 
 
