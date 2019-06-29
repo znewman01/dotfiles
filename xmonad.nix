@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 
 let
   bgColor = "#282A36";
@@ -10,10 +10,11 @@ in
     enableContribAndExtras = true;
     config = pkgs.writeText "xmonad.hs" ''
       import XMonad
+      import XMonad.Hooks.DynamicLog
+      import XMonad.Hooks.ManageDocks
       import XMonad.Layout.NoBorders
       import XMonad.Layout.Spacing
-      import XMonad.Hooks.ManageDocks
-      import XMonad.Hooks.DynamicLog
+      import XMonad.Util.EZConfig
   
       myBorderSpacing = spacingRaw True (Border 4 4 4 4) True (Border 4 4 4 4) True
   
@@ -35,7 +36,10 @@ in
           , manageHook=manageHook defaultConfig <+> manageDocks
           , startupHook = startup
           , normalBorderColor = "${bgColor}"
-          , focusedBorderColor = "${fgColor}" }
+          , focusedBorderColor = "${fgColor}"
+          } `additionalKeysP`
+          [ ("M-p", spawn "rofi -show run")
+          ]
   
       startup :: X ()
       startup = do
@@ -81,6 +85,14 @@ in
             ]
        }
   '';
+
+  # TODO: don't hardcode full path
+  home.file.".config/rasi/dracula.rasi".source = ./dracula.rasi;
+  programs.rofi = {
+    enable = true;
+    theme = "/home/zjn/.config/rasi/dracula.rasi";
+    font = "Hack 9";
+  };
 
   # TODO: move xmobar package in here
 }

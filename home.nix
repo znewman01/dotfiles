@@ -1,8 +1,6 @@
 { config, pkgs, ... }:
 
 let
-  home = "/home/zjn";
-  dots = "${home}/dotfiles";
   bgColor = "#282A36";
   fgColor = "#F8F8F2";
 in
