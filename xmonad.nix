@@ -9,6 +9,7 @@ in
     enable = true;
     enableContribAndExtras = true;
     config = pkgs.writeText "xmonad.hs" ''
+      import Graphics.X11.ExtraTypes.XF86
       import XMonad
       import XMonad.Hooks.DynamicLog
       import XMonad.Hooks.ManageDocks
@@ -39,6 +40,10 @@ in
           , focusedBorderColor = "${fgColor}"
           } `additionalKeysP`
           [ ("M-p", spawn "rofi -show run")
+          ] `additionalKeys`
+          [ ((0, xF86XK_AudioMute), spawn "amixer set Master toggle; amixer set Speaker unmute; amixer set Headphone unmute") -- hack: "toggle" mutes master and individual channels, but only unmutes master
+          , ((0, xF86XK_AudioLowerVolume), spawn "amixer set Master 2-")
+          , ((0, xF86XK_AudioRaiseVolume), spawn "amixer set Master 2+")
           ]
   
       startup :: X ()
@@ -53,7 +58,7 @@ in
        , bgColor =      "${bgColor}"
        , fgColor =      "${fgColor}"
        , position =     Top
-       , template = " %StdinReader% }{  %multicpu%  %KBOS%  %wlp3s0wi%  %battery%  %date% "
+       , template = " %StdinReader% }{  %multicpu%  %KBOS% %default:Master%  %wlp3s0wi%  %battery%  %date% "
        , allDesktops =      True    -- show on all desktops
        , commands = 
             [ Run Weather "KBOS"    [ "-t" , "<fc=#6272A4><tempF></fc>°F"
@@ -78,6 +83,14 @@ in
                                     , "-i" , "<fc=#FF5555>Charged</fc>"
                                     ] 50
             , Run Date              "<fc=#6272A4>%F</fc>  %T" "date" 1
+            , Run Volume "default" "Master"
+                                    [ "-t"      , "<status> <volume>%"
+                                    , "--"
+                                    , "-O"      , ""
+                                    , "-C"      , "${fgColor}"
+                                    , "-o"      , ""
+                                    , "-c"      , "${fgColor}"
+                                    ] 10
             , Run Wireless "wlp3s0" [ "-t"      , "<essid>"
                                     , "--"
                                     ] 10

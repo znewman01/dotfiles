@@ -26,9 +26,7 @@
     wget
   ];
 
-  # Enable sound.
-  # sound.enable = true;
-  # hardware.pulseaudio.enable = true;
+  sound.enable = true;
 
   services.xserver.enable = true;
   services.xserver.layout = "us";
@@ -36,7 +34,7 @@
 
   users.users.zjn = {
     isNormalUser = true;
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "audio" ];
   };
 
   system.stateVersion = "19.03";
