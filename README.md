@@ -4,7 +4,7 @@
 
 - [-] Firefox configuration (plugins, sync)
 - [ ] Passwords, SSH keys (pass?)
-- [ ] Better terminal
+- [x] Better terminal
 - [ ] Email
 - [x] Git config
 - [ ] My git projects

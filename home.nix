@@ -4,7 +4,17 @@
   programs.home-manager.enable = true;
 
   xsession.enable = true;
-  xsession.windowManager.xmonad.enable = true;
+  xsession.windowManager.xmonad = {
+    enable = true;
+    config = pkgs.writeText "xmonad.hs" ''
+      import XMonad
+
+      main = xmonad defaultConfig
+          { terminal = "st" }
+    '';
+  };
+
+  home.packages = [ pkgs.st ];
 
   programs.git = {
     enable = true;
