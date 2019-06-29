@@ -6,6 +6,6 @@
 - [ ] Passwords, SSH keys
 - [ ] Better terminal
 - [ ] Email
-- [ ] Git config
+- [x] Git config
 - [ ] My git projects
 - [ ] Emacs + Spacemacs
