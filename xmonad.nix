@@ -17,7 +17,7 @@ in
       import XMonad.Layout.Spacing
       import XMonad.Util.EZConfig
   
-      myBorderSpacing = spacingRaw True (Border 4 4 4 4) True (Border 4 4 4 4) True
+      myBorderSpacing = spacingRaw False (Border 4 4 4 4) True (Border 4 4 4 4) True
   
       main = xmonad =<< statusBar "xmobar" myPP toggleStrutsKey myConfig
   
@@ -33,7 +33,7 @@ in
       myConfig = defaultConfig
           { terminal = "alacritty"
           , borderWidth = 3
-          , layoutHook = avoidStruts $ smartBorders $ myBorderSpacing $ layoutHook defaultConfig
+          , layoutHook = avoidStruts $ myBorderSpacing $ layoutHook defaultConfig
           , manageHook=manageHook defaultConfig <+> manageDocks
           , startupHook = startup
           , normalBorderColor = "${bgColor}"

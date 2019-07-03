@@ -37,3 +37,6 @@
 2. Firefox:
    - Log in to Firefox sync
    - Install Tridactyl (beta version)
+3. Dropbox
+   - this is weird, you may need to wait a while for it to update itself
+   - `dropbox status` will give you a URL

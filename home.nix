@@ -9,9 +9,12 @@ in
 
   programs.home-manager.enable = true;
 
+  nixpkgs.config.allowUnfree = true;
+
   xsession.enable = true;
 
   home.packages = with pkgs; [
+     dropbox-cli
      haskellPackages.xmobar
      # Fonts
      font-awesome_4
@@ -77,4 +80,26 @@ in
   };
 
   fonts.fontconfig.enable = true;
+
+  systemd.user.services.dropbox = {
+    Unit = {
+      Description = "Dropbox";
+    };
+
+    Install = {
+      WantedBy = [ "graphical-session.target" ];
+    };
+
+    Service = {
+      # Hack! See https://github.com/rycee/home-manager/issues/745
+      Environment = "QT_PLUGIN_PATH=/run/current-system/sw/${pkgs.qt5.qtbase.qtPluginPrefix}\nEnvironment=QML2_IMPORT_PATH/run/current-system/sw/${pkgs.qt5.qtbase.qtQmlPrefix}";
+      ExecStart = "${pkgs.dropbox.out}/bin/dropbox";
+      ExecReload = "${pkgs.coreutils.out}/bin/kill -HUP $MAINPID";
+      KillMode = "control-group"; # upstream recommends process
+      Restart = "on-failure";
+      PrivateTmp = true;
+      ProtectSystem = "full";
+      Nice = 10;
+    };
+  };
 }
