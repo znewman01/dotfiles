@@ -58,7 +58,7 @@ in
        , bgColor =      "${bgColor}"
        , fgColor =      "${fgColor}"
        , position =     Top
-       , template = " %StdinReader% }{ %multicpu%  %KBOS% %default:Master%  %wlp3s0wi%  %battery%  %date% "
+       , template = " %StdinReader% }{ %multicpu% |  %dropbox% |  %KBOS% | %default:Master% |  %wlp3s0wi% |  %battery% |  %date% "
        , allDesktops =      True    -- show on all desktops
        , commands = 
             [ Run Weather "KBOS"    [ "-t" , "<fc=#6272A4><tempF></fc>°F"
@@ -94,10 +94,33 @@ in
             , Run Wireless "wlp3s0" [ "-t"      , "<essid>"
                                     , "--"
                                     ] 10
-    	, Run StdinReader
+            , Run Com "/home/zjn/bin/xmobar-dropbox" [] "dropbox" 10
+            , Run StdinReader
             ]
        }
   '';
+
+  home.file."bin/xmobar-dropbox" = {
+    text = ''
+      #!/bin/sh
+
+      status="$(dropbox status)"
+
+      case "$status" in
+              "Up to date")
+                      echo "<fc=#50FA7B></fc>" ;;
+              Updating*)
+                      echo "<fc=#FFB86C>↯</fc>" ;;
+              Starting*)
+                      echo "<fc=#FFB86C>↯</fc>" ;;
+              Checking*)
+                      echo "<fc=#FFB86C>↯</fc>" ;;
+              *)
+                      echo "<fc=#FF5555></fc> $status" ;;
+      esac
+    '';
+    executable = true;
+  };
 
   # TODO: don't hardcode full path
   home.file.".config/rasi/dracula.rasi".source = ./dracula.rasi;
