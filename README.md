@@ -17,6 +17,7 @@
 - [ ] My git projects
 - [x] Sound
 - [ ] Emacs + Spacemacs
+  - [ ] services.emacs.enable
 - [ ] TRIM on your SSD
 - [ ] CUPS
 - [ ] Separate install.sh into root,non-root parts
@@ -30,6 +31,9 @@
 - [x] batteries
 - [ ] get copy/paste working
 - [ ] better factoring for shared variables
+- [ ] brightness
+  - [ ] services.redshift
+- [ ] screen saver/locker
 
 ## Manual steps
 
