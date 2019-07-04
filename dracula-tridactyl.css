@@ -1,0 +1,61 @@
+:root {
+    /* Based on https://github.com/dracula/dracula-theme */
+    --background: #282a36;
+    --selection: #44475a;
+    --comment: #6272a4;
+    --foreground: #f8f8f2;
+    --red: #ff5555;
+    --orange: #ffb86c;
+    --yellow: #f1fa8c;
+    --green: #50fa7b;
+    --cyan: #8be9fd;
+    --purple: #bd93f9;
+    --pink: #ff79c6;
+
+    --tridactyl-fg: var(--foreground);
+    --tridactyl-bg: var(--background);
+    --tridactyl-url-fg: var(--foreground);
+    --tridactyl-url-bg: var(--background);
+    --tridactyl-highlight-box-bg: var(--selection);
+    --tridactyl-highlight-box-fg: var(--foreground);
+
+    /* Hint character tags */
+    --tridactyl-hintspan-fg: var(--foreground) !important;
+    --tridactyl-hintspan-bg: var(--background) !important;
+
+    /* Element Highlights */
+    --tridactyl-hint-active-fg: none;
+    --tridactyl-hint-active-bg: none;
+    --tridactyl-hint-active-outline: none;
+    --tridactyl-hint-bg: --background;
+    --tridactyl-hint-fg: --foreground;
+    --tridactyl-hint-outline: none;
+    --tridactyl-hint-outline: none;
+
+    --tridactyl-fg: var(--foreground);
+    --tridactyl-bg: var(--background);
+
+    --tridactyl-cmdl-fg: var(--foreground);
+    --tridactyl-cmdl-bg: var(--background);
+
+
+    --tridactyl-url-fg: var(--comment);
+    --tridactyl-url-bg: var(--background);
+
+    --tridactyl-of-fg: var(--foreground);
+    --tridactyl-of-bg: var(--selection);
+
+
+    --tridactyl-highlight-box-bg: var(--background);
+    --tridactyl-highlight-box-fg: var(--foreground);
+}
+
+#completions {
+    border-top: 4px solid var(--foreground);
+    font-family: Hack;
+    font-size: 9pt;
+}
+
+#completions .sectionHeader {
+    display: none !important;
+}

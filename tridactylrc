@@ -1,0 +1,22 @@
+set newtab about:blank
+set hintdelay 100
+bind ! fillcmdline !
+colors dracula
+" Strike a blow for freedom
+set searchengine duckduckgo
+" I feel the defaults are backwards
+bind J tabnext
+bind K tabprev
+" Make Tridactyl work in more places
+set csp clobber
+" Saner search
+bind / fillcmdline find
+bind ? fillcmdline find -?
+bind n findnext
+bind N findnext -1
+bind ,/ nohlsearch
+" Site-specific improvements
+bindurl www.google.com f hint -J
+bindurl www.google.com F hint -Jt
+bindurl www.duckduckgo.com f hint -J
+bindurl www.duckduckgo.com F hint -Jt

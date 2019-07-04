@@ -39,8 +39,10 @@
 
 1. Run `./install.sh`
 2. Firefox:
-   - Log in to Firefox sync
-   - Install Tridactyl (beta version)
+   - Log in to Firefox sync (need email nearby)
+   - Log in to LastPass
+   - Tridactyl: ":installnative", ":restart"
+   - firefox "about:preferences#search"
 3. Dropbox
    - this is weird, you may need to wait a while for it to update itself
    - `dropbox status` will give you a URL
