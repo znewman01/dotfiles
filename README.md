@@ -28,12 +28,14 @@
   - [x] less ugly border
   - [x] dmenu for running programs
   - [x] xmobar
+  - [ ] xmobar dropbox script should be scoped to just xmobar world
 - [x] batteries
 - [ ] get copy/paste working
 - [ ] better factoring for shared variables
 - [ ] brightness
   - [ ] services.redshift
 - [ ] screen saver/locker
+- [ ] rofi calculator
 
 ## Manual steps
 
