@@ -1,8 +1,10 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
+
 
 let
   bgColor = "#282A36";
   fgColor = "#F8F8F2";
+  dag = config.lib.dag;
 in
 {
   imports = [ ./xmonad.nix ];
@@ -21,6 +23,7 @@ in
      zathura
      # Fonts
      corefonts
+     source-code-pro
      font-awesome_4
      hack-font
      liberation_ttf
@@ -111,6 +114,10 @@ in
       sha256 = "1af73ls0znbpx73ym9cx22yc6q1dvv375l493ccilg2xpjsgam6w";
     };
   };
+  home.activation.makeLinks = dag.entryAfter [ "writeBoundary" ] ''
+      ln -sf ${config.home.homeDirectory}/Dropbox/dotfiles/spacemacs.d \
+          ${config.home.homeDirectory}/.spacemacs.d
+  '';
 
   fonts.fontconfig.enable = true;
 
