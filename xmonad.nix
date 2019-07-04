@@ -115,6 +115,8 @@ in
                       echo "<fc=#FFB86C>↯</fc>" ;;
               Checking*)
                       echo "<fc=#FFB86C>↯</fc>" ;;
+              Syncing*)
+                      echo "<fc=#FFB86C>↯</fc>" ;;
               *)
                       echo "<fc=#FF5555></fc> $status" ;;
       esac
