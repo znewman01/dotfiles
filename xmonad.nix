@@ -58,18 +58,18 @@ in
        , bgColor =      "${bgColor}"
        , fgColor =      "${fgColor}"
        , position =     Top
-       , template = " %StdinReader% }{  %multicpu%  %KBOS% %default:Master%  %wlp3s0wi%  %battery%  %date% "
+       , template = " %StdinReader% }{ %multicpu%  %KBOS% %default:Master%  %wlp3s0wi%  %battery%  %date% "
        , allDesktops =      True    -- show on all desktops
        , commands = 
             [ Run Weather "KBOS"    [ "-t" , "<fc=#6272A4><tempF></fc>°F"
                                     ] 36000
-            , Run MultiCpu          [ "-t" , "<total0>% <total1>%"
+            , Run MultiCpu          [ "-t" , " <total0>%  <total1>%"
                                     , "-L" , "50"         -- units: %
                                     , "-H" , "85"         -- units: %
                                     , "-l" , "#50FA7B"
                                     , "-n" , "#FFB86C"
                                     , "-h" , "#FF5555"
-                                    , "-p" , "2"
+                                    , "-p" , "3"
                                     ] 10
             , Run Battery           [ "-t" , "<acstatus>"
                                     , "-L" , "20"        -- units: %
