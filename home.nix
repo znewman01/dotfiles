@@ -17,7 +17,10 @@ in
   home.packages = with pkgs; [
      dropbox-cli
      haskellPackages.xmobar
+     tree
+     zathura
      # Fonts
+     corefonts
      font-awesome_4
      hack-font
      liberation_ttf
