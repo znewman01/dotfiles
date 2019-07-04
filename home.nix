@@ -117,6 +117,8 @@ in
   home.activation.makeLinks = dag.entryAfter [ "writeBoundary" ] ''
       ln -sf ${config.home.homeDirectory}/Dropbox/dotfiles/spacemacs.d \
           ${config.home.homeDirectory}/.spacemacs.d
+      ln -sf ${config.home.homeDirectory}/Dropbox/notes \
+          #{config.home.homeDirectory}/notes
   '';
 
   fonts.fontconfig.enable = true;
