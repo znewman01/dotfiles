@@ -101,12 +101,20 @@ in
     enable = true;
     sessionVariables = {
       EDITOR = "vim";
+      PATH = "$HOME/bin:$PATH";
     };
+  };
+
+  home.file."bin/em" = {
+    text = "#!/bin/sh\nemacsclient -nc";
+    executable = true;
   };
 
   programs.emacs = {
     enable = true;
   };
+
+  services.emacs.enable = true;
 
   home.file.".emacs.d" = {
     recursive = true;
