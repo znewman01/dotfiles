@@ -21,6 +21,7 @@ in
      haskellPackages.xmobar
      tree
      zathura
+     pass
      # Fonts
      corefonts
      source-code-pro
@@ -33,6 +34,9 @@ in
      noto-fonts-extra
      ttf_bitstream_vera
   ];
+
+  programs.gpg.enable = true;
+  services.gpg-agent.enable = true;
 
 
   programs.alacritty = {
@@ -119,6 +123,10 @@ in
           ${config.home.homeDirectory}/.spacemacs.d
       ln -sf ${config.home.homeDirectory}/Dropbox/notes \
           #{config.home.homeDirectory}/notes
+      ln -sT ${config.home.homeDirectory}/Dropbox/passwords \
+          ${config.home.homeDirectory}/.password-store || true
+      ln -s ${config.home.homeDirectory}/Dropbox/passwords/authinfo.gpg \
+          ${config.home.homeDirectory}/.authinfo.gpg || true
   '';
 
   fonts.fontconfig.enable = true;
