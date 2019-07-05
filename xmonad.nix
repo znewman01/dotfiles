@@ -22,6 +22,9 @@ in
       import XMonad.Layout.NoBorders
       import XMonad.Layout.Spacing
       import XMonad.Util.EZConfig
+      import XMonad.Util.Scratchpad
+
+      import qualified XMonad.StackSet as W
 
       myBorderSpacing = spacingRaw False (Border 4 4 4 4) True (Border 4 4 4 4) True
 
@@ -32,20 +35,31 @@ in
           { ppCurrent = xmobarColor "${fgColor}" ""
           , ppHidden = xmobarColor "#6272A4" ""
           , ppLayout = const ""
-          , ppTitle = const "" }
+          , ppTitle = const ""
+          , ppSort = fmap (.scratchpadFilterOutWorkspace) $ ppSort defaultPP
+          }
       toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
+
+      manageScratchPad :: ManageHook
+      manageScratchPad = scratchpadManageHook (W.RationalRect l t w h)
+        where
+          h = 0.6
+          w = 0.8
+          t = 0.2
+          l = 0.1
 
       -- Main configuration, override the defaults to your liking.
       myConfig = defaultConfig
           { terminal = "alacritty"
           , borderWidth = 3
           , layoutHook = avoidStruts $ myBorderSpacing $ layoutHook defaultConfig
-          , manageHook=manageHook defaultConfig <+> manageDocks
+          , manageHook = manageHook defaultConfig <+> manageDocks <+> manageScratchPad
           , startupHook = startup
           , normalBorderColor = "${bgColor}"
           , focusedBorderColor = "${fgColor}"
           } `additionalKeysP`
           [ ("M-p", spawn "rofi -show run")
+          , ("<F12>", scratchpadSpawnActionCustom "alacritty --class scratchpad")
           ] `additionalKeys`
           [ ((0, xF86XK_AudioMute), spawn "amixer set Master toggle; amixer set Speaker unmute; amixer set Headphone unmute") -- hack: "toggle" mutes master and individual channels, but only unmutes master
           , ((0, xF86XK_AudioLowerVolume), spawn "amixer set Master 2-")
