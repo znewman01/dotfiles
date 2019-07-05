@@ -1,10 +1,12 @@
 { config, lib, pkgs, ... }:
 
+with lib;
 
 let
   bgColor = "#282A36";
   fgColor = "#F8F8F2";
   dag = config.lib.dag;
+  passBin = "${pkgs.pass}/bin/pass";
 in
 {
   imports = [ ./xmonad.nix ];
@@ -21,6 +23,7 @@ in
      haskellPackages.xmobar
      tree
      zathura
+     mu
      pass
      xclip
      # Fonts
@@ -38,6 +41,157 @@ in
 
   programs.gpg.enable = true;
   services.gpg-agent.enable = true;
+
+  # concatStringsSep trick is a half-hearted attempt to prevent email harvesting.
+  accounts.email = {
+    maildirBasePath = "${config.home.homeDirectory}/Maildir";
+
+      accounts = {
+      mit = {
+        address = concatStringsSep "@" [ "zjn" "mit.edu" ];
+        userName = concatStringsSep "@" [ "zjn" "mit.edu" ];
+        passwordCommand = "${passBin} show mit";
+        folders = {
+          inbox = "Inbox";
+          drafts = "Drafts";
+          sent = "Sent";
+          trash = "Deleted";
+        };
+        imap = {
+          host = "imap.exchange.mit.edu";
+          port = 993;
+          tls.enable = true;
+        };
+        mbsync = {
+          enable = true;
+          create = "both";
+          expunge = "both";
+          remove = "maildir";
+          flatten = "..";
+          patterns = [ "Archive" "Drafts" "INBOX" ];
+          extraConfig.account = {
+            AuthMechs = "PLAIN";
+          };
+        };
+      };
+
+      fastmail = {
+        realName = "Zachary Newman";
+        userName = concatStringsSep "@" [ "z" "znewman.net" ];
+        address = concatStringsSep "@" [ "z" "znewman.net" ];
+        maildir.path = "fastmail";
+        passwordCommand = "${passBin} show fastmail";
+        primary = true;
+        folders = {
+          inbox = "INBOX";
+          drafts = "Drafts";
+          sent = "Sent";
+          trash = "Trash";
+        };
+        imap = {
+          host = "imap.fastmail.com";
+          port = 993;
+          tls.enable = true;
+        };
+        mbsync = {
+          enable = true;
+          create = "both";
+          expunge = "both";
+          remove = "maildir";
+          flatten = "..";
+          patterns = [ "Archive" "Drafts" "INBOX" "Sent" "Spam" "Trash" ];
+        };
+      };
+
+      gmail = {
+        realName = "Zachary Newman";
+        address = concatStringsSep "@" [ "znewman01" "gmail.com" ];
+        userName = concatStringsSep "@" [ "znewman01" "gmail.com" ];
+        maildir.path = "gmail";
+        flavor = "gmail.com";
+        passwordCommand = "${passBin} show gmail-imap";
+        folders = {
+          inbox = "Inbox";
+          drafts = "[Gmail]/Drafts";
+          sent = "[Gmail]/SentMail";
+          trash = "[Gmail]/Trash";
+        };
+        imap = {
+          port = 993;
+        };
+        mbsync = {
+          enable = true;
+          create = "both";
+          expunge = "both";
+          remove = "maildir";
+          patterns = [ "Inbox" "\"[Gmail]/Drafts\"" "\"[Gmail]/Spam\"" "\"[Gmail]/Trash\"" ];
+          extraConfig.account = {
+            AuthMechs = "LOGIN";
+          };
+          extraConfig.channel = {
+            CopyArrivalDate = "yes";
+          };
+        };
+      };
+    };
+  };
+  programs.mbsync = {
+    enable = true;
+    extraConfig = ''
+      # Blocked on https://github.com/rycee/home-manager/issues/748
+      # CopyArrivalDate yes
+
+      Channel mit-sent
+      Create Slave
+      Master ":mit-remote:Sent Items"
+      Slave ":mit-local:Sent"
+
+      Channel mit-junk
+      Create Slave
+      Master ":mit-remote:Junk E-Mail"
+      Slave ":mit-local:Junk"
+
+      Channel mit-trash
+      Create Slave
+      Master ":mit-remote:Deleted Items"
+      Slave ":mit-local:Deleted"
+
+      Group mit
+      Channel mit
+      Channel mit-sent
+      Channel mit-junk
+      Channel mit-junk
+
+      Channel gmail-inbox
+      CopyArrivalDate yes
+      Create Slave
+      Master ":gmail-remote:Inbox"
+      Slave ":gmail-local:Inbox"
+
+      Channel gmail-sent
+      CopyArrivalDate yes
+      Create Slave
+      Master ":gmail-remote:[Gmail]/Sent Mail"
+      Slave ":gmail-local:[Gmail]/SentMail"
+
+      Channel gmail-all
+      CopyArrivalDate yes
+      Create Slave
+      Master ":gmail-remote:[Gmail]/All Mail"
+      Slave ":gmail-local:[Gmail]/AllMail"
+
+      Group gmail
+      Channel gmail
+      Channel gmail-inbox
+      Channel gmail-sent
+      Channel gmail-all
+    '';
+  };
+  services.mbsync = {
+    enable = true;
+    postExec = ("${pkgs.emacs}/bin/emacsclient -e" +
+                " \"(progn (require 'mu4e) (mu4e-update-index))\"");
+  };
 
 
   programs.alacritty = {
