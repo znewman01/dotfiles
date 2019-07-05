@@ -16,11 +16,11 @@ in
       import XMonad.Layout.NoBorders
       import XMonad.Layout.Spacing
       import XMonad.Util.EZConfig
-  
+
       myBorderSpacing = spacingRaw False (Border 4 4 4 4) True (Border 4 4 4 4) True
-  
+
       main = xmonad =<< statusBar "xmobar" myPP toggleStrutsKey myConfig
-  
+
       -- Command to launch the bar.
       myPP = xmobarPP
           { ppCurrent = xmobarColor "${fgColor}" ""
@@ -28,7 +28,7 @@ in
           , ppLayout = const ""
           , ppTitle = const "" }
       toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
-  
+
       -- Main configuration, override the defaults to your liking.
       myConfig = defaultConfig
           { terminal = "alacritty"
@@ -45,7 +45,7 @@ in
           , ((0, xF86XK_AudioLowerVolume), spawn "amixer set Master 2-")
           , ((0, xF86XK_AudioRaiseVolume), spawn "amixer set Master 2+")
           ]
-  
+
       startup :: X ()
       startup = do
         spawn "xsetroot -solid '#44475A'"
