@@ -119,10 +119,10 @@ in
     };
   };
   home.activation.makeLinks = dag.entryAfter [ "writeBoundary" ] ''
-      ln -sf ${config.home.homeDirectory}/Dropbox/dotfiles/spacemacs.d \
-          ${config.home.homeDirectory}/.spacemacs.d
-      ln -sf ${config.home.homeDirectory}/Dropbox/notes \
-          #{config.home.homeDirectory}/notes
+      ln -sT ${config.home.homeDirectory}/Dropbox/dotfiles/spacemacs.d \
+          ${config.home.homeDirectory}/.spacemacs.d || true
+      ln -sT ${config.home.homeDirectory}/Dropbox/notes \
+          ${config.home.homeDirectory}/notes || true
       ln -sT ${config.home.homeDirectory}/Dropbox/passwords \
           ${config.home.homeDirectory}/.password-store || true
       ln -s ${config.home.homeDirectory}/Dropbox/passwords/authinfo.gpg \
