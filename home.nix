@@ -106,7 +106,7 @@ in
   };
 
   home.file."bin/em" = {
-    text = "#!/bin/sh\nemacsclient -nc";
+    text = "#!/bin/sh\nemacsclient -nc $@";
     executable = true;
   };
 
