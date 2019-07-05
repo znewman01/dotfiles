@@ -26,6 +26,8 @@ in
      mu
      pass
      xclip
+     xautolock
+     i3lock
      # Fonts
      corefonts
      source-code-pro

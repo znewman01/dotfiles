@@ -5,6 +5,12 @@ let
   fgColor = "#F8F8F2";
 in
 {
+  services.screen-locker = {
+    enable = true;
+    inactiveInterval = 10;
+    lockCmd = "${pkgs.i3lock}/bin/i3lock -n";
+  };
+
   xsession.windowManager.xmonad = {
     enable = true;
     enableContribAndExtras = true;
@@ -46,6 +52,7 @@ in
           , ((0, xF86XK_AudioRaiseVolume), spawn "amixer set Master 2+")
           , ((0, xF86XK_MonBrightnessUp), spawn "light -A 10")
           , ((0, xF86XK_MonBrightnessDown), spawn "light -U 10")
+          , ((0, xF86XK_ScreenSaver), spawn "i3lock")
           ]
 
       startup :: X ()
