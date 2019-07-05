@@ -34,8 +34,17 @@
 
   users.users.zjn = {
     isNormalUser = true;
-    extraGroups = [ "networkmanager" "wheel" "audio" ];
+    extraGroups = [ "networkmanager" "wheel" "audio" "video" ];
   };
 
   system.stateVersion = "19.03";
+
+  # For backlight
+  programs.light.enable = true;
+
+  services.redshift = {
+    enable = true;
+    latitude = "42.3";
+    longitude = "-71.1";
+  };
 }

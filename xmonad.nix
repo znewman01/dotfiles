@@ -44,6 +44,8 @@ in
           [ ((0, xF86XK_AudioMute), spawn "amixer set Master toggle; amixer set Speaker unmute; amixer set Headphone unmute") -- hack: "toggle" mutes master and individual channels, but only unmutes master
           , ((0, xF86XK_AudioLowerVolume), spawn "amixer set Master 2-")
           , ((0, xF86XK_AudioRaiseVolume), spawn "amixer set Master 2+")
+          , ((0, xF86XK_MonBrightnessUp), spawn "light -A 10")
+          , ((0, xF86XK_MonBrightnessDown), spawn "light -U 10")
           ]
 
       startup :: X ()
