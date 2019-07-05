@@ -28,6 +28,7 @@ in
      xclip
      xautolock
      i3lock
+     anki
      # Fonts
      corefonts
      source-code-pro
