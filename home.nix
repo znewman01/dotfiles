@@ -22,6 +22,7 @@ in
      tree
      zathura
      pass
+     xclip
      # Fonts
      corefonts
      source-code-pro
