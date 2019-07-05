@@ -315,4 +315,9 @@ in
       Nice = 10;
     };
   };
+
+  home.file."bin/instapaper.py" = {
+    source = ./instapaper.py;
+    executable = true;
+  };
 }
