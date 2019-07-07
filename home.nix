@@ -42,6 +42,11 @@ in
      ttf_bitstream_vera
   ];
 
+  programs.direnv = {
+    enable = true;
+    enableBashIntegration = true;
+  };
+
   programs.gpg.enable = true;
   services.gpg-agent.enable = true;
 
