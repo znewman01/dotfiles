@@ -32,7 +32,7 @@ in
      # Fonts
      corefonts
      source-code-pro
-     font-awesome_4
+     font-awesome
      hack-font
      liberation_ttf
      noto-fonts

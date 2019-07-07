@@ -40,7 +40,7 @@
     extraGroups = [ "networkmanager" "wheel" "audio" "video" ];
   };
 
-  system.stateVersion = "19.03";
+  system.stateVersion = "19.09";
 
   # For backlight
   programs.light.enable = true;
