@@ -352,7 +352,7 @@ in
       {
         name = "noisy-radio";
         url = "git@github.mit.edu:zjn/noisy-radio.git";
-        shell = ./shells/basic.nix;
+        shell = ./shells/noisy-radio.nix;
       }
     ];
   };
