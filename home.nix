@@ -348,6 +348,7 @@ in
       {
         name = "fourierhnp";
         url = "git@github.com:factorable/fourierhnp.git";
+        shell = ./shells/fourier.nix;
       }
       {
         name = "noisy-radio";
