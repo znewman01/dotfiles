@@ -7,6 +7,28 @@ let
   dag = config.lib.dag;
   cfg = config.code;
 
+  excludeSubmodule = types.submodule {
+    options = {
+
+      enable = mkEnableOption ''
+        Manage .git/info/exclude.
+
+        If enabled, include any files that we drop in.
+      '';
+
+      text = mkOption {
+        type = types.string;
+        example = ''
+          .envrc
+          shell.nix
+        '';
+        default = "";
+        description = "TODO";
+      };
+
+    };
+  };
+
   repoSubmodule = types.submodule {
     options = {
 
@@ -35,6 +57,14 @@ let
         '';
       };
 
+      exclude = mkOption {
+        type = types.nullOr excludeSubmodule;
+        default = { enable = false; };
+        # TODO: example
+        description = "TODO";
+      };
+
+      # TODO: more git config?
     };
   };
 
@@ -72,11 +102,14 @@ in
     cloneRepoSh = repo: (
       let
         dirname = getDirname repo;
-        shell = optional repo.shell repo.shell;
+        manageExcludes = if repo.exclude.enable then "1" else "0";
         # TODO: should probably make sure remotes etc. are correct
       in ''
         if [ ! -d "${dirname}" ]; then
           $DRY_RUN_CMD ${pkgs.git}/bin/git clone ${repo.url} "${dirname}"
+          if [ "${manageExcludes}" -eq 1 ]; then
+            $DRY_RUN_CMD rm "${dirname}/.git/info/exclude"
+          fi
         fi
       ''
     );
@@ -86,14 +119,23 @@ in
         dirname = getDirname repo;
         shell = repo.shell;
         envrc = "${dirname}/.envrc";
-      in optionalAttrs (repo.shell != null) {
-        "${dirname}/shell.nix".source = repo.shell;
-        "${envrc}" = {
-          text = "use_nix";
-          onChange = "$DRY_RUN_CMD ${pkgs.direnv}/bin/direnv allow ${envrc}";
+        shellNixFiles = optionalAttrs (repo.shell != null) {
+          "${dirname}/shell.nix".source = repo.shell;
+          "${envrc}" = {
+            text = "use_nix";
+            onChange = "$DRY_RUN_CMD ${pkgs.direnv}/bin/direnv allow ${envrc}";
+          };
         };
-        # TODO: more git config. .git/info/exclude?
-      }
+        ourFiles = concatMapStringsSep "\n"
+          (removePrefix dirname)
+          (attrNames shellNixFiles);
+        excludeFiles = optionalAttrs (repo.exclude.enable) {
+          "${dirname}/.git/info/exclude".text = concatStringsSep "\n\n" [
+            ourFiles
+            repo.exclude.text
+          ];
+        };
+      in mkMerge [ shellNixFiles excludeFiles ]
     );
 
   in
@@ -104,7 +146,6 @@ in
         dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] ''
           mkdir -p ${cfg.baseDir}
           ${concatMapStringsSep "\n" cloneRepoSh cfg.repos}
-          chmod -w ${cfg.baseDir}
         '';
 
       home.file = mkMerge (map additionalFiles cfg.repos);

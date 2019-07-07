@@ -349,11 +349,13 @@ in
         name = "fourierhnp";
         url = "git@github.com:factorable/fourierhnp.git";
         shell = ./shells/fourier.nix;
+        exclude.enable = true;
       }
       {
         name = "noisy-radio";
         url = "git@github.mit.edu:zjn/noisy-radio.git";
         shell = ./shells/noisy-radio.nix;
+        exclude.enable = true;
       }
     ];
   };
