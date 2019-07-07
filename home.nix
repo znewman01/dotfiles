@@ -136,9 +136,6 @@ in
           extraConfig.account = {
             AuthMechs = "LOGIN";
           };
-          extraConfig.channel = {
-            CopyArrivalDate = "yes";
-          };
         };
       };
     };
@@ -146,9 +143,9 @@ in
   programs.mbsync = {
     enable = true;
     extraConfig = ''
-      # Blocked on https://github.com/rycee/home-manager/issues/748
-      # CopyArrivalDate yes
+      CopyArrivalDate yes
 
+      # TODO: move these after https://github.com/rycee/home-manager/issues/747
       Channel mit-sent
       Create Both
       Expunge Both
@@ -174,21 +171,18 @@ in
       Channel mit-junk
 
       Channel gmail-inbox
-      CopyArrivalDate yes
       Create Both
       Expunge Both
       Master ":gmail-remote:Inbox"
       Slave ":gmail-local:Inbox"
 
       Channel gmail-sent
-      CopyArrivalDate yes
       Create Both
       Expunge Both
       Master ":gmail-remote:[Gmail]/Sent Mail"
       Slave ":gmail-local:[Gmail]/SentMail"
 
       Channel gmail-all
-      CopyArrivalDate yes
       Create Both
       Expunge Both
       Master ":gmail-remote:[Gmail]/All Mail"
