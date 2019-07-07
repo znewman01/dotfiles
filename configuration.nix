@@ -24,7 +24,10 @@
     git
     vim
     wget
+    manpages
   ];
+
+  documentation.dev.enable = true;
 
   sound.enable = true;
 
