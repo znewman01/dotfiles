@@ -296,14 +296,18 @@ in
     };
   };
   home.activation.makeLinks = dag.entryAfter [ "writeBoundary" ] ''
-      ln -sT ${config.home.homeDirectory}/Dropbox/dotfiles/spacemacs.d \
-          ${config.home.homeDirectory}/.spacemacs.d || true
-      ln -sT ${config.home.homeDirectory}/Dropbox/notes \
-          ${config.home.homeDirectory}/notes || true
-      ln -sT ${config.home.homeDirectory}/Dropbox/passwords \
-          ${config.home.homeDirectory}/.password-store || true
-      ln -s ${config.home.homeDirectory}/Dropbox/passwords/authinfo.gpg \
-          ${config.home.homeDirectory}/.authinfo.gpg || true
+      $DRY_RUN_CMD ln -snT \
+          "${config.home.homeDirectory}/Dropbox/dotfiles/spacemacs.d" \
+          "${config.home.homeDirectory}/.spacemacs.d" || true
+      $DRY_RUN_CMD ln -snT \
+          "${config.home.homeDirectory}/Dropbox/notes" \
+          "${config.home.homeDirectory}/notes" || true
+      $DRY_RUN_CMD ln -snT \
+          "${config.home.homeDirectory}/Dropbox/passwords" \
+          "${config.home.homeDirectory}/.password-store" || true
+      $DRY_RUN_CMD ln -s \
+          "${config.home.homeDirectory}/Dropbox/passwords/authinfo.gpg" \
+          "${config.home.homeDirectory}/.authinfo.gpg" || true
   '';
 
   fonts.fontconfig.enable = true;
