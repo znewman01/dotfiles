@@ -9,7 +9,7 @@ let
   passBin = "${pkgs.pass}/bin/pass";
 in
 {
-  imports = [ ./xmonad.nix ];
+  imports = [ ./xmonad.nix ./code.nix ];
 
   programs.home-manager.enable = true;
 
