@@ -150,17 +150,20 @@ in
       # CopyArrivalDate yes
 
       Channel mit-sent
-      Create Slave
+      Create Both
+      Expunge Both
       Master ":mit-remote:Sent Items"
       Slave ":mit-local:Sent"
 
       Channel mit-junk
-      Create Slave
+      Create Both
+      Expunge Both
       Master ":mit-remote:Junk E-Mail"
       Slave ":mit-local:Junk"
 
       Channel mit-trash
-      Create Slave
+      Create Both
+      Expunge Both
       Master ":mit-remote:Deleted Items"
       Slave ":mit-local:Deleted"
 
@@ -172,19 +175,22 @@ in
 
       Channel gmail-inbox
       CopyArrivalDate yes
-      Create Slave
+      Create Both
+      Expunge Both
       Master ":gmail-remote:Inbox"
       Slave ":gmail-local:Inbox"
 
       Channel gmail-sent
       CopyArrivalDate yes
-      Create Slave
+      Create Both
+      Expunge Both
       Master ":gmail-remote:[Gmail]/Sent Mail"
       Slave ":gmail-local:[Gmail]/SentMail"
 
       Channel gmail-all
       CopyArrivalDate yes
-      Create Slave
+      Create Both
+      Expunge Both
       Master ":gmail-remote:[Gmail]/All Mail"
       Slave ":gmail-local:[Gmail]/AllMail"
 
