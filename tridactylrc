@@ -20,3 +20,5 @@ bindurl www.google.com f hint -J
 bindurl www.google.com F hint -Jt
 bindurl www.duckduckgo.com f hint -J
 bindurl www.duckduckgo.com F hint -Jt
+" maximum irony!
+set editorcmd emacsclient -c
