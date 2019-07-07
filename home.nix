@@ -340,4 +340,20 @@ in
     source = ./instapaper.py;
     executable = true;
   };
+
+  code ={
+    enable = true;
+    baseDir = "${config.home.homeDirectory}/git";
+    repos = [
+      {
+        name = "fourierhnp";
+        url = "git@github.com:factorable/fourierhnp.git";
+      }
+      {
+        name = "noisy-radio";
+        url = "git@github.mit.edu:zjn/noisy-radio.git";
+        shell = ./shells/basic.nix;
+      }
+    ];
+  };
 }
