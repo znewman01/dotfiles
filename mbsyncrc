@@ -65,7 +65,7 @@ Slave ":gmail-local:[Gmail]/AllMail"
 Channel gmail-rest
 Master :gmail-remote:
 Slave :gmail-local:
-Patterns Inbox "[Gmail]/Drafts" "[Gmail]/Spam" "[Gmail]/Trash"
+Patterns "[Gmail]/Drafts" "[Gmail]/Spam" "[Gmail]/Trash"
 
 
 IMAPAccount mit
@@ -96,21 +96,26 @@ Slave ":mit-local:Junk"
 
 Channel mit-trash
 Master ":mit-remote:Deleted Items"
-Slave :mit-local:Deleted
+Slave ":mit-local:Deleted"
+
+Channel mit-inbox
+Master ":mit-remote:Inbox"
+Slave ":mit-local:Inbox"
 
 Channel mit-rest
 Master :mit-remote:
 Slave :mit-local:
-Patterns Archive Drafts INBOX
+Patterns "Archive" "Drafts"
 
 
 Group gmail
-Channel gmail-rest
 Channel gmail-inbox
+Channel gmail-rest
 Channel gmail-sent
 Channel gmail-all
 
 Group mit
+Channel mit-inbox
 Channel mit-rest
 Channel mit-sent
 Channel mit-junk
