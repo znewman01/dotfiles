@@ -30,6 +30,8 @@ in
      i3lock
      anki
      isync
+     ripgrep
+     duplicity
      # Fonts
      corefonts
      source-code-pro
