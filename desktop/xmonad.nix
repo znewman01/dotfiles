@@ -1,15 +1,16 @@
 { config, pkgs, ... }:
 
 let
+  # TODO: make module
   bgColor = "#282A36";
   fgColor = "#F8F8F2";
 in
 {
-  services.screen-locker = {
-    enable = true;
-    inactiveInterval = 10;
-    lockCmd = "${pkgs.i3lock}/bin/i3lock -n";
-  };
+  xsession.enable = true;
+
+  home.packages = with pkgs; [
+    haskellPackages.xmobar
+  ];
 
   xsession.windowManager.xmonad = {
     enable = true;
@@ -154,6 +155,4 @@ in
     theme = "/home/zjn/.config/rasi/dracula.rasi";
     font = "Hack 9";
   };
-
-  # TODO: move xmobar package in here
 }
