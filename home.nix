@@ -31,7 +31,7 @@ in
      anki
      isync
      ripgrep
-     duplicity
+     restic
      # Fonts
      corefonts
      source-code-pro
