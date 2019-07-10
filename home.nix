@@ -9,6 +9,7 @@ in
   imports = [
     # Modules
     ./modules/code.nix
+    ./modules/make-links.nix
     # Config
     ./desktop
     ./emacs
@@ -51,15 +52,8 @@ in
     };
   };
 
-  # TODO: factor out into a module (with makeLinks2)
-  home.activation.makeLinks = dag.entryAfter [ "writeBoundary" ] ''
-      $DRY_RUN_CMD ln -snT \
-          "${config.home.homeDirectory}/Dropbox/passwords" \
-          "${config.home.homeDirectory}/.password-store" || true
-      $DRY_RUN_CMD ln -s \
-          "${config.home.homeDirectory}/Dropbox/passwords/authinfo.gpg" \
-          "${config.home.homeDirectory}/.authinfo.gpg" || true
-  '';
+  home.links.".password-store" = "Dropbox/passwords";
+  home.links.".authinfo.gpg" = "Dropbox/passwords/authinfo.gpg";
 
   systemd.user.services.dropbox = {
     Unit = {

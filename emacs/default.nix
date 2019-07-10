@@ -27,13 +27,6 @@ in
     };
   };
 
-  # TODO: factor out into a module (with makeLinks)
-  home.activation.makeLinks2 = dag.entryAfter [ "writeBoundary" ] ''
-      $DRY_RUN_CMD ln -snT \
-          "${config.home.homeDirectory}/Dropbox/dotfiles/spacemacs.d" \
-          "${config.home.homeDirectory}/.spacemacs.d" || true
-      $DRY_RUN_CMD ln -snT \
-          "${config.home.homeDirectory}/Dropbox/notes" \
-          "${config.home.homeDirectory}/notes" || true
-      '';
+  home.links.".spacemacs.d" = "Dropbox/dotfiles/spacemacs.d";
+  home.links."notes" = "Dropbox/notes";
 }
