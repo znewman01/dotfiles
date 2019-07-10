@@ -77,14 +77,14 @@ in
   };
 
   home.file.".xmobarrc".text = ''
-    Config { 
-         font =         "xft:Hack:size=9::antialias=true,FontAwesome:size=9"
+    Config {
+         font =         "xft:Hack:size=9,Font Awesome 5 Free Regular:size=9,Font Awesome 5 Free Solid:size=9,Font Awesome 5 Brands:size=9"
        , bgColor =      "${bgColor}"
        , fgColor =      "${fgColor}"
        , position =     Top
        , template = " %StdinReader% }{ %multicpu% |  %dropbox% |  %KBOS% | %default:Master% |  %wlp3s0wi% |  %battery% |  %date% "
        , allDesktops =      True    -- show on all desktops
-       , commands = 
+       , commands =
             [ Run Weather "KBOS"    [ "-t" , "<fc=#6272A4><tempF></fc>°F"
                                     ] 36000
             , Run MultiCpu          [ "-t" , " <total0>%  <total1>%"

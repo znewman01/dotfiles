@@ -6,11 +6,10 @@
   home.packages = with pkgs; [
     corefonts
     source-code-pro
-    font-awesome
     hack-font
+    font-awesome-ttf
     liberation_ttf
     noto-fonts
-    noto-fonts-cjk
     noto-fonts-emoji
     noto-fonts-extra
     ttf_bitstream_vera

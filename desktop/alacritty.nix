@@ -9,7 +9,7 @@ in
   programs.alacritty = {
     enable = true;
     settings.font.size = 7;
-    settings.font.family = [ "Hack" "FontAwesome" ];
+    settings.font.family = [ "Hack" "Font Awesome 5 Brands" "Font Awesome 5 Free" "Font Awesome 5 Free Solid" ];
     settings.colors = {
       primary = {
         background = "${bgColor}";
