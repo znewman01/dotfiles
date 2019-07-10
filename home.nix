@@ -85,7 +85,6 @@ in
   };
 
   code = {
-    enable = true;
     baseDir = "${config.home.homeDirectory}/git";
     repos = [
       {

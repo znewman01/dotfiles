@@ -74,12 +74,15 @@ in
 
   options = {
     code = {
-      enable = mkEnableOption "Manage code directories.";
-
       baseDir = mkOption {
-        type = types.string;
-        example = "$HOME/git";
-        description = "Default directory in which given repos will be cloned.";
+        type = with types; nullOr string;
+        example = "$HOME/code";
+        default = null;
+        description = ''
+          Default directory in which given repos will be cloned.
+
+          Must be given to use this feature.
+        '';
       };
 
 
@@ -140,8 +143,7 @@ in
 
   in
 
-    mkIf cfg.enable {
-
+    {
       home.activation.cloneRepos =
         dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] ''
           mkdir -p ${cfg.baseDir}
