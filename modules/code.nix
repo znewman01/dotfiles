@@ -32,12 +32,6 @@ let
   repoSubmodule = types.submodule {
     options = {
 
-      name = mkOption {
-        type = types.str;
-        example = "tensorflow";
-        description = "The name of the checked-out repo.";
-      };
-
       url = mkOption {
         type = types.str;
         example = "git@github.com:tensorflow/tensorflow.git";
@@ -87,11 +81,11 @@ in
 
 
       repos = mkOption {
-        type = types.listOf repoSubmodule;
-        example = [
-          {
-          }
-        ];
+        type = with types; attrsOf repoSubmodule;
+        example = {
+          "tensorflow" = {
+          };
+        };
         default = [];
         description = "Repos to clone.";
       };
@@ -100,11 +94,11 @@ in
 
   config = let
 
-    getDirname = repo: "${cfg.baseDir}/${repo.name}";
+    getDirname = name: repo: "${cfg.baseDir}/${name}";
 
-    cloneRepoSh = repo: (
+    cloneRepoSh = name: repo: (
       let
-        dirname = getDirname repo;
+        dirname = getDirname name repo;
         manageExcludes = if repo.exclude.enable then "1" else "0";
         # TODO: should probably make sure remotes etc. are correct
       in ''
@@ -117,9 +111,9 @@ in
       ''
     );
 
-    additionalFiles = repo: (
+    additionalFiles = name: repo: (
       let
-        dirname = getDirname repo;
+        dirname = getDirname name repo;
         shell = repo.shell;
         envrc = "${dirname}/.envrc";
         shellNixFiles = optionalAttrs (repo.shell != null) {
@@ -147,10 +141,10 @@ in
       home.activation.cloneRepos =
         dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] ''
           mkdir -p ${cfg.baseDir}
-          ${concatMapStringsSep "\n" cloneRepoSh cfg.repos}
+          ${concatStringsSep "\n" (mapAttrsToList cloneRepoSh cfg.repos)}
         '';
 
-      home.file = mkMerge (map additionalFiles cfg.repos);
+      home.file = mkMerge (mapAttrsToList additionalFiles cfg.repos);
     };
 
 }

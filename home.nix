@@ -86,19 +86,17 @@ in
 
   code = {
     baseDir = "${config.home.homeDirectory}/git";
-    repos = [
-      {
-        name = "fourierhnp";
+    repos = {
+      "fourierhnp" = {
         url = "git@github.com:factorable/fourierhnp.git";
         shell = ./shells/fourier.nix;
         exclude.enable = true;
-      }
-      {
-        name = "noisy-radio";
+      };
+      "noisy-radio" = {
         url = "git@github.mit.edu:zjn/noisy-radio.git";
         shell = ./shells/noisy-radio.nix;
         exclude.enable = true;
-      }
-    ];
+      };
+    };
   };
 }
