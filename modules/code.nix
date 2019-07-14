@@ -86,7 +86,7 @@ in
           "tensorflow" = {
           };
         };
-        default = [];
+        default = {};
         description = "Repos to clone.";
       };
     };
