@@ -10,7 +10,7 @@ SyncState *
 IMAPAccount fastmail
 CertificateFile /etc/ssl/certs/ca-certificates.crt
 Host imap.fastmail.com
-PassCmd "/nix/store/cbk3ajz748fffmxp2pgckdkc6kd3bvdl-password-store-1.7.3/bin/pass show fastmail"
+PassCmd "pass show fastmail"
 Port 993
 SSLType IMAPS
 User z@znewman.net
@@ -37,7 +37,7 @@ IMAPAccount gmail
 AuthMechs LOGIN
 CertificateFile /etc/ssl/certs/ca-certificates.crt
 Host imap.gmail.com
-PassCmd "/nix/store/cbk3ajz748fffmxp2pgckdkc6kd3bvdl-password-store-1.7.3/bin/pass show gmail-imap"
+PassCmd "pass show gmail-imap"
 Port 993
 SSLType IMAPS
 User znewman01@gmail.com
@@ -72,7 +72,7 @@ IMAPAccount mit
 AuthMechs PLAIN
 CertificateFile /etc/ssl/certs/ca-certificates.crt
 Host imap.exchange.mit.edu
-PassCmd "/nix/store/cbk3ajz748fffmxp2pgckdkc6kd3bvdl-password-store-1.7.3/bin/pass show mit"
+PassCmd "pass show mit"
 Port 993
 SSLType IMAPS
 User zjn@mit.edu
