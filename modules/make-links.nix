@@ -27,15 +27,9 @@ in
       let
         source = "${homeDirectory}/${sourceName}";
         target = "${homeDirectory}/${targetName}";
-        isDir =
-          let base = baseNameOf source;
-              parent = dirOf source;
-              type = (builtins.readDir parent).${base} or null;
-          in source == /. || type == "directory";
-        lnFlags = if isDir then "-snT" else "-s";
       in ''
         if [ ! -e "${target}" ]; then
-          $DRY_RUN_CMD ln ${lnFlags} "${source}" "${target}"
+          $DRY_RUN_CMD ln -snT "${source}" "${target}"
         fi
       '');
 
