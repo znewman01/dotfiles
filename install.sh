@@ -20,6 +20,9 @@ home-manager switch
 
 gpg --full-generate-key
 
+find "$HOME/.gnupg/" -type f -exec chmod 600 {} \;
+find "$HOME/.gnupg/" -type d -exec chmod 700 {} \;
+
 systemctl --user restart dropbox.service
 
 dropbox status
