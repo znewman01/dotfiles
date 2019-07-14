@@ -22,5 +22,7 @@ if __name__ == "__main__":
     WebDriverWait(driver, 60).until(EC.url_matches('https://accounts.firefox.com/connect_another_device'))
     print('2FA complete if applicable!')
 
+    time.sleep(15) # otherwise the profile doesn't save completely
+
     keep_profile_changes()
     driver.quit()
