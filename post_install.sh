@@ -61,5 +61,16 @@ if [ "$GITHUB" = "y" ]; then
 fi
 
 
+read -p "Initialize email (might take a while, multiple attempts)? [y/N] " EMAIL
 
+if [ "$EMAIL" = "y" ]; then
+    systemctl stop --user mbsync.service
+    systemctl stop --user mbsync.timer
 
+    for store in fastmail mit gmail; do
+        mkdir -p $HOME/Maildir/$store
+	mbsync $store
+    done
+
+    mu index
+fi
