@@ -16,7 +16,8 @@ Requires:
 
 if [ "$FIREFOX" = "y" ]; then
     echo "Setting up Firefox sync."
-    python3 firefox_setup.py
+    python3 browser_auto/firefox_setup.py
+
     # For Tridactyl
     curl -fsSl https://raw.githubusercontent.com/tridactyl/tridactyl/master/native/install.sh -o /tmp/trinativeinstall.sh && bash /tmp/trinativeinstall.sh master
 
@@ -33,7 +34,7 @@ read -p "Set up MIT certificates? [y/N] " MIT
 
 if [ "$MIT" = "y" ]; then
     echo "Setting up MIT certificate."
-    python3 mit_cert.py
+    python3 browser_auto/mit_cert.py
     CERTDIR=$(dirname $(find "$HOME/.mozilla" -name "cert9.db"))
     curl -o /tmp/mitca.crt https://ca.mit.edu/mitca.crt
     certutil -A -n "MIT" -t "TC,," -i /tmp/mitca.crt -d "$CERTDIR"
@@ -44,7 +45,8 @@ read -p "Set up GitHub access? [y/N] " GITHUB
 
 if [ "$GITHUB" = "y" ]; then
     ssh-keygen -N "" -f $HOME/.ssh/id_rsa
-    python3 github_add_ssh_key.py
+    python3 browser_auto/github_add_ssh_key.py
+
     # TODO: do this better?
     git checkout home.nix
     home-manager switch
