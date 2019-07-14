@@ -59,9 +59,14 @@ in
           , normalBorderColor = "${bgColor}"
           , focusedBorderColor = "${fgColor}"
           } `additionalKeysP`
-          [ ("M-p", spawn "rofi -show run")
-          , ("<F12>", scratchpadSpawnActionCustom "alacritty --class scratchpad")
-          ] `additionalKeys`
+          ( [ ("M-p", spawn "rofi -show run")
+            , ("<F12>", scratchpadSpawnActionCustom "alacritty --class scratchpad")
+            ] ++ [
+              (mask ++ "M-" ++ [key], screenWorkspace scr >>= flip whenJust (windows . action))
+              | (key, scr)  <- zip "we" [1,0]
+            , (action, mask) <- [ (W.view, "") , (W.shift, "S-")]
+            ]
+          ) `additionalKeys`
           [ ((0, xF86XK_AudioMute), spawn "amixer set Master toggle; amixer set Speaker unmute; amixer set Headphone unmute") -- hack: "toggle" mutes master and individual channels, but only unmutes master
           , ((0, xF86XK_AudioLowerVolume), spawn "amixer set Master 2-")
           , ((0, xF86XK_AudioRaiseVolume), spawn "amixer set Master 2+")
