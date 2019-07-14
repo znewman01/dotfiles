@@ -1,3 +1,4 @@
+import configparser
 import re
 import subprocess
 import shutil
@@ -10,8 +11,12 @@ from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 
 def get_profile_path():
-    profiles_dir = Path.home() / '.mozilla' / 'firefox'
-    return next(profiles_dir.rglob('*.default')).as_posix()
+    firefox_dir = Path.home() /'.mozilla' / 'firefox'
+    config = configparser.ConfigParser()
+    assert config.read((firefox_dir / 'profiles.ini'))
+    for section in dict(config).values():
+        if section.get('default') == '1':
+            return (firefox_dir / section.get('path')).as_posix()
 
 def keep_profile_changes():
     profile_path = get_profile_path() 
