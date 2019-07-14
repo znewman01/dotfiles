@@ -47,16 +47,11 @@
 - [ ] work through nix-pills
 - [x] direnv
 - [ ] webcam
+- [ ] (workstation) screen: `xrandr --output HDMI-5 --left-of DP-3 --rotate right`
 
 ## Manual steps
 
-1. Run `./install.sh`
-2. Firefox:
-   - Log in to Firefox sync (need email nearby)
-   - Log in to LastPass
-   - Tridactyl: ":installnative", ":restart"
-   - firefox "about:preferences#search"
-   - firefox https://ca.mit.edu/ca/
-3. Dropbox
-   - this is weird, you may need to wait a while for it to update itself
-   - `dropbox status` will give you a URL
+0. Clone this repo: `git clone https://git.github.com/znewman01/dotfiles.git`
+1. Run `cd dotfiles`. Edit networking.hostName. `./install_root.sh && reboot`
+2. (Comment out GitHub code. TODO: make this not a thing). Run `./install.sh` (in X!). Wait a while. Reboot.
+3. Run `/.post-install.sh`
