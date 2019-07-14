@@ -28,7 +28,7 @@ in
         source = "${homeDirectory}/${sourceName}";
         target = "${homeDirectory}/${targetName}";
       in ''
-        if [ ! -e "${target}" ]; then
+        if [ ! -h "${target}" ]; then
           $DRY_RUN_CMD ln -snT "${source}" "${target}"
         fi
       '');
