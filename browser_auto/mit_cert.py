@@ -7,7 +7,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.alert import Alert
 
-from web_common import get_driver, get_pass, keep_profile_changes
+from web_common import get_driver, get_pass, keep_profile_changes, do_mit_2fa
 
 
 if __name__ == "__main__":
@@ -20,15 +20,7 @@ if __name__ == "__main__":
     driver.find_element_by_name('password').send_keys(get_pass('mit'))
     driver.find_element_by_name('Submit').submit()
 
-    driver.switch_to.frame('duo_iframe')
-    time.sleep(2)  # the phone button is clickable before it actually works
-    driver.find_element_by_css_selector('.phone-label button').click()
-
-    driver.switch_to.default_content()
-
-    print("Pick up the phone and hit a key!")
-    # Wait long since this could take a while...
-    WebDriverWait(driver, 60).until(EC.url_to_be('https://ca.mit.edu/ca/certgen'))
+    do_mit_2fa(driver, 'https://ca.mit.edu/ca/certgen')
 
     wait.until(EC.element_to_be_clickable((By.NAME, 'Submit'))).submit()
     wait.until(EC.alert_is_present())

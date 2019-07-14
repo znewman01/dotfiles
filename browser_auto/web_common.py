@@ -1,10 +1,13 @@
 import re
 import subprocess
 import shutil
+import time
 from pathlib import Path
 
 from selenium.webdriver import Firefox, FirefoxProfile
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
 
 def get_profile_path():
     profiles_dir = Path.home() / '.mozilla' / 'firefox'
@@ -34,3 +37,14 @@ def get_driver(use_system_profile=False, headless=False):
                      options=options)
     driver.implicitly_wait(10)
     return driver
+
+def do_mit_2fa(driver, expected_url):
+    driver.switch_to.frame('duo_iframe')
+    time.sleep(2)  # the phone button is clickable before it actually works
+    driver.find_element_by_css_selector('.phone-label button').click()
+
+    driver.switch_to.default_content()
+
+    print("Pick up the phone and hit a key!")
+    # Wait long since this could take a while...
+    WebDriverWait(driver, 60).until(EC.url_to_be(expected_url))
