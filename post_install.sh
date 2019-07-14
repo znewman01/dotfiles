@@ -47,6 +47,9 @@ if [ "$MIT" = "y" ]; then
     curl -o /tmp/mitca.crt https://ca.mit.edu/mitca.crt
     certutil -A -n "MIT" -t "TC,," -i /tmp/mitca.crt -d "$CERTDIR"
     rm /tmp/mitca.crt
+
+    # home-manager handles Firefox profile files so need "-b"
+    home-manager switch -b "bak"
 fi
 
 read -p "Set up GitHub/MIT GitHub access? [y/N] " GITHUB

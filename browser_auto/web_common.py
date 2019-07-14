@@ -25,6 +25,10 @@ def keep_profile_changes():
     shutil.rmtree(profile_path)
     # shutil.copytree doesn't handle locks etc.
     subprocess.check_call(['cp', '-r', selenium_profile_path, profile_path])
+    try:
+        (profile_path / 'user.js.bak').unlink()
+    except FileNotFoundError:
+        pass
 
 def get_pass(passname):
     return subprocess.check_output(['pass', passname]).decode('utf-8').splitlines()[0].strip()
