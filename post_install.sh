@@ -47,7 +47,7 @@ if [ "$MIT" = "y" ]; then
     rm /tmp/mitca.crt
 fi
 
-read -p "Set up GitHub access? [y/N] " GITHUB
+read -p "Set up GitHub/MIT GitHub access? [y/N] " GITHUB
 
 if [ "$GITHUB" = "y" ]; then
     ssh-keygen -N "" -f $HOME/.ssh/id_rsa
