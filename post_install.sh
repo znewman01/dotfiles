@@ -18,6 +18,9 @@ if [ "$FIREFOX" = "y" ]; then
     echo "Setting up Firefox sync."
     python3 browser_auto/firefox_setup.py
 
+    # home-manager handles Firefox profile files so need "-b"
+    home-manager switch -b "bak"
+
     # For Tridactyl
     curl -fsSl https://raw.githubusercontent.com/tridactyl/tridactyl/master/native/install.sh -o /tmp/trinativeinstall.sh && bash /tmp/trinativeinstall.sh master
 
@@ -28,6 +31,9 @@ if [ "$FIREFOX" = "y" ]; then
     $FFKEYS \
         windowfocus --sync \
         key --clearmodifiers --delay 200 Tab Tab d ctrl+q
+    sleep 1
+    pkill firefox
+
 fi
 
 read -p "Set up MIT certificates? [y/N] " MIT
