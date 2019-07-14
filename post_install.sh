@@ -3,6 +3,8 @@
 # Needs to be bash for process subtitution
 set -e
 
+autorandr -c
+
 FFKEYS="xdotool search --onlyvisible --class Firefox"
 
 read -p "Set up Firefox account?
