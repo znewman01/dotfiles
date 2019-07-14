@@ -47,11 +47,14 @@
 - [ ] work through nix-pills
 - [x] direnv
 - [ ] webcam
-- [ ] (workstation) screen: `xrandr --output HDMI-5 --left-of DP-3 --rotate right`
+- [ ] better configuration for multiple machines
+  - [ ] hostnames
+  - [ ] e.g. autorandr
+  - [ ] github code cloning
 
 ## Manual steps
 
-0. Clone this repo: `git clone https://git.github.com/znewman01/dotfiles.git`
+0. Clone this repo: `git clone https://github.com/znewman01/dotfiles.git`
 1. Run `cd dotfiles`. Edit networking.hostName. `./install_root.sh && reboot`
-2. (Comment out GitHub code. TODO: make this not a thing). Run `./install.sh` (in X!). Wait a while. Reboot.
+2. (Comment out GitHub code.). Run `./install.sh` (in X!). Wait a while. Reboot.
 3. Run `/.post-install.sh`
