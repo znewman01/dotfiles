@@ -32,7 +32,7 @@ if [ "$FIREFOX" = "y" ]; then
     sleep 2
     $FFKEYS \
         windowfocus --sync \
-        key --clearmodifiers --delay 200 Tab Tab d ctrl+q
+        key --clearmodifiers --delay 200 Tab Tab d
     sleep 1
     pkill firefox
 
@@ -44,7 +44,7 @@ if [ "$MIT" = "y" ]; then
     echo "Setting up MIT certificate."
     python3 browser_auto/mit_cert.py
     CERTDIR=$(dirname $(find "$HOME/.mozilla" -name "cert9.db"))
-    curl -o /tmp/mitca.crt https://ca.mit.edu/mitca.crt
+    curl -s -o /tmp/mitca.crt https://ca.mit.edu/mitca.crt
     certutil -A -n "MIT" -t "TC,," -i /tmp/mitca.crt -d "$CERTDIR"
     rm /tmp/mitca.crt
 
