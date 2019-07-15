@@ -11,6 +11,7 @@
   - [x] Set home page
   - [x] get search configured correctly
 - [x] Passwords, SSH keys (pass?)
+  - [ ] use pass more: rofi-pass? browserpass?
 - [x] Better terminal
 - [x] Email
 - [x] Git config
@@ -33,24 +34,28 @@
   - [ ] dunst
 - [x] batteries
 - [x] get copy/paste working
-- [ ] better factoring for shared variables (and reorganize generally)
+- [x] better factoring for shared variables (and reorganize generally)
 - [x] brightness
   - [x] services.redshift
 - [x] screen saver/locker
-- [ ] rofi calculator
+- [ ] rofi calculator (requires writing (probably simple) derivation)
 - [ ] emacs configs into git
 - [ ] org files into git?
 - [ ] disk encryption
 - [ ] get everything working on mac
 - [ ] look into fixing home-manager mbsync experience
+  - [ ] channels
+  - [ ] add test for mbsyncrc extra config at top
 - [x] anki
 - [ ] work through nix-pills
 - [x] direnv
-- [ ] webcam
+- [x] webcam
 - [ ] better configuration for multiple machines
   - [ ] hostnames
   - [ ] e.g. autorandr
   - [ ] github code cloning
+- [ ] backups
+- [ ] org from source
 
 ## Manual steps
 

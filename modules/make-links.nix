@@ -27,6 +27,10 @@ in
       let
         source = "${homeDirectory}/${sourceName}";
         target = "${homeDirectory}/${targetName}";
+        # - if target is link pointing at the right place, do nothing
+        # - if target exists and is not link, error
+        # - if target is link pointing at the wrong place, fix it
+        # - if target doesn't exist, make it
       in ''
         if [ ! -h "${target}" ]; then
           $DRY_RUN_CMD ln -snT "${source}" "${target}"
