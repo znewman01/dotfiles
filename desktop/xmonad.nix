@@ -12,6 +12,14 @@ in
     haskellPackages.xmobar
   ];
 
+  # Big hack: XMonad.Prompt.Pass uses "find" on the .password-store directory to
+  # find relevant passwords. I symlink .password-store, so "find" needs the "-L"
+  # flag. Also we add "~/.xmonad/bin" to the $PATH in xmonad.hs.
+  home.file.".xmonad/bin/find" = {
+    text = "#!/bin/bash\n${pkgs.findutils}/bin/find -L $@";
+    executable = true;
+  };
+
   xsession.windowManager.xmonad = {
     enable = true;
     enableContribAndExtras = true;
@@ -24,12 +32,22 @@ in
       import XMonad.Layout.Spacing
       import XMonad.Util.EZConfig
       import XMonad.Util.Scratchpad
+      import XMonad.Prompt
+      import XMonad.Prompt.Pass
+      import System.Environment
 
       import qualified XMonad.StackSet as W
 
       myBorderSpacing = spacingRaw False (Border 4 4 4 4) True (Border 4 4 4 4) True
 
-      main = xmonad =<< statusBar "xmobar" myPP toggleStrutsKey myConfig
+      fixPath :: IO ()
+      fixPath = do
+        path <- getEnv "PATH"
+        setEnv "PATH" ("${config.home.homeDirectory}/.xmonad/bin:" ++ path)
+
+      main = do
+        fixPath
+        xmonad =<< statusBar "xmobar" myPP toggleStrutsKey myConfig
 
       -- Command to launch the bar.
       myPP = xmobarPP
@@ -49,6 +67,21 @@ in
           t = 0.2
           l = 0.1
 
+      xpconfig :: XPConfig
+      xpconfig = def
+          { font = "xft:Hack:size=9"
+          , bgColor = "${bgColor}"
+          , fgColor = "${fgColor}"
+          , fgHLight = "${fgColor}"
+          , bgHLight = "#44475a"
+          , borderColor = "${fgColor}"
+          , promptBorderWidth = 4
+          , position = CenteredAt 0.5 0.5
+          , height = 30
+          , maxComplRows = Just 1
+          , showCompletionOnTab = True
+          }
+
       -- Main configuration, override the defaults to your liking.
       myConfig = defaultConfig
           { terminal = "alacritty"
@@ -61,6 +94,7 @@ in
           } `additionalKeysP`
           ( [ ("M-p", spawn "rofi -show run")
             , ("<F12>", scratchpadSpawnActionCustom "alacritty --class scratchpad")
+            , ("S-M-p", passPrompt xpconfig)
             ] ++ [
               (mask ++ "M-" ++ [key], screenWorkspace scr >>= flip whenJust (windows . action))
               | (key, scr)  <- zip "we" [1,0]
