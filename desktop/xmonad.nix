@@ -12,14 +12,6 @@ in
     haskellPackages.xmobar
   ];
 
-  # Big hack: XMonad.Prompt.Pass uses "find" on the .password-store directory to
-  # find relevant passwords. I symlink .password-store, so "find" needs the "-L"
-  # flag. Also we add "~/.xmonad/bin" to the $PATH in xmonad.hs.
-  home.file.".xmonad/bin/find" = {
-    text = "#!/bin/bash\n${pkgs.findutils}/bin/find -L $@";
-    executable = true;
-  };
-
   xsession.windowManager.xmonad = {
     enable = true;
     enableContribAndExtras = true;
@@ -40,13 +32,11 @@ in
 
       myBorderSpacing = spacingRaw False (Border 4 4 4 4) True (Border 4 4 4 4) True
 
-      fixPath :: IO ()
-      fixPath = do
-        path <- getEnv "PATH"
-        setEnv "PATH" ("${config.home.homeDirectory}/.xmonad/bin:" ++ path)
+      setPassDir :: IO ()
+      setPassDir = setEnv "PASSWORD_STORE_DIR" "${config.home.homeDirectory}/Dropbox/passwords"
 
       main = do
-        fixPath
+        setPassDir
         xmonad =<< statusBar "xmobar" myPP toggleStrutsKey myConfig
 
       -- Command to launch the bar.
@@ -79,7 +69,7 @@ in
           , position = CenteredAt 0.5 0.5
           , height = 30
           , maxComplRows = Just 1
-          , showCompletionOnTab = True
+          , showCompletionOnTab = False
           }
 
       -- Main configuration, override the defaults to your liking.
@@ -94,7 +84,8 @@ in
           } `additionalKeysP`
           ( [ ("M-p", spawn "rofi -show run")
             , ("<F12>", scratchpadSpawnActionCustom "alacritty --class scratchpad")
-            , ("S-M-p", passPrompt xpconfig)
+            , ("S-M-p p", passPrompt xpconfig)
+            , ("S-M-p t", passTypePrompt xpconfig)
             ] ++ [
               (mask ++ "M-" ++ [key], screenWorkspace scr >>= flip whenJust (windows . action))
               | (key, scr)  <- zip "we" [1,0]

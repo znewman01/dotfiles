@@ -12,6 +12,7 @@
     i3lock
     xautolock
     xclip
+    xdotool
     zathura
   ];
 
