@@ -94,6 +94,15 @@ in
         url = "git@github.com:factorable/fourierhnp.git";
         shell = ./shells/fourier.nix;
         exclude.enable = true;
+        extraFiles = {
+          ".dir-locals".text = "((python-mode . (blacken-mode . t)))\n";
+          ".pycheckers".text = ''
+            [DEFAULT]
+            max_line_length=88
+            pylint_rcfile=.pylintrc
+            checkers=pylint,mypy3
+          '';
+        };
       };
       "noisy-radio" = {
         url = "git@github.mit.edu:zjn/noisy-radio.git";
