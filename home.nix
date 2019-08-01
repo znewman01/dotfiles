@@ -45,6 +45,7 @@ in
     ignores = [ "*~" "*.swp" ];
     userEmail = "z@znewman.net";
     userName = "Zachary Newman";
+    extraConfig.pull.rebase = "true";
   };
 
   programs.bash = {
