@@ -175,7 +175,8 @@ in
     #   };
     # };
   # };
-  home.file.".mbsyncrc".source = ./mbsyncrc;
+
+  home.file.".mbsyncrc".text = import ./mbsyncrc.nix { pkgs = pkgs; };
   services.mbsync = {
     enable = true;
     postExec = ("${pkgs.emacs}/bin/emacsclient -e" +
