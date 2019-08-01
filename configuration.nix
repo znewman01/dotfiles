@@ -35,9 +35,17 @@
   services.xserver.layout = "us";
   services.xserver.xkbOptions = "caps:swapescape";
 
+  services.printing.enable = true;
+  services.printing.clientConf = ''
+    ServerName cups.csail.mit.edu
+  '';
+  services.printing.extraConf = ''
+    SystemGroup lp
+  '';
+
   users.users.zjn = {
     isNormalUser = true;
-    extraGroups = [ "networkmanager" "wheel" "audio" "video" ];
+    extraGroups = [ "networkmanager" "wheel" "audio" "video" "lp" ];
   };
 
   system.stateVersion = "19.09";
