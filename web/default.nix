@@ -10,6 +10,7 @@
         "general.warnOnAboutConfig" = false;
         "browser.startup.homepage" = "about:blank";
         "browser.newtabpage.enabled" = false;
+        "browser.tabs.closeWindowWithLastTab" = true;
         # For Tridactyl support in more places
         "privacy.resistFingerprinting.block_mozAddonManager" = true;
         "extensions.webextensions.restrictedDomains" = "";
