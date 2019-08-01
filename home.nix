@@ -111,6 +111,12 @@ in
         shell = ./shells/noisy-radio.nix;
         exclude.enable = true;
       };
+      "iacr-dl" = {
+        url = "git@github.com:znewman01/iacr-dl.git";
+        shell = ./shells/iacr.nix;
+        exclude.enable = true;
+        extraFiles = filterAttrs (name: value: name != ".pycheckers") blackFiles;
+      };
     };
   };
 }
