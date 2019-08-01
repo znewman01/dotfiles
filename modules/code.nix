@@ -208,9 +208,11 @@ in
           ];
         };
         moveToRepoDir = (name: value:
-          (mapAttrs (name': value': if name' == "target" then "${dirname}/${name}" else value') value)
+          nameValuePair
+            "${dirname}/${name}"
+            (mapAttrs (name': value': if name' == "target" then "${dirname}/${name}" else value') value)
         );
-        extraFiles = mapAttrs moveToRepoDir repo.extraFiles;
+        extraFiles = mapAttrs' moveToRepoDir repo.extraFiles;
       in mkMerge [ shellNixFiles excludeFiles extraFiles ]
     );
 
