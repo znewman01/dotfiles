@@ -94,7 +94,7 @@ in
     baseDir = "${config.home.homeDirectory}/git";
     repos = let
       blackFiles = {
-        ".dir-locals".text = "((python-mode . (blacken-mode . t)))\n";
+        ".dir-locals.el".text = "((python-mode . (blacken-mode . t)))\n";
         ".pycheckers".text = ''
           [DEFAULT]
           max_line_length=88
