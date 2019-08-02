@@ -19,5 +19,6 @@ in pkgs.mkShell rec {
     gnumake
     ipe
     python3
+    poppler_utils  # for pdftotext
   ];
 }

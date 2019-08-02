@@ -113,6 +113,9 @@ in
         url = "git@github.mit.edu:zjn/noisy-radio.git";
         shell = ./shells/noisy-radio.nix;
         exclude.enable = true;
+        extraFiles = {
+          ".dir-locals.el".text = "((latex-mode . (TeX-master . \"document.tex\")))\n";
+        };
       };
       "iacr-dl" = {
         url = "git@github.com:znewman01/iacr-dl.git";
