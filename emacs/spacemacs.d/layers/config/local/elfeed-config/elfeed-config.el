@@ -1,3 +1,5 @@
+;; -*- lexical-binding:t -*-
+
 (require 'elfeed)
 (provide 'elfeed-config)
 
@@ -20,18 +22,32 @@
         ("https://www.scottaaronson.com/blog/?feed=rss2")))
 
 ; Instapaper + Elfeed
-(defun add-to-instapaper (url)
-  (call-process "~/bin/instapaper.py" nil nil nil url))
+(require 'request)
+
+(defun add-to-instapaper (url success-callback)
+  (let* ((username "znewman01@gmail.com")
+         (password (car (process-lines "pass" "show" "instapaper")))
+         (auth-string (base64-encode-string (format "%s:%s" username password)))
+         (auth-header (format "Basic %s" auth-string)))
+    (request "https://www.instapaper.com/api/add"
+             :headers `(("Authorization" . ,auth-header))
+             :params `(("url" . ,url))
+             :success success-callback
+             :error (cl-function
+                     (lambda (&key error-thrown &allow-other-keys)
+                       (warn "Issue adding to Instapaper! %S" error-thrown))))))
 
 (defun add-elfeed-entry-to-instapaper ()
   (interactive)
   (let ((entry (elfeed-search-selected :single)))
-    (if (not (= 0 (add-to-instapaper (elfeed-entry-link entry))))
-        (message "Error adding to Instapaper!")
-      (message "Added to Instapaper: %s" (elfeed-entry-title entry))
-      (elfeed-untag entry 'unread)
-      (elfeed-search-update-entry entry)
-      (unless (use-region-p) (forward-line)))))
+    (add-to-instapaper
+     (elfeed-entry-link entry)
+     (cl-function (lambda (&key data &allow-other-keys)
+                    (message "Added to Instapaper!")
+                    (elfeed-untag entry 'unread)
+                    (elfeed-search-update-entry entry))))
+    (unless (use-region-p) (forward-line))))
+
 (define-key elfeed-search-mode-map "i" #'add-elfeed-entry-to-instapaper)
 
 (defun add-elfeed-shown-to-instapaper ()

@@ -83,11 +83,6 @@ in
     };
   };
 
-  home.file."bin/instapaper.py" = {
-    source = ./instapaper.py;
-    executable = true;
-  };
-
   home.file.".cups/lpoptions".text = "Default 00-dev_null\nDest xerox8/twoside Duplex=DuplexNoTumble sides=two-sided-long-edge";
 
   code = {
