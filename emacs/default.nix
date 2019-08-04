@@ -27,6 +27,8 @@ in
     };
   };
 
-  home.links.".spacemacs.d" = "Dropbox/dotfiles/spacemacs.d";
+  # Use a link rather than home.files because we probably want to be able to
+  # hack on this pretty sloppily
+  home.links.".spacemacs.d" = "dotfiles/emacs/spacemacs.d";
   home.links."notes" = "Dropbox/notes";
 }
