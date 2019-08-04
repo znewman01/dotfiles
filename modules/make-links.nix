@@ -27,12 +27,18 @@ in
       let
         source = "${homeDirectory}/${sourceName}";
         target = "${homeDirectory}/${targetName}";
-        # - if target is link pointing at the right place, do nothing
-        # - if target exists and is not link, error
-        # - if target is link pointing at the wrong place, fix it
-        # - if target doesn't exist, make it
       in ''
-        if [ ! -h "${target}" ]; then
+        if [ -h "${target}" ]; then
+          CURR_LINK_SOURCE=$(readlink -f "${target}")
+          if [ "$CURR_LINK_SOURCE" != "${source}" ]; then
+              warnEcho "${target} points to wrong place; updating."
+              $DRY_RUN_CMD rm "${target}"
+              $DRY_RUN_CMD ln -snT "${source}" "${target}"
+          fi
+        elif [ -e "${target}" ]; then
+          errorEcho "${target} exists but is not a link."
+          exit 1
+        else
           $DRY_RUN_CMD ln -snT "${source}" "${target}"
         fi
       '');
