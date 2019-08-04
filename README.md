@@ -11,7 +11,7 @@
   - [x] Set home page
   - [x] get search configured correctly
 - [x] Passwords, SSH keys (pass?)
-  - [ ] use pass more: rofi-pass? browserpass?
+  - [x] use pass more: xmonad-pass
 - [x] Better terminal
 - [x] Email
 - [x] Git config
@@ -20,8 +20,8 @@
 - [x] Emacs + Spacemacs
   - [x] services.emacs.enable
 - [ ] TRIM on your SSD
-- [ ] CUPS
-- [ ] Separate install.sh into root,non-root parts
+- [x] CUPS
+- [x] Separate install.sh into root,non-root parts
 - [x] WiFi
 - [x] $EDITOR
 - [x] Need to fix fonts
@@ -40,9 +40,9 @@
 - [x] screen saver/locker
 - [ ] rofi calculator (requires writing (probably simple) derivation)
 - [ ] emacs configs into git
-- [ ] org files into git?
+- [-] org files into git? NO
 - [ ] disk encryption
-- [ ] get everything working on mac
+- [-] get everything working on mac. NO
 - [ ] look into fixing home-manager mbsync experience
   - [ ] channels
   - [ ] add test for mbsyncrc extra config at top
@@ -52,8 +52,8 @@
 - [x] webcam
 - [ ] better configuration for multiple machines
   - [ ] hostnames
-  - [ ] e.g. autorandr
-  - [ ] github code cloning
+  - [x] e.g. autorandr
+  - [x] github code cloning
 - [ ] backups
 - [ ] org from source
 
