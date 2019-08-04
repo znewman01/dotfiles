@@ -60,6 +60,6 @@
 ## Manual steps
 
 0. Clone this repo: `git clone https://github.com/znewman01/dotfiles.git`
-1. Run `cd dotfiles`. Edit networking.hostName. `./install_root.sh && reboot`
-2. (Comment out GitHub code.). Run `./install.sh` (in X!). Wait a while. Reboot.
-3. Run `/.post-install.sh`
+1. Run `cd dotfiles`. Edit networking.hostName. `./scripts/install_root.sh && reboot`
+2. (Comment out GitHub code.). Run `./scripts/install.sh` (in X!). Wait a while. Reboot.
+3. Run `./scripts/post-install.sh`
