@@ -123,6 +123,10 @@ in
         exclude.enable = true;
         extraFiles = filterAttrs (name: value: name != ".pycheckers") blackFiles;
       };
+      "resume" = {
+        url = "git@github.mit.edu:zjn/resume.git";
+        exclude.enable = true;
+      };
     };
   };
 }
