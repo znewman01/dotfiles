@@ -22,7 +22,8 @@
 (add-hook 'auto-save-hook 'org-save-all-org-buffers)
 
 (setq org-todo-keywords
-      '((sequence "NEXT(n)" "BUY" "HABIT(h)" "TODO(t)" "|" "DONE(d!)")
+      '((sequence "NEXT(n)" "BUY" "TODO(t)" "|" "DONE(d!)")
+        (sequence "HABIT(h)" "|" "HABITDONE(H)")
         (sequence "PROJ(p)" "BLOCKEDPROJ(b)" "|" "PROJDONE(P)")
         (sequence "WAITING(w)" "SOMEDAY(s)" "|" "CANCELLED(c)")))
 
