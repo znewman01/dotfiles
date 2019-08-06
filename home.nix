@@ -94,7 +94,7 @@ in
     baseDir = "${config.home.homeDirectory}/git";
     repos = let
       blackFiles = {
-        ".dir-locals.el".text = "((python-mode . (blacken-mode . t)))\n";
+        ".dir-locals.el".text = "((python-mode . ((blacken-mode . t))))\n";
         ".pycheckers".text = ''
           [DEFAULT]
           max_line_length=88
@@ -114,7 +114,7 @@ in
         shell = ./shells/noisy-radio.nix;
         exclude.enable = true;
         extraFiles = {
-          ".dir-locals.el".text = "((latex-mode . (TeX-master . \"document.tex\")))\n";
+          ".dir-locals.el".text = "((latex-mode . ((TeX-master . \"document.tex\"))))\n";
           ".git/hooks/post-commit" = {
             text = ''
               #!/bin/sh
