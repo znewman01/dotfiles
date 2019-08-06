@@ -59,28 +59,26 @@
           list)))
 
 (defun zjn-current-time-invalid-for-tag (tag)
-  (if (not (string-match-p "[0-9]\\{4\\}_[0-9]\\{4\\}$" tag))
-      nil
-    (let* ((range (mapcar 'string-to-number (split-string tag "_")))
-           (start (car range))
-           (end (cadr range))
-           (curr (string-to-number (format-time-string "%H%M"))))
-      (or (< curr start) (> curr end)))))
+  (let* ((range (mapcar 'string-to-number (split-string tag "_")))
+         (curr (string-to-number (format-time-string "%H%M"))))
+    (or (< curr (car range)) (> curr (cadr range)))))
 
 (setq zjn-days-of-week '("sun" "mon" "tue" "wed" "thu" "fri" "sat"))
 
 (defun zjn-current-day-invalid-for-tag (tag)
-  (if (not (member tag zjn-days-of-week))
-      nil
-    (not (string= (downcase (format-time-string "%a"))
-                  tag))))
+  (not (string= (downcase (format-time-string "%a"))
+                tag)))
 
 (defun zjn-org-skip-subtree-if-bad-time ()
   "Skip entries with invalid time tags or day of week tags."
   (let* ((subtree-end (save-excursion (org-end-of-subtree t)))
-         (tags (org-get-tags)))
-    (if (or (zjn-any (mapcar 'zjn-current-time-invalid-for-tag tags))
-            (zjn-all (mapcar 'zjn-current-day-invalid-for-tag tags)))
+         (tags (org-get-tags))
+         (time-tags (seq-filter (lambda (tag) (string-match-p "[0-9]\\{4\\}_[0-9]\\{4\\}$" tag)) tags))
+         (day-tags (seq-intersection zjn-days-of-week tags)))
+    (if (or (and time-tags
+                 (zjn-all (mapcar 'zjn-current-time-invalid-for-tag time-tags)))
+            (and day-tags
+                 (zjn-all (mapcar 'zjn-current-day-invalid-for-tag day-tags))))
         subtree-end
       nil)))
 
