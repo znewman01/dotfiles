@@ -77,3 +77,10 @@ if [ "$EMAIL" = "y" ]; then
 
     mu index
 fi
+
+read -p "Set up CSAIL WiFi? [y/N] " WIFI
+
+if [ "$WIFI" = "y" ]; then
+    ./net/CSAILPrivate.nmconnection.sh | sudo tee /etc/NetworkManager/system-connections/CSAILPrivate.nmconnection > /dev/null
+    echo "You may need to reload your network connection."
+fi
