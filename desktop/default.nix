@@ -5,6 +5,7 @@
     ./xmonad.nix
     ./fonts.nix
     ./alacritty.nix
+    ./autorandr.nix
   ];
 
   home.packages = with pkgs; [
