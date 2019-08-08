@@ -20,5 +20,6 @@ in pkgs.mkShell rec {
     ipe
     python3
     poppler_utils  # for pdftotext
+    inkscape  # for svg rendering
   ];
 }
