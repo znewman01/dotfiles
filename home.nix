@@ -56,6 +56,16 @@ in
     };
   };
 
+  home.file."bin/pdftogray" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env nix-shell
+      #!nix-shell -i bash -p ghostscript
+      if [ -z "$2" ]; then echo "Usage: $0 <in-file> <out-file>"; exit 1; fi
+      gs -sDEVICE=pdfwrite -sProcessColorModel=DeviceGray -sColorConversionStrategy=Gray -dOverrideICC -o $2 -f $1
+    '';
+  };
+
   home.links.".password-store" = "Dropbox/passwords";
   home.links.".authinfo.gpg" = "Dropbox/passwords/authinfo.gpg";
 
