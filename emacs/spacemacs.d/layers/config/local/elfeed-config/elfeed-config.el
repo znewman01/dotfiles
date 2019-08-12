@@ -19,6 +19,7 @@
         ("http://eprint.iacr.org/rss/rss.xml")
         ("https://slatestarcodex.com/feed/")
         ("http://www.christianmoscardi.com/feed.xml")
+        ("http://scholars-stage.blogspot.com/feeds/posts/default")
         ("https://www.scottaaronson.com/blog/?feed=rss2")))
 
 ; Instapaper + Elfeed
