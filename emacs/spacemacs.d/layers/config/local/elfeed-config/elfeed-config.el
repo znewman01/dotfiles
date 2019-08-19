@@ -53,7 +53,8 @@
 
 (defun add-elfeed-shown-to-instapaper ()
   (interactive)
-  (if (not (= 0 (add-to-instapaper (elfeed-entry-link elfeed-show-entry))))
-      (message "Error adding to Instapaper!")
-    (message "Added to Instapaper: %s" (elfeed-entry-title elfeed-show-entry))))
+  (add-to-instapaper
+   (elfeed-entry-link elfeed-show-entry)
+   (cl-function (lambda (&key data &allow-other-keys)
+                  (message "Added to Instapaper!")))))
 (define-key elfeed-show-mode-map "i" #'add-elfeed-shown-to-instapaper)
