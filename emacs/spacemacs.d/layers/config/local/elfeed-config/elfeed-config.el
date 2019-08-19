@@ -16,7 +16,7 @@
         ("http://lambda-the-ultimate.org/rss.xml")
         ("http://feeds.feedburner.com/Fsharpforfunandprofit?format=xml")
         ("https://blog.acolyer.org/feed/")
-        ("http://eprint.iacr.org/rss/rss.xml")
+        ("https://www.iacr.org/news/rss")
         ("https://slatestarcodex.com/feed/")
         ("http://www.christianmoscardi.com/feed.xml")
         ("http://scholars-stage.blogspot.com/feeds/posts/default")
