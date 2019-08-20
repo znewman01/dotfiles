@@ -86,6 +86,7 @@ in
             , ("<F12>", scratchpadSpawnActionCustom "alacritty --class scratchpad")
             , ("S-M-p p", passPrompt xpconfig)
             , ("S-M-p t", passTypePrompt xpconfig)
+            , ("S-M-l", spawn "i3lock")
             ] ++ [
               (mask ++ "M-" ++ [key], screenWorkspace scr >>= flip whenJust (windows . action))
               | (key, scr)  <- zip "we" [1,0]
