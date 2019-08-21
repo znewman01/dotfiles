@@ -39,7 +39,7 @@
   - [x] services.redshift
 - [x] screen saver/locker
 - [ ] rofi calculator (requires writing (probably simple) derivation)
-- [ ] emacs configs into git
+- [x] emacs configs into git
 - [-] org files into git? NO
 - [ ] disk encryption
 - [-] get everything working on mac. NO
@@ -54,6 +54,7 @@
   - [ ] hostnames
   - [x] e.g. autorandr
   - [x] github code cloning
+  - [ ] different xmobar configs
 - [ ] backups
 - [ ] org from source
 
