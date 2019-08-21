@@ -8,7 +8,7 @@ function show_help {
     echo "Passes through remaining arguments to restic."
 }
 
-source ./restic_common.sh
+source "${BASH_SOURCE%/*}/restic_common.sh"
 
 function main {
     BACKUP_NAME="$1"

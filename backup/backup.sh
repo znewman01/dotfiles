@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-source ./restic_common.sh
+source "${BASH_SOURCE%/*}/restic_common.sh"
 
 function main {
     for BACKUP_SPEC in $BACKUP_SPECS; do

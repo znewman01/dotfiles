@@ -1,4 +1,5 @@
-RESTIC=restic
+RESTIC={{RESTIC_BIN_PATH}}
+PASS={{PASS_BIN_PATH}}
 BUCKET_NAME=zjn-backup
 BACKUP_SPECS="
 passwords:$HOME/Dropbox/passwords
@@ -10,7 +11,7 @@ export GOOGLE_APPLICATION_CREDENTIALS=$HOME/Dropbox/gcp-service-account.json
 
 function run_restic {
     "$RESTIC" \
-        --password-command="pass backups" \
+        --password-command="${PASS} backups" \
         --verbose \
         $@
 }
