@@ -11,6 +11,7 @@ in
     ./modules/code.nix
     ./modules/make-links.nix
     # Config
+    ./backup
     ./desktop
     ./emacs
     ./email
