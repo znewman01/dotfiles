@@ -9,7 +9,8 @@ function main {
         NAME="$(echo ${BACKUP_SPEC} | sed 's/:.*//g')"
         REMOTE="gs:${BUCKET_NAME}:/${HOSTNAME}/${NAME}"
 
-        run_restic -r "$REMOTE" backup "$LOCAL"
+        cd "$LOCAL"
+        run_restic -r "$REMOTE" backup .
     done
 }
 
