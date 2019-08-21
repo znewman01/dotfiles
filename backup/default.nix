@@ -26,6 +26,7 @@ in
 
     Timer = {
       OnCalendar = "hourly";
+      RandomizedDelaySec = 3600;
       Unit = "backups.service";
     };
 
@@ -52,6 +53,7 @@ in
 
     Timer = {
       OnCalendar = "hourly";
+      RandomizedDelaySec = 3600;
       Unit = "enforce-backups-up-to-date.service";
     };
 
@@ -60,5 +62,30 @@ in
     };
   };
 
-  # TODO: prune old backups
+  systemd.user.services.prune-backups = {
+    Unit = {
+      Description = "prune regular restic-based backups";
+    };
+
+    Service = {
+      Type = "oneshot";
+      ExecStart = "${backup-scripts}/bin/prune.sh";
+    };
+  };
+
+  systemd.user.timers.prune-backups = {
+    Unit = {
+      Description = "prune regular restic-based backups";
+    };
+
+    Timer = {
+      OnCalendar = "hourly";
+      RandomizedDelaySec = 3600;
+      Unit = "prune-backups.service";
+    };
+
+    Install = {
+      WantedBy = [ "timers.target" ];
+    };
+  };
 }

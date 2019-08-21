@@ -11,5 +11,6 @@ derivation {
     ./enforce_backup_recency.sh
     ./restic_common.sh
     ./restic.sh
+    ./prune_backups.sh
   ];
 }
