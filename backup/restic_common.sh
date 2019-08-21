@@ -1,5 +1,7 @@
 RESTIC={{RESTIC_BIN_PATH}}
 PASS={{PASS_BIN_PATH}}
+JQ={{JQ_BIN_PATH}}
+
 BUCKET_NAME=zjn-backup
 BACKUP_SPECS="
 passwords:$HOME/Dropbox/passwords

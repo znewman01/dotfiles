@@ -4,7 +4,12 @@ derivation {
   builder = "${bash}/bin/bash";
   args = [ ./install.sh ];
   buildInputs = [ coreutils gnused ];
-  inherit pass restic;
+  inherit pass restic jq;
   system = builtins.currentSystem;
-  src = [ ./backup.sh ./restic_common.sh ./restic.sh ];
+  src = [
+    ./backup.sh
+    ./enforce_backup_recency.sh
+    ./restic_common.sh
+    ./restic.sh
+  ];
 }
