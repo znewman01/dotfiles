@@ -1,10 +1,6 @@
 #!/bin/sh
 set -e
 
-function show_help {
-    echo "Usage: $0 [--dry-run] (--backup|--restore)"
-}
-
 source ./restic_common.sh
 
 function main {

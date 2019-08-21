@@ -12,12 +12,11 @@ source ./restic_common.sh
 
 function main {
     BACKUP_NAME="$1"
-    shift
-
     if [ -z "$BACKUP_NAME" ]; then
         show_help
         exit 1
     fi
+    shift
 
     RAN=0
     for BACKUP_SPEC in $BACKUP_SPECS; do
