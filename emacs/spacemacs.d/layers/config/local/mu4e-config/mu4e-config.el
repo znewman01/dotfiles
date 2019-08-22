@@ -132,6 +132,7 @@
   (save-excursion
     (let ((msg (mu4e-message-at-point))
           (instapaper-email "readlater.safqxp45y6q@instapaper.com"))
+      (mu4e-context-switch nil "Gmail")
       (compose-mail instapaper-email
                     (mu4e-message-field msg :subject))
       (mu4e-compose-attach-message msg)
