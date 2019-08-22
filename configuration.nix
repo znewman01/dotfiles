@@ -43,9 +43,11 @@
     SystemGroup lp
   '';
 
+  virtualisation.docker.enable = true;
+
   users.users.zjn = {
     isNormalUser = true;
-    extraGroups = [ "networkmanager" "wheel" "audio" "video" "lp" ];
+    extraGroups = [ "networkmanager" "wheel" "audio" "video" "lp" "docker" ];
   };
 
   system.stateVersion = "19.09";
