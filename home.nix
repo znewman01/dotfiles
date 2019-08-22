@@ -101,19 +101,23 @@ in
     repos = let
       blackFiles = {
         ".dir-locals.el".text = "((python-mode . ((blacken-mode . t))))\n";
-        ".pycheckers".text = ''
-          [DEFAULT]
-          max_line_length=88
-          pylint_rcfile=.pylintrc
-          checkers=pylint,mypy3
-        '';
       };
     in {
       "fourierhnp" = {
         url = "git@github.com:factorable/fourierhnp.git";
         shell = ./shells/fourier.nix;
         exclude.enable = true;
-        extraFiles = blackFiles;
+        extraFiles = blackFiles // {
+          ".dir-locals.el".text = ''
+            ((python-mode . ((blacken-mode . t)
+                             (eval . (require 'vc))
+                             (flycheck-pycheckers-max-line-length . 88)
+                             (flycheck-pycheckers-pylint-rc .(expand-file-name ".pylintrc" (vc-git-root (buffer-file-name))))
+                             (eval . (setenv
+                                      "MYPYPATH"
+                                      (expand-file-name "python" (vc-git-root (buffer-file-name))))))))
+          '';
+        };
       };
       "noisy-radio" = {
         url = "git@github.mit.edu:zjn/noisy-radio.git";
@@ -142,7 +146,7 @@ in
         url = "git@github.com:znewman01/iacr-dl.git";
         shell = ./shells/iacr.nix;
         exclude.enable = true;
-        extraFiles = filterAttrs (name: value: name != ".pycheckers") blackFiles;
+        extraFiles = blackFiles;
       };
       "resume" = {
         url = "git@github.mit.edu:zjn/resume.git";
