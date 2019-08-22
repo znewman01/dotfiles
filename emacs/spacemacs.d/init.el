@@ -46,6 +46,7 @@
                   shell-default-shell 'ansi-term
                   shell-default-height 25
                   shell-default-position 'bottom)
+           rust
            semantic
            syntax-checking
            python
@@ -138,6 +139,9 @@
     (add-hook 'before-save-hook 'clang-format-buffer-smart nil t))
   (spacemacs/add-to-hooks 'clang-format-buffer-smart-on-save
                           '(c-mode-hook c++-mode-hook))
+
+  ;; Rust
+  (setq rust-format-on-save t)
 
   ; RefTeX/AUCTeX
   (setq-default TeX-master nil)

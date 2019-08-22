@@ -148,6 +148,11 @@ in
         url = "git@github.mit.edu:zjn/resume.git";
         exclude.enable = true;
       };
+      "pirate-radio" = {
+        url = "git@github.mit.edu:zjn/pirate-radio.git";
+        exclude.enable = true;
+        shell = ./shells/pirate-radio.nix;
+      };
     };
   };
 }
