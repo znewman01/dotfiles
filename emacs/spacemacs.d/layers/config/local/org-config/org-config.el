@@ -355,3 +355,52 @@
         (file+headline "~/notes/research.org" "Paper queue")
         "** %i\nURL:\nAuthor(s):\n\n#+BEGIN_SRC bibtex\n#+END_SRC")
       org-capture-templates)
+
+
+; garbage collection for attachments
+(require 'seq)
+
+(defun zjn--dir-files-no-dots (path)
+  (seq-filter (lambda (x) (not (member x '("." ".."))))
+              (directory-files path)))
+
+(defun zjn--get-all-org-attach-ids (attach-dir)
+  (let ((prefixes (zjn--dir-files-no-dots attach-dir)))
+    (mapcan (lambda (prefix)
+              (let* ((prefix-dir (expand-file-name prefix attach-dir))
+                     (remainders (zjn--dir-files-no-dots prefix-dir)))
+                (mapcar (lambda (remainder) (cons prefix remainder)) remainders)))
+            prefixes)))
+
+(defun zjn--any-files-contain (files value)
+  (let ((args `("rg" nil nil nil "-i" ,value ,@files)))
+    (eq (apply #'call-process args) 0)))
+
+(defun zjn-org-attach-collect-garbage ()
+  (interactive)
+  (let* ((default-directory org-directory)
+         (org-files (seq-filter (lambda (f) (or (string-suffix-p ".org" f)
+                                                (string-suffix-p ".org_archive" f)))
+                                (directory-files org-directory)))
+         (attach-dir (expand-file-name org-attach-directory org-directory))
+         (org-attach-ids (zjn--get-all-org-attach-ids attach-dir))
+         (unused-ids
+          (seq-filter (lambda (id)
+                        (not (zjn--any-files-contain
+                              org-files
+                              (concat (car id) (cdr id)))))
+                        org-attach-ids)))
+    ; Delete non-referenced data directories
+    (mapcar (lambda (id)
+              (let ((dir-abs (expand-file-name (cdr id)
+                                               (expand-file-name (car id) "data"))))
+                (mapcar (lambda (f) (delete-file (expand-file-name f dir-abs)))
+                        (zjn--dir-files-no-dots dir-abs))
+                (delete-directory dir-abs)))
+            unused-ids)
+    ; And any now-empty data directories
+    (mapcar (lambda (dir)
+              (let ((abs-dir (expand-file-name dir attach-dir)))
+                (if (not (zjn--dir-files-no-dots abs-dir))
+                    (delete-directory abs-dir))))
+            (zjn--dir-files-no-dots attach-dir))))
