@@ -54,7 +54,7 @@ in
     Timer = {
       OnCalendar = "hourly";
       RandomizedDelaySec = 3600;
-      Unit = "enforce-backups-up-to-date.service";
+      Unit = "ensure-backups-up-to-date.service";
     };
 
     Install = {
