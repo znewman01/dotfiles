@@ -26,7 +26,7 @@ def keep_profile_changes():
     # shutil.copytree doesn't handle locks etc.
     subprocess.check_call(['cp', '-r', selenium_profile_path, profile_path])
     try:
-        (profile_path / 'user.js.bak').unlink()
+        (Path(profile_path) / 'user.js.bak').unlink()
     except FileNotFoundError:
         pass
 
