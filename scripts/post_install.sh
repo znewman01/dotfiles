@@ -72,7 +72,7 @@ if [ "$EMAIL" = "y" ]; then
 
     for store in fastmail mit gmail; do
         mkdir -p $HOME/Maildir/$store
-	mbsync $store
+        mbsync $store
     done
 
     mu index
