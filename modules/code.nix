@@ -218,7 +218,7 @@ in
 
   in
 
-    {
+    mkIf (cfg.baseDir != null) {
       home.activation.cloneRepos =
         dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] ''
           mkdir -p ${cfg.baseDir}
