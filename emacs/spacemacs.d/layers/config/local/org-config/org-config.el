@@ -357,6 +357,11 @@
       org-capture-templates)
 
 
+; HACK: handle case issue
+; https://lists.gnu.org/archive/html/emacs-orgmode/2019-07/msg00081.html
+(advice-add 'org-id-new :filter-return #'upcase)
+
+
 ; garbage collection for attachments
 (require 'seq)
 
