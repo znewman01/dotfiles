@@ -60,7 +60,27 @@
 
 ## Manual steps
 
+- Install NixOS: https://nixos.org/nixos/manual/index.html
+  - You may need to configure WiFi:
+
+    ```sh
+    ifconfig wlp3s0 down
+    ifconfig wlp3s0 up
+    iwconfig wlp3s0 essid ...
+    sleep 10 && ping 8.8.8.8  # repeat as needed
+    ```
+  - make sure to add `zjn` user, hostname, git/vim/wget in configuration.nix
+  - on reboot:
+    - log in as root,
+    - set `passwd zjn`
+    - log in as `zjn`
+    - deactivate root password. then proceed
+
 0. Clone this repo: `git clone https://github.com/znewman01/dotfiles.git`
-1. Run `cd dotfiles`. Edit networking.hostName. `./scripts/install_root.sh && reboot`
+1. Run `cd dotfiles`. Edit networking.hostName.
+   `sudo ./scripts/install_root.sh && sudo reboot`
 2. (Comment out GitHub code.). Run `./scripts/install.sh` (in X!). Wait a while. Reboot.
 3. Run `./scripts/post-install.sh`
+
+You're probably going to have to restart Firefox, Emacs a couple of times each
+until things work. Such is life.
