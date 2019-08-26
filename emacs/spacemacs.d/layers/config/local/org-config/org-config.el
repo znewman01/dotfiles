@@ -11,7 +11,7 @@
             (org-file "gtd.org")
             (org-file "research.org")
             (org-file "school.org")))
-(setq org-archive-location "%s_archive::")
+(setq org-archive-location "archive/%s::")
 (setq org-default-notes-file (concat org-directory "gtd.org"))
 
 (setq org-refile-targets '((org-agenda-files :maxlevel . 9)))
