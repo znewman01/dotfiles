@@ -2,6 +2,7 @@
  '(
    org
    mu4e
+   python
    elfeed
    )
  )
