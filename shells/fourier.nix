@@ -5,7 +5,7 @@ let
     gmpy2  # requires nixos-unstable channel
     # Testing
     hypothesis
-    nose
+    nose2
     # Linting
     black
     mypy
