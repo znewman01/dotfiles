@@ -12,6 +12,7 @@
         "browser.newtabpage.enabled" = false;
         "browser.tabs.closeWindowWithLastTab" = true;
         "browser.link.open_newwindow" = 3;
+        "extensions.screenshots.disabled" = true;
         # For Tridactyl support in more places
         "privacy.resistFingerprinting.block_mozAddonManager" = true;
         "extensions.webextensions.restrictedDomains" = "";
