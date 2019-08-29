@@ -19,6 +19,7 @@
         ("https://www.iacr.org/news/rss")
         ("https://slatestarcodex.com/feed/")
         ("http://www.christianmoscardi.com/feed.xml")
+        ("https://mass.streetsblog.org/feed/")
         ("http://scholars-stage.blogspot.com/feeds/posts/default")
         ("https://www.scottaaronson.com/blog/?feed=rss2")))
 
