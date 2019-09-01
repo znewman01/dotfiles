@@ -7,5 +7,6 @@ pkgs.mkShell rec {
     cargo
     rustc
     rustfmt
+    gnum4
   ];
 }
