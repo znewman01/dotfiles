@@ -1,6 +1,8 @@
 #!/bin/sh
 set -e
 
+EMACS=/home/zjn/.nix-profile/bin/emacs
+
 source "${BASH_SOURCE%/*}/restic_common.sh"
 
 MAX_AGE="5 days"
@@ -21,7 +23,7 @@ Subject: No backups for $HOSTNAME in the last $MAX_AGE!
 
 Last backup was on $latest! Maybe do something about it...
 EOF
-            emacs --batch \
+            $EMACS --batch \
                 --load "${HOME}/.emacs.d/init.el" \
                 --visit /tmp/test.eml \
                 --eval "(require 'mu4e)" \

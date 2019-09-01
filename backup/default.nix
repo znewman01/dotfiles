@@ -69,7 +69,7 @@ in
 
     Service = {
       Type = "oneshot";
-      ExecStart = "${backup-scripts}/bin/prune.sh";
+      ExecStart = "${backup-scripts}/bin/prune_backups.sh";
     };
   };
 
