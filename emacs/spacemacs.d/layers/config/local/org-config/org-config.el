@@ -396,6 +396,7 @@
                               (concat (car id) (cdr id)))))
                         org-attach-ids)))
     ; Delete non-referenced data directories
+    (y-or-n-p (format "Delete %d directories?" (length unused-ids)))
     (mapcar (lambda (id)
               (let ((dir-abs (expand-file-name (cdr id)
                                                (expand-file-name (car id) "data"))))
