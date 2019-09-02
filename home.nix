@@ -157,6 +157,29 @@ in
         exclude.enable = true;
         shell = ./shells/pirate-radio.nix;
       };
+      "sm-proposal" = {
+        url = "git@github.mit.edu:zjn/sm-proposal.git";
+        exclude.enable = true;
+        shell = ./shells/sm-proposal.nix;
+        extraFiles = {
+          ".dir-locals.el".text = "((latex-mode . ((TeX-master . \"proposal.tex\"))))\n";
+          ".git/hooks/post-commit" = {
+            text = ''
+              #!/bin/sh
+              set -e
+              BMND_AUTH=$(pass show beeminder-auth-token)
+              make clean && make
+              WORD_COUNT=$(pdftotext proposal.pdf - | wc -w)
+              curl -X POST \
+                   "https://www.beeminder.com/api/v1/users/znewman01/goals/sm-thesis-proposal/datapoints.json" \
+                   -d auth_token=$BMND_AUTH \
+                   -d value=$WORD_COUNT \
+                   -d comment=automated+post+commit+post
+            '';
+            executable = true;
+          };
+        };
+      };
     };
   };
 }
