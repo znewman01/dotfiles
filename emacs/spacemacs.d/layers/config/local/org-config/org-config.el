@@ -9,8 +9,12 @@
 (setq org-agenda-files
       (list (org-file "personal.org")
             (org-file "gtd.org")
-            (org-file "research.org")
-            (org-file "school.org")))
+            (org-file "research/default.org")
+            (org-file "research/hnp.org")
+            (org-file "research/radio.org")
+            (org-file "research/broadcast.org")
+            (org-file "school.org")
+            (org-file "6.875/6.875.org")))
 (setq org-archive-location "archive/%s::")
 (setq org-default-notes-file (concat org-directory "gtd.org"))
 
@@ -380,6 +384,7 @@
 
 (defun zjn-org-attach-collect-garbage ()
   (interactive)
+  (error "do not call me until you handle archive/ and 6.875/ structure!")
   (let* ((default-directory org-directory)
          (org-files (seq-filter (lambda (f) (or (string-suffix-p ".org" f)
                                                 (string-suffix-p ".org_archive" f)))
