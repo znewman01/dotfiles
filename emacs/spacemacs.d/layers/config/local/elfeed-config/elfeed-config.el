@@ -47,8 +47,8 @@
      (cl-function (lambda (&key data &allow-other-keys)
                     (message "Added to Instapaper!")
                     (elfeed-untag entry 'unread)
-                    (elfeed-search-update-entry entry))))
-    (unless (use-region-p) (forward-line))))
+                    (elfeed-search-update-entry entry)))))
+  (unless (use-region-p) (forward-line)))
 
 (define-key elfeed-search-mode-map "i" #'add-elfeed-entry-to-instapaper)
 
@@ -59,3 +59,15 @@
    (cl-function (lambda (&key data &allow-other-keys)
                   (message "Added to Instapaper!")))))
 (define-key elfeed-show-mode-map "i" #'add-elfeed-shown-to-instapaper)
+
+(defun add-elfeed-entry-to-paper-queue-iacr ()
+  (interactive)
+  (let ((entry (elfeed-search-selected :single)))
+    (org-capture-string (elfeed-entry-link entry) "i"))
+  (unless (use-region-p) (forward-line)))
+(define-key elfeed-search-mode-map "I" #'add-elfeed-entry-to-paper-queue-iacr)
+
+(defun add-elfeed-shown-to-paper-queue-iacr ()
+  (interactive)
+  (org-capture-string (elfeed-entry-link elfeed-show-entry) "i"))
+(define-key elfeed-show-mode-map "I" #'add-elfeed-shown-to-paper-queue-iacr)
