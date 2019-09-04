@@ -247,9 +247,6 @@
                         "--run"
                         (concat "python -m iacr " id)))))
 
-(defun zjn--test-region (start end)
-  (interactive "r")
-  (message "start %d end %d %s" start end (eql start end)))
 
 (require 'json)
 (require 'org-attach)
