@@ -14,7 +14,8 @@
             (org-file "research/radio.org")
             (org-file "research/broadcast.org")
             (org-file "school.org")
-            (org-file "6.875/6.875.org")))
+            (org-file "6.875/6.875.org")
+            (org-file "6.876/6.876.org")))
 (setq org-archive-location "archive/%s::")
 (setq org-default-notes-file (concat org-directory "gtd.org"))
 
