@@ -21,6 +21,7 @@
         ("http://www.christianmoscardi.com/feed.xml")
         ("https://mass.streetsblog.org/feed/")
         ("http://scholars-stage.blogspot.com/feeds/posts/default")
+        ("http://feeds.feedburner.com/creditslips/feed?format=xml")
         ("https://www.scottaaronson.com/blog/?feed=rss2")))
 
 ; Instapaper + Elfeed
