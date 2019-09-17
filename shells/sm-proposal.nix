@@ -11,7 +11,9 @@ let
       preprint  # for authblk
       mwe
       todonotes
+      enumitem
       soul
+      booktabs
       threeparttable
       IEEEtran
       latexmk;
