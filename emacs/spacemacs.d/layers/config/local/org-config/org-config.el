@@ -282,7 +282,7 @@
   "")  ; needs to return string to satisfy org-capture
 
 (setq org-capture-templates nil)
-(push '("i" "IACR" entry (file+headline "~/notes/research.org" "Paper queue")
+(push '("i" "IACR" entry (file+headline "~/notes/research/default.org" "Paper queue")
         "* %(zjn--format-iacr-org \"%i\")\n")
       org-capture-templates)
 
@@ -334,7 +334,7 @@
     "")
 
 
-(push '("a" "arXiv" entry (file+headline "~/notes/research.org" "Paper queue")
+(push '("a" "arXiv" entry (file+headline "~/notes/research/default.org" "Paper queue")
         "* %?%(zjn--format-arxiv-org \"%i\")\n")
       org-capture-templates)
 
@@ -354,7 +354,7 @@
       org-capture-templates)
 
 (push '("p" "Paper" entry
-        (file+headline "~/notes/research.org" "Paper queue")
+        (file+headline "~/notes/research/default.org" "Paper queue")
         "** %i\nURL:\nAuthor(s):\n\n#+BEGIN_SRC bibtex\n#+END_SRC")
       org-capture-templates)
 
