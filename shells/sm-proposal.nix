@@ -15,6 +15,8 @@ let
       soul
       booktabs
       threeparttable
+      fnpct
+      translations
       IEEEtran
       latexmk;
   };
