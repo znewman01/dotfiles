@@ -112,12 +112,12 @@
 (define-key mu4e-headers-mode-map (kbd "C-c c") 'org-mu4e-store-and-capture)
 (define-key mu4e-view-mode-map    (kbd "C-c c") 'org-mu4e-store-and-capture)
 
-(with-eval-after-load 'mu4e
-  (evil-set-initial-state 'mu4e-main 'emacs)
-  (require 'evil-collection-mu4e)
-  (evil-collection-mu4e-setup)
-  (require 'evil-collection-mu4e-conversation)
-  (evil-collection-mu4e-conversation-setup))
+; (with-eval-after-load 'mu4e
+;   (evil-set-initial-state 'mu4e-main 'emacs)
+;   (require 'evil-collection-mu4e)
+;   (evil-collection-mu4e-setup)
+;   (require 'evil-collection-mu4e-conversation)
+;   (evil-collection-mu4e-conversation-setup))
 
 (defun zjn--confirm-empty-subject ()
   "Allow user to quit when current message subject is empty."
