@@ -150,6 +150,11 @@ in
           ".dir-locals.el".text = "((latex-mode . ((TeX-master . \"proposal.tex\"))))\n";
         };
       };
+      "spectrum-paper" = {
+        url = "git@github.com:sachaservan/spectrum-paper.git";
+        exclude.enable = true;
+        shell = ./shells/spectrum-paper.nix;
+      };
     };
   };
 }
