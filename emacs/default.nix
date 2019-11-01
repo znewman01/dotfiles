@@ -22,8 +22,8 @@ in
       owner = "syl20bnr";
       repo = "spacemacs";
       # git ls-remote https://github.com/syl20bnr/spacemacs/ master
-      rev = "8c0b8c3440a33df2c291088c47e75fd5e4fbbb61";
-      sha256 = "1af73ls0znbpx73ym9cx22yc6q1dvv375l493ccilg2xpjsgam6w";
+      rev = "26b8fe0c317915b622825877eb5e5bdae88fb2b2";
+      sha256 = "00cfm6caaz85rwlrbs8rm2878wgnph6342i9688w4dji3dgyz3rz";
     };
   };
 
