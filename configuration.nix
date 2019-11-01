@@ -58,7 +58,10 @@
 
   services.redshift = {
     enable = true;
-    latitude = "42.3";
-    longitude = "-71.1";
+  };
+
+  location = {
+    latitude = 42.3;
+    longitude = -71.1;
   };
 }
