@@ -13,7 +13,7 @@ function main {
         NAME="$(echo ${BACKUP_SPEC} | sed 's/:.*//g')"
         REMOTE="gs:${BUCKET_NAME}:/${HOSTNAME}/${NAME}"
 
-        latest=$(run_restic -r "$REMOTE" snapshots --last --json | jq "sort_by(.time)[-1].time" | sed 's/"//g')
+        latest=$(run_restic -r "$REMOTE" snapshots --last --json | $JQ "sort_by(.time)[-1].time" | sed 's/"//g')
         target=$(date -Iseconds --date "$MAX_AGE ago")
         if [[ "$latest" < "$target" ]]; then
             cat > /tmp/test.eml <<EOF
