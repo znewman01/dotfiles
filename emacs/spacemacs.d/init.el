@@ -66,7 +66,7 @@
   ; https://github.com/emacs-evil/evil-collection/issues/60
   (setq evil-want-keybinding nil)
 
-  (setq custom-file "/dev/null")
+  (setq custom-file "~/.spacemacs.d/custom.el")
 
   ; https://debbugs.gnu.org/cgi/bugreport.cgi?bug=34341
   (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
