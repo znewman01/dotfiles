@@ -1,16 +1,11 @@
-(setq linux? (string= system-type "gnu/linux"))
-(setq mac? (string= system-type "darwin"))
-
 (defun zjn--shell (cmd)
   (let ((strip-newlines (lambda (string) (replace-regexp-in-string "\n\\'" "" string))))
     (funcall strip-newlines (shell-command-to-string cmd))))
 
 (setq zjn--mu4e-path
       (expand-file-name
-       (if linux? "share/emacs/site-lisp/mu4e"
-         "share/emacs/site-lisp/mu/mu4e")
-       (if linux? (zjn--shell "nix-build '<nixpkgs>' --no-build-output -A mu")
-         (zjn--shell "brew --prefix mu"))))
+       "share/emacs/site-lisp/mu4e"
+       (zjn--shell "nix-build '<nixpkgs>' --no-build-output -A mu")))
 
 (defun dotspacemacs/layers ()
   (setq-default
@@ -29,43 +24,38 @@
    dotspacemacs-excluded-packages '(
      smartparens org-projectile smeargle neotree
      yasnippet
-   ))
-  (let ((common-layers
-         `(
-           (c-c++ :variables c-c++-enable-clang-support t)
-           markdown
-           python
-           (config :location local)
-           helm
-           html
-           auto-completion
-           emacs-lisp
-           git
-           org
-           (shell :variables
-                  shell-default-shell 'ansi-term
-                  shell-default-height 25
-                  shell-default-position 'bottom)
-           rust
-           semantic
-           syntax-checking
-           python
-           (latex :variables latex-build-command "LatexMk")
-           (mu4e :variables mu4e-installation-path ,zjn--mu4e-path)
-           pdf-tools
-           elfeed)))
-    (setq-default
-     dotspacemacs-configuration-layers
-     (append common-layers
-             (if linux? '(nixos) '()))
-     )))
+   )
+   dotspacemacs-configuration-layers `(
+     (c-c++ :variables c-c++-enable-clang-support t)
+     markdown
+     python
+     (config :location local)
+     helm
+     html
+     auto-completion
+     emacs-lisp
+     git
+     nixos
+     org
+     (shell :variables
+            shell-default-shell 'ansi-term
+            shell-default-height 25
+            shell-default-position 'bottom)
+     rust
+     semantic
+     syntax-checking
+     python
+     (latex :variables latex-build-command "tectonic")
+     (mu4e :variables mu4e-installation-path ,zjn--mu4e-path)
+     pdf-tools
+     elfeed)))
 
 (defun dotspacemacs/init ()
   (setq-default
    dotspacemacs-check-for-update t
    dotspacemacs-editing-style 'vim
    dotspacemacs-scratch-mode 'emacs-lisp-mode
-   dotspacemacs-themes (if linux? '(dracula leuven) '(spacemacs-light spacemacs-dark))
+   dotspacemacs-themes  '(dracula leuven)
    dotspacemacs-which-key-delay 0.2
    dotspacemacs-leader-key "SPC"
    dotspacemacs-emacs-leader-key "M-m"
@@ -83,14 +73,13 @@
   )
 
 (defun dotspacemacs/user-config ()
-  (if linux? (direnv-mode))
+  (direnv-mode)
   (setq evil-want-Y-yank-to-eol nil)
   (setq powerline-default-separator 'utf-8)
   (setq spacemacs-theme-org-agenda-height nil
         spacemacs-theme-org-height nil
         spacemacs-theme-org-highlight nil)
   (define-coding-system-alias 'utf8 'utf-8)
-  (if mac? (setq browse-url-generic-function 'browse-url-default-macosx-browser))
   (setq-default require-final-newline t)
   (setq split-width-threshold nil
         even-window-sizes nil)
@@ -111,13 +100,6 @@
             `(,(expand-file-name "snippets" dotspacemacs-directory)))
            (bad? (lambda (x) (member x bad-dirs))))
       (setq yas-snippet-dirs (remove-if bad? yas-snippet-dirs))))
-
-  ; https://github.com/politza/pdf-tools/issues/480
-  ; May need to retry to installation after everything loads
-  (if mac?
-      (setenv "PKG_CONFIG_PATH"
-              (concat (shell-command-to-string "printf %s \"$(brew --prefix libffi)\"")
-                      "/lib/pkgconfig/")))
 
   ;; Python
   (add-hook 'python-mode-hook 'anaconda-mode)
