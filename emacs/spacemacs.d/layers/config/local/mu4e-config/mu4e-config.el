@@ -1,6 +1,9 @@
 (require 'mu4e)
 (provide 'mu4e-config)
 
+(require 'evil-collection)
+(evil-collection-init 'mu4e)
+
 ; TODO: add imapfilter
 ; TODO: http://pragmaticemacs.com/emacs/using-postfix-instead-of-smtpmail-to-send-email-in-mu4e/
 
@@ -111,13 +114,6 @@
 
 (define-key mu4e-headers-mode-map (kbd "C-c c") 'org-mu4e-store-and-capture)
 (define-key mu4e-view-mode-map    (kbd "C-c c") 'org-mu4e-store-and-capture)
-
-; (with-eval-after-load 'mu4e
-;   (evil-set-initial-state 'mu4e-main 'emacs)
-;   (require 'evil-collection-mu4e)
-;   (evil-collection-mu4e-setup)
-;   (require 'evil-collection-mu4e-conversation)
-;   (evil-collection-mu4e-conversation-setup))
 
 (defun zjn--confirm-empty-subject ()
   "Allow user to quit when current message subject is empty."

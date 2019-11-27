@@ -89,9 +89,7 @@
     (setq split-window-preferred-function 'visual-fill-column-split-window-sensibly)
     (advice-add 'text-scale-adjust :after 'visual-fill-column-adjust))
 
-  ; (with-eval-after-load 'dired
-  ;   (require 'evil-collection-dired)
-  ;   (evil-collection-dired-setup))
+  (evil-collection-init 'dired)
 
   ;; Work-arounds
   ; https://github.com/syl20bnr/spacemacs/issues/10316
