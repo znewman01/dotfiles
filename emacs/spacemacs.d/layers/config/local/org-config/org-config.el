@@ -173,25 +173,8 @@
                              zjn-org-babel-languages)
 ; (setq org-confirm-babel-evaluate nil)
 
-;; Use minted
-(add-to-list 'org-latex-packages-alist '("" "minted"))
-(setq org-latex-listings 'minted)
-
-;; Add the shell-escape flag
-(setq org-latex-pdf-process '(
-                              "latexmk -shell-escape -bibtex -f -pdf %f"))
-;                              "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-;                              "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-;                              "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-;                              ))
-
-;; Sample minted options.
-(setq org-latex-minted-options '(
-                                 ("frame" "lines")
-                                 ("fontsize" "\\footnotesize")
-                                 ("xleftmargin" "\\parindent")
-                                 ))
-
+;; Use tectonic
+(setq org-latex-pdf-process '("tectonic %f"))
 
 
 (require 'evil)
@@ -217,12 +200,6 @@
             (setq TeX-command-default "latexmk")))
 
 (require 'org-ref)
-
-
-                                        ; Make tikz previews work
-(add-to-list 'org-latex-packages-alist '("" "tikz" t))
-(eval-after-load "preview" '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tikzpicture}" t))
-(setq org-latex-create-formula-image-program 'imagemagick)
 
 ; Printing
 
