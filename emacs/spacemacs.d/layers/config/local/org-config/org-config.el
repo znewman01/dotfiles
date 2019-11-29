@@ -145,6 +145,9 @@
 
 
 ;; org-latex
+(require 'ox-latex)
+(setq org-latex-compiler "tectonic")
+(add-to-list 'org-latex-compilers org-latex-compiler)
 (add-hook 'doc-view-mode-hook 'auto-revert-mode)
 (unless (boundp 'org-latex-classes)
   (setq org-latex-classes nil))
