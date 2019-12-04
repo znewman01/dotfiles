@@ -272,7 +272,7 @@
   (let* ((id (if (string-empty-p region)
                  (read-string "arXiv ID (ex. 1905.11379)? ")
                region))
-         (api-url (format "https://export.arxiv.org/api/query?id_list=%s" id)))
+         (api-url (format "http://export.arxiv.org/api/query?id_list=%s" id)))
     (request
      api-url
      :parser (lambda () (libxml-parse-xml-region (point) (point-max)))
