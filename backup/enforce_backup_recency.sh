@@ -9,11 +9,11 @@ MAX_AGE="5 days"
 
 function main {
     for BACKUP_SPEC in $BACKUP_SPECS; do
-        LOCAL="$(echo ${BACKUP_SPEC} | sed 's/.*://g')"
-        NAME="$(echo ${BACKUP_SPEC} | sed 's/:.*//g')"
+        LOCAL="$(echo ${BACKUP_SPEC} | $SED 's/.*://g')"
+        NAME="$(echo ${BACKUP_SPEC} | $SED 's/:.*//g')"
         REMOTE="gs:${BUCKET_NAME}:/${HOSTNAME}/${NAME}"
 
-        latest=$(run_restic -r "$REMOTE" snapshots --last --json | $JQ "sort_by(.time)[-1].time" | sed 's/"//g')
+        latest=$(run_restic -r "$REMOTE" snapshots --last --json | $JQ "sort_by(.time)[-1].time" | $SED 's/"//g')
         target=$(date -Iseconds --date "$MAX_AGE ago")
         if [[ "$latest" < "$target" ]]; then
             cat > /tmp/test.eml <<EOF

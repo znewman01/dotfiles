@@ -14,6 +14,7 @@ for file in $src; do
         -e "s'{{RESTIC_BIN_PATH}}'${restic}/bin/restic'g" \
         -e "s'{{JQ_BIN_PATH}}'${jq}/bin/jq'g" \
         -e "s'{{PASS_BIN_PATH}}'${pass}/bin/pass'g" \
+        -e "s'{{SED_BIN_PATH}}'${gnused}/bin/sed'g" \
         "$file" > "$dest"
     chmod +x "$dest"
 done

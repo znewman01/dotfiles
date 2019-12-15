@@ -20,8 +20,8 @@ function main {
 
     RAN=0
     for BACKUP_SPEC in $BACKUP_SPECS; do
-        LOCAL="$(echo ${BACKUP_SPEC} | sed 's/.*://g')"
-        NAME="$(echo ${BACKUP_SPEC} | sed 's/:.*//g')"
+        LOCAL="$(echo ${BACKUP_SPEC} | $SED 's/.*://g')"
+        NAME="$(echo ${BACKUP_SPEC} | $SED 's/:.*//g')"
         REMOTE="gs:${BUCKET_NAME}:/${HOSTNAME}/${NAME}"
 
         if [ "$NAME" = "$BACKUP_NAME" ]; then

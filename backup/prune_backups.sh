@@ -5,7 +5,7 @@ source "${BASH_SOURCE%/*}/restic_common.sh"
 
 function main {
     for BACKUP_SPEC in $BACKUP_SPECS; do
-        NAME="$(echo ${BACKUP_SPEC} | sed 's/:.*//g')"
+        NAME="$(echo ${BACKUP_SPEC} | $SED 's/:.*//g')"
         REMOTE="gs:${BUCKET_NAME}:/${HOSTNAME}/${NAME}"
 
         run_restic -r "$REMOTE" forget --prune \
