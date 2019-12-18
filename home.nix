@@ -155,6 +155,11 @@ in
         exclude.enable = true;
         shell = ./shells/spectrum-paper.nix;
       };
+      "spectrum-impl" = {
+        url = "git@github.com:znewman01/spectrum-impl.git";
+        exclude.enable = true;
+        shell = ./shells/spectrum.nix;
+      };
     };
   };
 }
