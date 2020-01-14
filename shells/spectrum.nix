@@ -18,6 +18,7 @@ stdenv.mkDerivation {
     rustPackages.clippy
     protobuf
     gnum4
+    etcd
   ];
 
   PROTOC = "${pkgs.protobuf}/bin/protoc";
