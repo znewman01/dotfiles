@@ -19,6 +19,8 @@ stdenv.mkDerivation {
     protobuf
     gnum4
     etcd
+    openssl
+    pkgconfig
   ];
 
   PROTOC = "${pkgs.protobuf}/bin/protoc";
