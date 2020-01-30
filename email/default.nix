@@ -76,7 +76,7 @@ in
         userName = concatStringsSep "@" [ "z" "znewman.net" ];
         address = concatStringsSep "@" [ "z" "znewman.net" ];
         maildir.path = "fastmail";
-        passwordCommand = "${passBin} show fastmail";
+        passwordCommand = "${passBin} show fastmail-app";
         primary = true;
 
         folders = {
