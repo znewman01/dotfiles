@@ -18,7 +18,7 @@ key-mgmt=wpa-eap
 
 [802-1x]
 anonymous-identity=anonymous
-ca-cert=${HOME}/dotfiles/net/AddTrust_External_Root.pem
+ca-cert=${HOME}/dotfiles/net/USERTrust_RSA_Certification_Authority.pem
 eap=ttls;
 identity=zjn
 password=$(pass show csail)
