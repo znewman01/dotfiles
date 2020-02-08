@@ -11,6 +11,7 @@
   boot.cleanTmpDir = true;
 
   networking.networkmanager.enable = true;
+  # SBUX wifi
   networking.extraHosts = "172.31.98.1 aruba.odyssys.net";
 
   i18n = {
