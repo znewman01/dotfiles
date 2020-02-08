@@ -14,7 +14,7 @@ SyncState *
 IMAPAccount fastmail
 CertificateFile /etc/ssl/certs/ca-certificates.crt
 Host imap.fastmail.com
-PassCmd "${passBin} show fastmail"
+PassCmd "${passBin} show fastmail-app"
 Port 993
 SSLType IMAPS
 User z@znewman.net
