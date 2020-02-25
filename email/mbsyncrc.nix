@@ -37,6 +37,35 @@ Remove Slave
 Slave :fastmail-local:
 
 
+IMAPAccount csail
+AuthMechs CRAM-MD5 DIGEST-MD5
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+Host imap.csail.mit.edu
+PassCmd "${passBin} show csail-imap"
+Port 143
+SSLType STARTTLS
+# Port 993
+# SSLType IMAPS
+User zjn
+
+IMAPStore csail-remote
+Account csail
+
+MaildirStore csail-local
+Flatten ..
+Inbox /home/zjn/Maildir/csail/INBOX
+Path /home/zjn/Maildir/csail/
+SubFolders Verbatim
+
+Channel csail
+Create Both
+Expunge Both
+Master :csail-remote:
+Patterns Archive Drafts INBOX Sent Spam Trash
+Remove Slave
+Slave :csail-local:
+
+
 IMAPAccount gmail
 AuthMechs LOGIN
 CertificateFile /etc/ssl/certs/ca-certificates.crt

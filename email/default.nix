@@ -102,6 +102,27 @@ in
         # };
       };
 
+      csail = {
+        realName = "Zachary Newman";
+        userName = concatStringsSep "@" [ "zjn" "csail.mit.edu" ];
+        address = concatStringsSep "@" [ "zjn" "csail.mit.edu" ];
+        maildir.path = "fastmail";
+        passwordCommand = "${passBin} show csail-imap";
+
+        folders = {
+          inbox = "INBOX";
+          drafts = "Drafts";
+          sent = "Sent";
+          trash = "Trash";
+        };
+
+        imap = {
+          host = "imap.csail.mit.edu";
+          port = "143";
+          tls.enable = true;
+        };
+      };
+
       gmail = {
         realName = "Zachary Newman";
         address = concatStringsSep "@" [ "znewman01" "gmail.com" ];

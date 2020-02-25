@@ -49,6 +49,19 @@
                    (smtpmail-stream-type . ssl)
                    (smtpmail-smtp-service . 465)))
         ,(make-mu4e-context
+          :name "CSAIL"
+          :match-func (zjn--make-match "csail")
+          :vars '((mu4e-trash-folder . "/csail/Trash")
+                  (mu4e-sent-folder . "/csail/Sent")
+                  (mu4e-drafts-folder . "/csail/Drafts")
+                  (mu4e-refile-folder . "/csail/Archive")
+                  (user-mail-address . "zjn@csail.mit.edu")
+                  (user-full-name . "Zachary Newman")
+                  (smtpmail-local-domain . "csail.mit.edu")
+                  (smtpmail-smtp-server . "outgoing.csail.mit.edu")
+                  (smtpmail-stream-type . starttls)
+                  (smtpmail-smtp-service . 587)))
+        ,(make-mu4e-context
            :name "Gmail"
            :match-func (zjn--make-match "gmail")
            :vars '((mu4e-trash-folder . "/gmail/[Gmail]/Trash")
@@ -88,7 +101,7 @@
   (setq mu4e-bookmarks
         (mapcar (apply-partially #'apply #'make-mu4e-bookmark)
                 `((:name "All Inboxes"
-                   :query "maildir:/gmail/Inbox OR maildir:/mit/INBOX OR maildir:/fastmail/INBOX"
+                   :query "maildir:/gmail/Inbox OR maildir:/mit/INBOX OR maildir:/fastmail/INBOX OR maildir:/csail/INBOX"
                    :key ?i)
                   (:name "Unread messages"
                    :query ,(funcall skip-trash-and-sent "flag:unread AND NOT flag:trashed")
