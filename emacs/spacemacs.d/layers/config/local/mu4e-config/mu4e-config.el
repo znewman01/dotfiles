@@ -55,7 +55,7 @@
                   (mu4e-sent-folder . "/csail/Sent")
                   (mu4e-drafts-folder . "/csail/Drafts")
                   (mu4e-refile-folder . "/csail/Archive")
-                  (user-mail-address . "zjn@csail.mit.edu")
+                  (user-mail-address . "zjn")
                   (user-full-name . "Zachary Newman")
                   (smtpmail-local-domain . "csail.mit.edu")
                   (smtpmail-smtp-server . "outgoing.csail.mit.edu")
