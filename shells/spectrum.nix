@@ -1,21 +1,23 @@
-with import <nixpkgs> { };
-let src = fetchFromGitHub {
-      owner = "mozilla";
-      repo = "nixpkgs-mozilla";
-      # commit from: 2019-05-15
-      rev = "9f35c4b09fd44a77227e79ff0c1b4b6a69dff533";
-      sha256 = "18h0nvh55b5an4gmlgfbvwbyqj91bklf1zymis6lbdh75571qaz0";
-   };
+let
+  moz_overlay = import (builtins.fetchTarball https://github.com/mozilla/nixpkgs-mozilla/archive/master.tar.gz);
+  nixpkgs = import <nixpkgs> { overlays = [ moz_overlay ]; };
+  rustNightlyChannel = (nixpkgs.rustChannelOf { date = "2020-03-19"; channel = "nightly"; }).rust.override {
+    extensions = [
+      "rust-src"
+      "rls-preview"
+      "clippy-preview"
+      "rustfmt-preview"
+    ];
+  };
 in
-with import "${src.out}/rust-overlay.nix" pkgs pkgs;
+with nixpkgs;
 stdenv.mkDerivation {
   name = "rust-env";
   buildInputs = [
     gmp6
     stdenv
-    latest.rustChannels.stable.rust
-    rustfmt
-    rustPackages.clippy
+    rustNightlyChannel
+    rustracer
     protobuf
     gnum4
     etcd
