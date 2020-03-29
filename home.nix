@@ -67,6 +67,8 @@ in
     '';
   };
 
+  services.lorri.enable = true;
+
   home.links.".password-store" = "Dropbox/passwords";
   home.links.".authinfo.gpg" = "Dropbox/passwords/authinfo.gpg";
 

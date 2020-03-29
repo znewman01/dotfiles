@@ -194,7 +194,7 @@ in
         shellNixFiles = optionalAttrs (repo.shell != null) {
           "${dirname}/shell.nix".source = repo.shell;
           "${envrc}" = {
-            text = "use_nix";
+            text = "eval \"$(lorri direnv)\"";
             onChange = "$DRY_RUN_CMD ${pkgs.direnv}/bin/direnv allow ${envrc}";
           };
         };
