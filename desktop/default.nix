@@ -16,6 +16,7 @@
     xdotool
     zathura
     slack
+    zoom-us
   ];
 
   services.screen-locker = {
@@ -53,7 +54,7 @@
         close = "ctrl+space";
         close_all = "ctrl+shift+space";
         history = "ctrl+grave";
-        context = "ctrl+shift+period";
+        context = "ctrl+shift+comma";
       };
       urgency_low = {
         foreground = "#6272A4";
