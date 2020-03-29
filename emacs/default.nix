@@ -21,9 +21,9 @@ in
     source = pkgs.fetchFromGitHub {
       owner = "syl20bnr";
       repo = "spacemacs";
-      # git ls-remote https://github.com/syl20bnr/spacemacs/ master
-      rev = "26b8fe0c317915b622825877eb5e5bdae88fb2b2";
-      sha256 = "00cfm6caaz85rwlrbs8rm2878wgnph6342i9688w4dji3dgyz3rz";
+      # git ls-remote https://github.com/syl20bnr/spacemacs/ develop
+      rev = "332f1bb06fcf9b8410c47122d03122f3e7056106";
+      sha256 = "1sv6q2232nh5f20rbi1dfpkmjqqv4ajwfx81rar0k5qch7pc4y1y";
     };
   };
 

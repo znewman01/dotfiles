@@ -23,7 +23,6 @@
    )
    dotspacemacs-excluded-packages '(
      smartparens org-projectile smeargle neotree
-     yasnippet
    )
    dotspacemacs-configuration-layers `(
      (c-c++ :variables c-c++-enable-clang-support t)
@@ -35,6 +34,7 @@
      auto-completion
      emacs-lisp
      git
+     lsp
      nixos
      org
      (shell :variables
@@ -45,9 +45,9 @@
      semantic
      syntax-checking
      python
+     yaml
      (latex :variables latex-build-command "tectonic")
      (mu4e :variables mu4e-installation-path ,zjn--mu4e-path)
-     pdf-tools
      elfeed)))
 
 (defun dotspacemacs/init ()
@@ -60,6 +60,12 @@
    dotspacemacs-leader-key "SPC"
    dotspacemacs-emacs-leader-key "M-m"
    dotspacemacs-emacs-command-key "SPC"
+   dotspacemacs-mode-line-theme 'spacemacs
+   dotspacemacs-default-font '("Source Code Pro"
+                               :size 13
+                               :weight normal
+                               :width normal
+                               :powerline-scale 1.1)
    ))
 
 (defun dotspacemacs/user-init ()
