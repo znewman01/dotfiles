@@ -10,6 +10,8 @@
   boot.loader.efi.canTouchEfiVariables = true;
   boot.cleanTmpDir = true;
 
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+
   networking.networkmanager.enable = true;
   # SBUX wifi
   networking.extraHosts = "172.31.98.1 aruba.odyssys.net";
