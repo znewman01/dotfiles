@@ -28,6 +28,7 @@ in
     tree
     pass
     ripgrep
+    libnotify
   ];
 
   programs.direnv = {
