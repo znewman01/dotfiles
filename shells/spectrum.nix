@@ -1,11 +1,10 @@
 let
   moz_overlay = import (builtins.fetchTarball https://github.com/mozilla/nixpkgs-mozilla/archive/master.tar.gz);
   nixpkgs = import <nixpkgs> { overlays = [ moz_overlay ]; };
-  rustNightlyChannel = (nixpkgs.rustChannelOf { date = "2020-03-19"; channel = "nightly"; }).rust.override {
+  rustChannel = (nixpkgs.rustChannelOf { date = "2020-02-05"; channel = "nightly"; }).rust.override {
     extensions = [
       "rust-src"
       "rls-preview"
-      "clippy-preview"
       "rustfmt-preview"
     ];
   };
@@ -16,8 +15,7 @@ stdenv.mkDerivation {
   buildInputs = [
     gmp6
     stdenv
-    rustNightlyChannel
-    rustracer
+    rustChannel
     protobuf
     gnum4
     etcd
@@ -26,5 +24,10 @@ stdenv.mkDerivation {
   ];
 
   PROTOC = "${pkgs.protobuf}/bin/protoc";
+  RUST_SRC_PATH = "${rustChannel}/lib/rustlib/src/rust/src";
+
+  shellHook = ''
+    export PATH="$PATH:/home/zjn/.cargo/bin"
+  '';
 
 }
