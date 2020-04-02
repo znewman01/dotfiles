@@ -29,6 +29,7 @@
      markdown
      python
      (config :location local)
+     github
      helm
      html
      auto-completion
@@ -125,6 +126,10 @@
     (add-hook 'before-save-hook 'clang-format-buffer-smart nil t))
   (spacemacs/add-to-hooks 'clang-format-buffer-smart-on-save
                           '(c-mode-hook c++-mode-hook))
+
+  ; fuzzy completion in helm everywhere
+  (add-to-list 'completion-styles 'helm-flex)
+  (setq projectile-switch-project-action #'projectile-vc)
 
   ;; Rust
   (setq rust-format-on-save t)
