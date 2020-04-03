@@ -46,6 +46,7 @@
      semantic
      syntax-checking
      python
+     spacemacs-purpose
      yaml
      (latex :variables latex-build-command "tectonic")
      (mu4e :variables mu4e-installation-path ,zjn--mu4e-path)
@@ -145,6 +146,31 @@
   (add-hook 'TeX-latex-mode-hook 'turn-on-visual-line-mode)
   (add-hook 'visual-line-mode-hook #'visual-fill-column-mode)
   (add-hook 'visual-line-mode-hook #'turn-off-auto-fill)
+
+  ; purpose-mode
+  (purpose-mode 1)
+  (setq purpose-user-name-purposes (quote (("*lsp-help*" . overview)))
+        purpose-user-mode-purposes (quote (
+                                            ; Global
+                                           (help-mode . status)
+                                           (debugger-mode . status)
+                                           (messages-buffer-mode . status)
+                                           (dired-mode . overview)
+                                           (text-mode . main)
+                                            ; code etc.
+                                           (cargo-process-mode . status)
+                                           (compilation-mode . status)
+                                           (rust-mode . main)
+                                           (toml-mode . main)
+                                           (emacs-lisp-mode . main)
+                                           (org-mode . main)
+                                           (magit-mode . overview)
+                                            ; mail
+                                           (mu4e-headers-mode overview)
+                                           (mu4e-main-mode overview)
+                                           (mu4e-view-mode main))))
+  (purpose-compile-user-configuration)
+  (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1)
   (setq ivy-re-builders-alist
         '((t . ivy--regex-fuzzy)))
   (setq projectile-switch-project-action #'magit-status)
