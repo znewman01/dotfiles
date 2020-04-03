@@ -30,7 +30,7 @@
      python
      (config :location local)
      github
-     helm
+     ivy
      html
      auto-completion
      emacs-lisp
@@ -130,7 +130,6 @@
                           '(c-mode-hook c++-mode-hook))
 
   ; fuzzy completion in helm everywhere
-  (add-to-list 'completion-styles 'helm-flex)
   (setq projectile-switch-project-action #'projectile-vc)
 
   ;; Rust
@@ -146,4 +145,8 @@
   (add-hook 'TeX-latex-mode-hook 'turn-on-visual-line-mode)
   (add-hook 'visual-line-mode-hook #'visual-fill-column-mode)
   (add-hook 'visual-line-mode-hook #'turn-off-auto-fill)
+  (setq ivy-re-builders-alist
+        '((t . ivy--regex-fuzzy)))
+  (setq projectile-switch-project-action #'magit-status)
+  (setq counsel-projectile-switch-project-action #'counsel-projectile-switch-project-action-vc)
   )
