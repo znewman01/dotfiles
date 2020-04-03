@@ -35,6 +35,8 @@
 
   sound.enable = true;
 
+  services.openssh.enable = true;
+
   services.xserver.enable = true;
   services.xserver.layout = "us";
   services.xserver.xkbOptions = "caps:swapescape";
@@ -52,6 +54,9 @@
   users.users.zjn = {
     isNormalUser = true;
     extraGroups = [ "networkmanager" "wheel" "audio" "video" "lp" "docker" ];
+    openssh.authorizedKeys.keyFiles = [
+      ./net/zjn-x1.pub
+    ];
   };
 
   system.stateVersion = "19.09";
