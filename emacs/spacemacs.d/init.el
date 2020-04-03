@@ -69,6 +69,8 @@
                                :powerline-scale 1.1)
    ))
 
+(defun spacemacs/user-env ())
+
 (defun dotspacemacs/user-init ()
   ; https://github.com/emacs-evil/evil-collection/issues/60
   (setq evil-want-keybinding nil)
