@@ -45,6 +45,15 @@
   services.xserver.enable = true;
   services.xserver.layout = "us";
   services.xserver.xkbOptions = "caps:swapescape";
+  services.xserver.desktopManager.session = [
+    {
+      name = "home-manager";
+      start = ''
+        ${pkgs.runtimeShell} $HOME/.hm-xsession &
+        waitPID=$!
+      '';
+    }
+  ];
 
   services.printing.enable = true;
   services.printing.clientConf = ''
