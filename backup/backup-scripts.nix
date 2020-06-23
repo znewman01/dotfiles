@@ -4,7 +4,7 @@ derivation {
   builder = "${bash}/bin/bash";
   args = [ ./install.sh ];
   buildInputs = [ coreutils gnused ];
-  inherit pass restic jq gnused;
+  inherit pass restic jq gnused coreutils;
   system = builtins.currentSystem;
   src = [
     ./backup.sh
