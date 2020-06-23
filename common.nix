@@ -41,6 +41,9 @@
   sound.enable = true;
 
   services.openssh.enable = true;
+  # TODO: move to home.nix when rycee/home-manager#1087 resolved
+  # https://github.com/rycee/home-manager/issues/1087
+  programs.ssh.startAgent = true;
 
   services.xserver.enable = true;
   services.xserver.layout = "us";

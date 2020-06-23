@@ -28,7 +28,9 @@ in
     tree
     pass
     ripgrep
+    entr
     libnotify
+    pinentry-gtk2
   ];
 
   programs.direnv = {
@@ -39,7 +41,8 @@ in
   programs.gpg.enable = true;
   services.gpg-agent = {
     enable = true;
-    defaultCacheTtl = 3600;
+    defaultCacheTtl = 7200;  # 2 hrs.
+    pinentryFlavor = "gtk2";
   };
 
   programs.git = {
