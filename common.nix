@@ -16,6 +16,8 @@
   # SBUX wifi
   networking.extraHosts = "172.31.98.1 aruba.odyssys.net";
 
+  nixpkgs.config.allowUnfree = true;
+
   i18n = {
     consoleFont = "Lat2-Terminus16";
     consoleKeyMap = "us";
@@ -29,7 +31,10 @@
     vim
     wget
     manpages
+    steam
   ];
+
+  hardware.opengl.driSupport32Bit = true;
 
   documentation.dev.enable = true;
 

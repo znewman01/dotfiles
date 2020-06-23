@@ -15,8 +15,8 @@
     xclip
     xdotool
     zathura
-    slack
     zoom-us
+    slack
   ];
 
   services.screen-locker = {
@@ -24,6 +24,8 @@
     inactiveInterval = 10;
     lockCmd = "${pkgs.i3lock}/bin/i3lock -n";
   };
+
+  xsession.scriptPath = ".hm-xsession";
 
   services.dunst = {
     enable = true;
