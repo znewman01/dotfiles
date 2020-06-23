@@ -35,10 +35,25 @@ let
       relsize
       latexmk;
   };
+  pythonPackages = ps: with ps; [
+    python-language-server
+    numpy
+    matplotlib
+    # Testing
+    nose2
+    # Linting
+    black
+    mypy
+    pylint
+    # For development ergonomics
+    ipython
+  ];
 in pkgs.mkShell rec {
   buildInputs = [
     tex-env
     gnumake
     tectonic
+    python3
+    (python3.withPackages pythonPackages)
   ];
 }
