@@ -9,6 +9,7 @@
     hack-font
     font-awesome-ttf
     liberation_ttf
+    libertinus
     noto-fonts
     noto-fonts-emoji
     noto-fonts-extra
