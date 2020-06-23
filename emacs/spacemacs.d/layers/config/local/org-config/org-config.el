@@ -29,7 +29,8 @@
         (sequence "HABIT(h)" "|" "HABITDONE(H)")
         (sequence "PROJ(p)" "BLOCKEDPROJ(b)" "|" "PROJDONE(P)")
         (sequence "WAITING(w)" "SOMEDAY(s)" "|" "CANCELLED(c)")))
-
+(evil-define-key 'normal evil-org-mode-map
+  "t" 'org-todo)
 
 (setq org-tag-persistent-alist '((:startgroup . nil)
                                  ("@errand" . ?e)
@@ -44,6 +45,7 @@
                                  ))
 
 ;; Org agendas
+(setq org-agenda-window-setup 'current-window)
 (setq org-agenda-skip-scheduled-if-done t)
 (setq org-agenda-start-on-weekday 6)
 (setq org-agenda-skip-deadline-if-done t)

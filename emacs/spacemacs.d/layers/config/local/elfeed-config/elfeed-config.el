@@ -22,6 +22,10 @@
         ("https://mass.streetsblog.org/feed/")
         ("http://scholars-stage.blogspot.com/feeds/posts/default")
         ("http://feeds.feedburner.com/creditslips/feed?format=xml")
+        ("https://this-week-in-rust.org/atom.xml")
+        ("http://squidarth.com/feed.xml")
+        ("https://windowsontheory.org/feed/")
+        ("https://www.interfluidity.com/feed")
         ("https://www.scottaaronson.com/blog/?feed=rss2")))
 
 ; Instapaper + Elfeed
