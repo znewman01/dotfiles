@@ -34,19 +34,25 @@ in
   };
 
 
-  # home.file.".emacs.d" = {
-  #   recursive = true;
-  #   source = pkgs.fetchFromGitHub {
-  #     owner = "syl20bnr";
-  #     repo = "spacemacs";
-  #     # git ls-remote https://github.com/syl20bnr/spacemacs/ develop
-  #     rev = "332f1bb06fcf9b8410c47122d03122f3e7056106";
-  #     sha256 = "1sv6q2232nh5f20rbi1dfpkmjqqv4ajwfx81rar0k5qch7pc4y1y";
-  #   };
-  # };
+  home.file.".emacs.d" = {
+    recursive = true;
+    source = pkgs.fetchFromGitHub {
+      owner = "hlissner";
+      repo = "doom-emacs";
+      # git ls-remote https://github.com/hlissner/doom-emacs/ develop
+      rev = "0c9256411d6bdb6cfc920bcce2216d99ff28a0c5";
+      # just rerun with the all-0 SHA, it'll tell you what to put
+      # (but if it matches a previous SHA it won't update!)
+      sha256 = "1702vgjx1ry5ykglv1gh37aqwhmjdc80fr1p954576zs56xw4kyz";
+    };
+    onChange = ''
+        yes 'n' | EMACSDIR=~/.emacs.d ~/.emacs.d/bin/doom install
+        EMACSDIR=~/.emacs.d ~/.emacs.d/bin/doom sync
+    '';
+  };
 
   # # Use a link rather than home.files because we probably want to be able to
   # # hack on this pretty sloppily
-  # home.links.".spacemacs.d" = "dotfiles/emacs/spacemacs.d";
-  # home.links."notes" = "Dropbox/notes";
+  home.links.".doom.d" = "dotfiles/emacs/doom.d";
+  home.links."notes" = "Dropbox/notes";
 }
