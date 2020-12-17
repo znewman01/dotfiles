@@ -1,7 +1,7 @@
 set newtab about:blank
 set hintdelay 100
 bind ! fillcmdline !
-colors dracula
+colors flucui-light
 " Strike a blow for freedom
 set searchengine duckduckgo
 " I feel the defaults are backwards

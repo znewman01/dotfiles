@@ -7,19 +7,19 @@ let
     html5lib
     requests
     # Testing
-    nose
+    tox
+    pytest
     responses
     parameterized
     # Linting
     black
     mypy
     pylint
-    # Development
-    ipython
   ];
 in pkgs.mkShell rec {
   buildInputs = with pkgs; [
-    (python3.withPackages pythonPackages)
+    (python36.withPackages pythonPackages)
+    nodePackages.pyright
     stdenv
   ];
 }

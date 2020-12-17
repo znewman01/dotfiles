@@ -1,7 +1,7 @@
 let
   moz_overlay = import (builtins.fetchTarball https://github.com/mozilla/nixpkgs-mozilla/archive/master.tar.gz);
   nixpkgs = import <nixpkgs> { overlays = [ moz_overlay ]; };
-  rustChannel = (nixpkgs.rustChannelOf { date = "2020-04-10"; channel = "nightly"; }).rust.override {
+  rustChannel = (nixpkgs.rustChannelOf { date = "2020-08-27"; channel = "nightly"; }).rust.override {
     extensions = [
       "rust-src"
       "rls-preview"
@@ -11,32 +11,43 @@ let
     ];
   };
   pythonPackages = ps: with ps; [
+    tenacity
+    asyncssh
     # Linting
     black
-    mypy
     pylint
     # For development ergonomics
-    python-language-server
     ipython
+    # graphs
+    matplotlib
+    numpy
+    pandas
   ];
+
 in
 with nixpkgs;
 stdenv.mkDerivation {
   name = "rust-env";
   buildInputs = [
+    # Build requirements
     gmp6
     stdenv
     rustChannel
     protobuf
+    glibc
     gnum4
-    etcd
     openssl
     libffi
     pkgconfig
+    # local testing
+    etcd
+    # DevOps
     packer
     terraform
+    # Python
     python3
     (python3.withPackages pythonPackages)
+    nodePackages.pyright
   ];
 
   PROTOC = "${pkgs.protobuf}/bin/protoc";

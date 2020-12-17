@@ -198,11 +198,5 @@ in
   # };
 
   home.file.".mbsyncrc".text = import ./mbsyncrc.nix { pkgs = pkgs; };
-  services.mbsync = {
-    enable = true;
-    frequency = "*:0/30";
-    postExec = ("${pkgs.emacs}/bin/emacsclient -e" +
-                " \"(progn (require 'mu4e) (mu4e-update-index))\"");
-  };
 
 }

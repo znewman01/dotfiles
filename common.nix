@@ -18,11 +18,12 @@
 
   nixpkgs.config.allowUnfree = true;
 
-  i18n = {
-    consoleFont = "Lat2-Terminus16";
-    consoleKeyMap = "us";
-    defaultLocale = "en_US.UTF-8";
+  console = {
+    font = "Lat2-Terminus16";
+    keyMap = "us";
   };
+
+  i18n.defaultLocale = "en_US.UTF-8";
 
   time.timeZone = "America/New_York";
 
@@ -39,6 +40,16 @@
   documentation.dev.enable = true;
 
   sound.enable = true;
+  hardware.pulseaudio = {
+    enable = true;
+    package = pkgs.pulseaudioFull;
+    # TODO: only x1
+    extraConfig = ''
+      load-module module-alsa-sink device=;w:0,0 channels=4
+      load-module module-alsa-source device=hw:0,6 channels=4
+    '';
+  };
+  nixpkgs.config.pulseaudio = true;
 
   services.openssh.enable = true;
   # TODO: move to home.nix when rycee/home-manager#1087 resolved
@@ -67,10 +78,12 @@
   '';
 
   virtualisation.docker.enable = true;
+  virtualisation.libvirtd.enable = true;
+  users.extraGroups.vboxusers.members = [ "zjn" ];
 
   users.users.zjn = {
     isNormalUser = true;
-    extraGroups = [ "networkmanager" "wheel" "audio" "video" "lp" "docker" ];
+    extraGroups = [ "networkmanager" "wheel" "audio" "video" "lp" "docker" "libvirtd" ];
     openssh.authorizedKeys.keyFiles = [
       ./net/zjn-x1.pub
     ];
@@ -88,5 +101,12 @@
   location = {
     latitude = 42.3;
     longitude = -71.1;
+  };
+
+  krb5 = {
+    enable = true;
+    libdefaults = {
+      forwardable = true;
+    };
   };
 }

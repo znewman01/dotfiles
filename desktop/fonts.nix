@@ -8,6 +8,7 @@
     source-code-pro
     hack-font
     font-awesome-ttf
+    iosevka
     liberation_ttf
     libertinus
     noto-fonts

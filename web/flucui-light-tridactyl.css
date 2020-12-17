@@ -1,16 +1,15 @@
 :root {
-    /* Based on https://github.com/dracula/dracula-theme */
-    --background: #282a36;
+    /* Based on  https://github.com/MetroWind/flucui-theme */
+    --background: #ecf0f1;
     --selection: #44475a;
     --comment: #6272a4;
-    --foreground: #f8f8f2;
-    --red: #ff5555;
-    --orange: #ffb86c;
-    --yellow: #f1fa8c;
-    --green: #50fa7b;
-    --cyan: #8be9fd;
-    --purple: #bd93f9;
-    --pink: #ff79c6;
+    --foreground: #425d78;
+    --red: #e74c3c;
+    --orange: #e67e22;
+    --yellow: #f1c40f;
+    --green: #2ecc71;
+    --cyan: #3498db;
+    --purple: #9b59b6;
 
     --tridactyl-fg: var(--foreground);
     --tridactyl-bg: var(--background);
@@ -53,7 +52,7 @@
 #completions {
     border-top: 4px solid var(--foreground);
     font-family: Iosevka;
-    font-size: 9pt;
+    font-size: 12pt;
 }
 
 #completions .sectionHeader {

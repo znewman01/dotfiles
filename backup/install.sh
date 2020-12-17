@@ -15,6 +15,7 @@ for file in $src; do
         -e "s'{{JQ_BIN_PATH}}'${jq}/bin/jq'g" \
         -e "s'{{PASS_BIN_PATH}}'${pass}/bin/pass'g" \
         -e "s'{{SED_BIN_PATH}}'${gnused}/bin/sed'g" \
+        -e "s'{{CAT_BIN_PATH}}'${coreutils}/bin/cat'g" \
         -e "s'{{DATE_BIN_PATH}}'${coreutils}/bin/date'g" \
         "$file" > "$dest"
     chmod +x "$dest"

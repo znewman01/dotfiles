@@ -3,4 +3,5 @@
 {
   imports = [ ./common.nix ];
   networking.hostName = "{{HOSTNAME}}";
+  # environment.systemPackages = with pkgs; [ sof-firmware ];
 }

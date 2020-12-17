@@ -86,7 +86,7 @@ let
       '';
 
       text = mkOption {
-        type = types.string;
+        type = types.lines;
         example = ''
           .envrc
           shell.nix
@@ -144,7 +144,7 @@ in
   options = {
     code = {
       baseDir = mkOption {
-        type = with types; nullOr string;
+        type = with types; nullOr str;
         example = "$HOME/code";
         default = null;
         description = ''
@@ -194,13 +194,13 @@ in
         shellNixFiles = optionalAttrs (repo.shell != null) {
           "${dirname}/shell.nix".source = repo.shell;
           "${envrc}" = {
-            text = "eval \"$(lorri direnv)\"";
+            text = "use_nix";
             onChange = "$DRY_RUN_CMD ${pkgs.direnv}/bin/direnv allow ${envrc}";
           };
         };
         ourFiles = concatMapStringsSep "\n"
           (removePrefix "${dirname}/")
-          ((attrNames repo.extraFiles) ++ (attrNames shellNixFiles));
+          ((attrNames repo.extraFiles) ++ (attrNames shellNixFiles) ++ [".direnv"]);
         excludeFiles = optionalAttrs (repo.exclude.enable) {
           "${dirname}/.git/info/exclude".text = concatStringsSep "\n\n" [
             ourFiles

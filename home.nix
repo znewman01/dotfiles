@@ -28,21 +28,52 @@ in
     tree
     pass
     ripgrep
+    fd
     entr
     libnotify
     pinentry-gtk2
+    keybase
+    google-chrome
   ];
+
+  services.keybase.enable = true;
+  services.kbfs.enable = true;
+
+  programs.ssh = {
+    enable = true;
+    matchBlocks = {
+      "jump.csail.mit.edu" = {
+        extraOptions = {
+          "GSSAPIAuthentication" = "yes";
+          # "GSSAPIKeyExchange" = "yes";
+          "VerifyHostKeyDNS" = "yes";
+        };
+      };
+      "*.csail.mit.edu !jump.csail.mit.edu 128.52.* 128.30.* 128.31.*" = dag.entryAfter [ "jump.csail.mit.edu" ] {
+        extraOptions = {
+          "ProxyJump" = "jump.csail.mit.edu";
+          "GSSAPIAuthentication" = "yes";
+          "GSSAPIDelegateCredentials" = "yes";
+          # "GSSAPIKeyExchange" = "yes";
+        };
+      };
+    };
+  };
+
 
   programs.direnv = {
     enable = true;
     enableBashIntegration = true;
+    enableNixDirenvIntegration = true;
   };
 
   programs.gpg.enable = true;
   services.gpg-agent = {
     enable = true;
-    defaultCacheTtl = 7200;  # 2 hrs.
+    defaultCacheTtl = 86400;  # 24 hrs.
+    maxCacheTtl = 86400;  # 24 hrs.
     pinentryFlavor = "gtk2";
+    # enableScDaemon = false;
   };
 
   programs.git = {
@@ -103,6 +134,69 @@ in
 
   home.file.".cups/lpoptions".text = "Default 00-dev_null\nDest xerox8/twoside Duplex=DuplexNoTumble sides=two-sided-long-edge";
 
+  home.file."bin/beeminder-lichess.sh" = {
+    text = ''
+      #! /usr/bin/env ${pkgs.nix.out}/bin/nix-shell
+      #! nix-shell -i bash -p jq curl pass
+      set -x
+      GOAL=lichess-fast
+      BEE="https://www.beeminder.com/api/v1"
+      BEE_AUTH="auth_token=$(pass show beeminder-auth-token)"
+      
+      TMP_FILE=$(mktemp)
+      curl "''${BEE}/users/znewman01/goals/lichess-fast/datapoints.json?''${BEE_AUTH}&count=1" > $TMP_FILE
+      BEE_GAMES=$(jq first.value $TMP_FILE)
+      
+      LI_GAMES=$(curl https://lichess.org/api/user/znewman01 | jq '.perfs.bullet.games + .perfs.blitz.games')
+       
+      if [ $LI_GAMES -le $BEE_GAMES ]; then
+          # Beeminder is up-to-date
+          exit 0
+      fi
+
+      # Post the new data point
+      # TODO: get the response
+      curl \
+          --data "''${BEE_AUTH}&value=''${LI_GAMES}" \
+          "''${BEE}/users/znewman01/goals/''${GOAL}/datapoints.json"
+
+     # TODO: all the below
+     # Get the goal
+     # If baremin >= 0: exit
+     # total_charge = -baremin
+     # check comment from prior data point ($TMP_FILE)
+     # if it has a # (charged), to_charge = total_charge - previous_charged
+     # charge!
+     # update most recent data point to include the total_charge today
+    '';
+    executable = true;
+  };
+  systemd.user.services.beeminder-lichess = {
+    Unit = {
+      Description = "update beeminder lichess goal";
+    };
+
+    Service = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.bash.out}/bin/bash -c \"${config.home.homeDirectory}/${config.home.file."bin/beeminder-lichess.sh".target}\"";
+    };
+  };
+  systemd.user.timers.beeminder-lichess= {
+    Unit = {
+      Description = "enforce regular restic-based backups";
+    };
+
+    Timer = {
+      OnCalendar = "hourly";
+      RandomizedDelaySec = 3600;
+      Unit = "beeminder-lichess.service";
+    };
+
+    Install = {
+      WantedBy = [ "timers.target" ];
+    };
+  };
+
   code = {
     baseDir = "${config.home.homeDirectory}/git";
     repos = let
@@ -133,6 +227,11 @@ in
         extraFiles = {
           ".dir-locals.el".text = "((latex-mode . ((TeX-master . \"document.tex\"))))\n";
         };
+      };
+      "authdict-paper" = {
+        url = "git@github.com:alinush/authdict-paper.git";
+        shell = ./shells/authdict-paper.nix;
+        exclude.enable = true;
       };
       "iacr-dl" = {
         url = "git@github.com:znewman01/iacr-dl.git";
@@ -166,6 +265,25 @@ in
         url = "git@github.com:znewman01/spectrum-impl.git";
         exclude.enable = true;
         shell = ./shells/spectrum.nix;
+      };
+      "bellman-bignat" = {
+        url = "git@github.com:znewman01/bellman-bignat.git";
+        exclude.enable = true;
+        shell = ./shells/bellman-bignat.nix;
+      };
+      "vDBx1000" = {
+        url = "git@github.com:aluex/vDBx1000.git";
+        exclude.enable = true;
+      };
+      "sm-thesis" = {
+        url = "git@github.mit.edu:zjn/sm-thesis.git";
+        exclude.enable = true;
+        shell = ./shells/sm-thesis.nix;
+      };
+      "tor-cdn" = {
+        url = "git@github.com:iowaguy/tor-cdn.git";
+        exclude.enable = true;
+        shell = ./shells/tor-cdn.nix;
       };
     };
   };

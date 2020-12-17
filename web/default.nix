@@ -21,5 +21,6 @@
   };
 
   xdg.configFile."tridactyl/themes/dracula.css".source = ./dracula-tridactyl.css;
+  xdg.configFile."tridactyl/themes/flucui-light.css".source = ./flucui-light-tridactyl.css;
   xdg.configFile."tridactyl/tridactylrc".source = ./tridactylrc;
 }
