@@ -45,11 +45,10 @@ in
       # (but if it matches a previous SHA it won't update!)
       sha256 = "1702vgjx1ry5ykglv1gh37aqwhmjdc80fr1p954576zs56xw4kyz";
     };
-    onChange = ''
-        yes 'n' | EMACSDIR=~/.emacs.d ~/.emacs.d/bin/doom install
-        EMACSDIR=~/.emacs.d ~/.emacs.d/bin/doom sync
-    '';
+    onChange = "EMACSDIR=~/.emacs.d ~/.emacs.d/bin/doom sync";
   };
+
+  programs.bash.sessionVariables."EMACSDIR" = "~/.emacs.d";
 
   # # Use a link rather than home.files because we probably want to be able to
   # # hack on this pretty sloppily
