@@ -41,6 +41,7 @@ in
     enableContribAndExtras = true;
     config = pkgs.writeText "xmonad.hs" ''
       import Graphics.X11.ExtraTypes.XF86
+      import Graphics.X11.Types
       import XMonad
       import XMonad.Hooks.DynamicLog
       import XMonad.Hooks.ManageDocks
@@ -111,6 +112,7 @@ in
           } `additionalKeysP`
           ( [ ("M-p", spawn "rofi -show run")
             , ("<F12>", scratchpadSpawnActionCustom "alacritty --class scratchpad")
+            , ("M-;", scratchpadSpawnActionCustom "alacritty --class scratchpad")
             , ("S-M-p p", passPrompt xpconfig)
             , ("S-M-p t", passTypePrompt xpconfig)
             , ("S-M-l", spawn "i3lock")
