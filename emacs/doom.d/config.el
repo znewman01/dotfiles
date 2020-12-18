@@ -443,6 +443,7 @@
           ("https://www.interfluidity.com/feed")
           ("https://schlosser.io/rss.xml")
           ("https://qualiacomputing.com/feed/")
+          ("https://algorithmsoup.wordpress.com/feed.xml")
           ("https://www.scottaaronson.com/blog/?feed=rss2")))
 
   ; Instapaper + Elfeed
@@ -507,7 +508,8 @@
 (setq tramp-inline-compress-start-size 1000000)
 
 (after! lsp-mode
-  (push "[/\\\\]\\venv$" lsp-file-watch-ignored))
+  (push "[/\\\\]\\venv$" lsp-file-watch-ignored)
+  (push "[/\\\\]\\.venv$" lsp-file-watch-ignored))
 (remove-hook 'doom-first-buffer-hook #'smartparens-global-mode)
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
