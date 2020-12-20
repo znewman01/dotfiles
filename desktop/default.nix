@@ -41,7 +41,6 @@ in
     ./xmonad.nix
     ./fonts.nix
     ./alacritty.nix
-    ./autorandr.nix
   ];
 
   nixpkgs.config = {
@@ -66,6 +65,8 @@ in
     signal-desktop
     keybase-gui
   ];
+
+  programs.autorandr.enable = true;
 
   services.screen-locker = {
     enable = true;
