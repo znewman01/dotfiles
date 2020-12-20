@@ -48,7 +48,7 @@ in
       import XMonad.Layout.NoBorders
       import XMonad.Layout.Spacing
       import XMonad.Util.EZConfig
-      import XMonad.Util.Scratchpad
+      import XMonad.Util.NamedScratchpad
       import XMonad.Prompt
       import XMonad.Prompt.Pass
       import System.Environment
@@ -64,23 +64,17 @@ in
         setPassDir
         xmonad =<< statusBar "xmobar" myPP toggleStrutsKey myConfig
 
+      scratchpads = [NS "terminal" "alacritty --title scratchpad" (title =? "scratchpad") (customFloating $ W.RationalRect 0.1 0.2 0.8 0.6)]
+
       -- Command to launch the bar.
       myPP = xmobarPP
           { ppCurrent = xmobarColor "${fgColorLight}" ""
           , ppHidden = xmobarColor "${fuiDarkConcrete}" ""
           , ppLayout = const ""
           , ppTitle = const ""
-          , ppSort = fmap (.scratchpadFilterOutWorkspace) $ ppSort defaultPP
           }
       toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
 
-      manageScratchPad :: ManageHook
-      manageScratchPad = scratchpadManageHook (W.RationalRect l t w h)
-        where
-          h = 0.6
-          w = 0.8
-          t = 0.2
-          l = 0.1
 
       xpconfig :: XPConfig
       xpconfig = def
@@ -104,15 +98,15 @@ in
           { terminal = "alacritty"
           , borderWidth = 3
           , layoutHook = avoidStruts $ myBorderSpacing $ layoutHook defaultConfig
-          , manageHook = manageHook defaultConfig <+> manageDocks <+> manageScratchPad
+          , manageHook = manageHook defaultConfig <+> manageDocks <+> namedScratchpadManageHook scratchpads
           , startupHook = startup
           , normalBorderColor = "${fuiDarkClouds}"
           , focusedBorderColor = "${fuiDeepAsphalt}"
           , workspaces = myWorkspaces
           } `additionalKeysP`
           ( [ ("M-p", spawn "rofi -show run")
-            , ("<F12>", scratchpadSpawnActionCustom "alacritty --class scratchpad")
-            , ("M-;", scratchpadSpawnActionCustom "alacritty --class scratchpad")
+            , ("<F12>", namedScratchpadAction scratchpads "terminal")
+            , ("M-;", namedScratchpadAction scratchpads "terminal")
             , ("S-M-p p", passPrompt xpconfig)
             , ("S-M-p t", passTypePrompt xpconfig)
             , ("S-M-l", spawn "i3lock")
