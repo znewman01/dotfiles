@@ -43,11 +43,6 @@
   hardware.pulseaudio = {
     enable = true;
     package = pkgs.pulseaudioFull;
-    # TODO: only x1
-    extraConfig = ''
-      load-module module-alsa-sink device=;w:0,0 channels=4
-      load-module module-alsa-source device=hw:0,6 channels=4
-    '';
   };
   nixpkgs.config.pulseaudio = true;
 

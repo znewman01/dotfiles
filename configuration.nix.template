@@ -1,7 +1,9 @@
 { config, pkgs, ... }:
 
 {
-  imports = [ ./common.nix ];
+  imports = [
+    ./common.nix
+    ./machines/{{HOSTNAME}}/system.nix
+  ];
   networking.hostName = "{{HOSTNAME}}";
-  # environment.systemPackages = with pkgs; [ sof-firmware ];
 }
