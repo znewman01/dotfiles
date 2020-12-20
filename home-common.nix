@@ -160,14 +160,14 @@ in
           --data "''${BEE_AUTH}&value=''${LI_GAMES}" \
           "''${BEE}/users/znewman01/goals/''${GOAL}/datapoints.json"
 
-     # TODO: all the below
-     # Get the goal
-     # If baremin >= 0: exit
-     # total_charge = -baremin
-     # check comment from prior data point ($TMP_FILE)
-     # if it has a # (charged), to_charge = total_charge - previous_charged
-     # charge!
-     # update most recent data point to include the total_charge today
+      # TODO: all the below
+      # Get the goal
+      # If baremin >= 0: exit
+      # total_charge = -baremin
+      # check comment from prior data point ($TMP_FILE)
+      # if it has a # (charged), to_charge = total_charge - previous_charged
+      # charge!
+      # update most recent data point to include the total_charge today
     '';
     executable = true;
   };
