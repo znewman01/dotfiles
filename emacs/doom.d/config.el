@@ -48,6 +48,8 @@
               (org-file "research/hnp.org")
               (org-file "research/radio.org")
               (org-file "research/broadcast.org")
+              (org-file "research/accumulators.org")
+              (org-file "research/tor.org")
               (org-file "6.893/6.893.org")
               (org-file "6852-ta.org")
               (org-file "school.org")))
@@ -509,7 +511,7 @@
   (setq projectile-project-search-path '("~/git"))
   (defun zjn-projectile-root-for-some-major-modes (_dir)
     (message "%s" major-mode)
-    (let ((modes '(mu4e-headers-mode mu4e-main-mode org-agenda-mode)))
+    (let ((modes '(mu4e-headers-mode mu4e-main-mode mu4e-view-mode org-agenda-mode)))
       (if (memq major-mode modes) "~/Dropbox/notes")))
   (push 'zjn-projectile-root-for-some-major-modes projectile-project-root-files-functions))
 
