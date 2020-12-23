@@ -456,16 +456,16 @@
 
   (defun add-to-instapaper (url success-callback)
     (let* ((username "znewman01@gmail.com")
-           (password (car (process-lines "pass" "show" "instapaper")))
-           (auth-string (base64-encode-string (format "%s:%s" username password)))
-           (auth-header (format "Basic %s" auth-string)))
+           ; work around "gpg: selecting card failed" issue
+           (password (car (process-lines "sh" "-c" "pass show instapaper 2>/dev/null"))))
       (request "https://www.instapaper.com/api/add"
-               :headers `(("Authorization" . ,auth-header))
-               :params `(("url" . ,url))
-               :success success-callback
-               :error (cl-function
-                       (lambda (&key error-thrown &allow-other-keys)
-                         (warn "Issue adding to Instapaper! %S" error-thrown))))))
+        :params `(("url" . ,url)
+                  ("username" . ,username)
+                  ("password" . ,password))
+        :success success-callback
+        :error (cl-function
+                (lambda (&key error-thrown &allow-other-keys)
+                  (warn "Issue adding to Instapaper! %S" error-thrown))))))
 
   (defun add-elfeed-entry-to-instapaper ()
     (interactive)
