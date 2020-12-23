@@ -520,7 +520,8 @@
     (message "%s" major-mode)
     (let ((modes '(mu4e-headers-mode mu4e-main-mode mu4e-view-mode org-agenda-mode)))
       (if (memq major-mode modes) "~/Dropbox/notes")))
-  (push 'zjn-projectile-root-for-some-major-modes projectile-project-root-files-functions))
+  ; (push 'zjn-projectile-root-for-some-major-modes projectile-project-root-files-functions))
+  )
 
 (setq tramp-inline-compress-start-size 1000000)
 
