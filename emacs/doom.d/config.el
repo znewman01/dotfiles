@@ -451,6 +451,12 @@
           ("https://algorithmsoup.wordpress.com/feed.xml")
           ("https://www.scottaaronson.com/blog/?feed=rss2")))
 
+  (defun elfeed-show-browse-url ()
+    (interactive)
+    (browse-url (elfeed-entry-link elfeed-show-entry)))
+  (map! :mode 'elfeed-search-mode :n "o" #'elfeed-search-browse-url)
+  (map! :mode 'elfeed-show-mode :n "o" #'elfeed-show-browse-url)
+
   ; Instapaper + Elfeed
   (require 'request)
 
@@ -478,27 +484,28 @@
                       (elfeed-search-update-entry entry)))))
     (unless (use-region-p) (forward-line)))
 
-  (define-key elfeed-search-mode-map "i" #'add-elfeed-entry-to-instapaper)
-
   (defun add-elfeed-shown-to-instapaper ()
     (interactive)
     (add-to-instapaper
      (elfeed-entry-link elfeed-show-entry)
      (cl-function (lambda (&key data &allow-other-keys)
                     (message "Added to Instapaper!")))))
-  (define-key elfeed-show-mode-map "i" #'add-elfeed-shown-to-instapaper)
+
+  (map! :mode 'elfeed-search-mode :n "i" #'add-elfeed-entry-to-instapaper)
+  (map! :mode 'elfeed-show-mode :n "i" #'add-elfeed-shown-to-instapaper)
 
   (defun add-elfeed-entry-to-paper-queue-iacr ()
     (interactive)
     (let ((entry (elfeed-search-selected :single)))
       (org-capture-string (elfeed-entry-link entry) "i"))
     (unless (use-region-p) (forward-line)))
-  (define-key elfeed-search-mode-map "I" #'add-elfeed-entry-to-paper-queue-iacr)
 
   (defun add-elfeed-shown-to-paper-queue-iacr ()
     (interactive)
     (org-capture-string (elfeed-entry-link elfeed-show-entry) "i"))
-  (define-key elfeed-show-mode-map "I" #'add-elfeed-shown-to-paper-queue-iacr)
+
+  (map! :mode 'elfeed-search-mode :n "I" #'add-elfeed-entry-to-paper-queue-iacr)
+  (map! :mode 'elfeed-show-mode :n "I" #'add-elfeed-shown-to-paper-queue-iacr)
   )
 
 
