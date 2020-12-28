@@ -154,6 +154,7 @@
             (tags-todo "yak-SOMEDAY/NEXT|BUY"
                   ((org-agenda-overriding-header "Yak shaving:")))))
            ))
+  (map! :leader "a" (cmd! (org-agenda nil "n")))
 
   (setq org-show-context-detail
         (quote
