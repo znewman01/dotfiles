@@ -136,25 +136,27 @@ in
     text = ''
       #! /usr/bin/env ${pkgs.nix.out}/bin/nix-shell
       #! nix-shell -i bash -p jq curl pass
-      set -x
+      set -euo pipefail
       GOAL=lichess-fast
       BEE="https://www.beeminder.com/api/v1"
       BEE_AUTH="auth_token=$(pass show beeminder-auth-token)"
       
       TMP_FILE=$(mktemp)
-      curl "''${BEE}/users/znewman01/goals/lichess-fast/datapoints.json?''${BEE_AUTH}&count=1" > $TMP_FILE
+      curl -s "''${BEE}/users/znewman01/goals/lichess-fast/datapoints.json?''${BEE_AUTH}&count=1" > $TMP_FILE
       BEE_GAMES=$(jq first.value $TMP_FILE)
+      echo "Current Beeminder # of games: ''${BEE_GAMES}"
       
-      LI_GAMES=$(curl https://lichess.org/api/user/znewman01 | jq '.perfs.bullet.games + .perfs.blitz.games')
+      LI_GAMES=$(curl -s https://lichess.org/api/user/znewman01 | jq '.perfs.bullet.games + .perfs.blitz.games')
+      echo "Current Lichess # of games: ''${LI_GAMES}"
        
       if [ $LI_GAMES -le $BEE_GAMES ]; then
-          # Beeminder is up-to-date
+          echo "Beeminder is up-to-date; exiting."
           exit 0
       fi
 
-      # Post the new data point
+      echo "Posting the new data point..."
       # TODO: get the response
-      curl \
+      curl -s \
           --data "''${BEE_AUTH}&value=''${LI_GAMES}" \
           "''${BEE}/users/znewman01/goals/''${GOAL}/datapoints.json"
 
