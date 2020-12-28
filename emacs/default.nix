@@ -34,8 +34,7 @@ in
   };
 
 
-  home.file.".emacs.d" = {
-    recursive = true;
+  home.file.".emacs.d.template" = {
     source = pkgs.fetchFromGitHub {
       owner = "hlissner";
       repo = "doom-emacs";
@@ -45,7 +44,18 @@ in
       # (but if it matches a previous SHA it won't update!)
       sha256 = "1702vgjx1ry5ykglv1gh37aqwhmjdc80fr1p954576zs56xw4kyz";
     };
-    onChange = "EMACSDIR=~/.emacs.d ~/.emacs.d/bin/doom sync";
+    onChange = ''
+        # Hack to prevent re-syncing unless doom is updated.
+        # .emacs.d gets e.g., compiled files in it, so it's not expected to
+        # match the source.
+        rsync \
+            --itemize-changes \
+            --links \
+            --recursive \
+            --checksum \
+            ~/.emacs.d.template/ ~/.emacs.d/
+        EMACSDIR=~/.emacs.d ~/.emacs.d/bin/doom sync
+    '';
   };
 
   programs.bash.sessionVariables."EMACSDIR" = "~/.emacs.d";
