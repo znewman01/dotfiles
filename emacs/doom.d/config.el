@@ -53,6 +53,11 @@
               (org-file "6.893/6.893.org")
               (org-file "6852-ta.org")
               (org-file "school.org")))
+   ; performance
+   (setq org-agenda-dim-blocked-tasks nil
+         org-agenda-inhibit-startup t
+         org-agenda-ignore-properties '(effort appt stat category)
+         org-agenda-use-tag-inheritance '(search timeline agenda))
   (setq org-archive-location "archive/%s::")
   (setq org-default-notes-file (org-file "gtd.org"))
   (setq org-log-done t)
@@ -120,7 +125,19 @@
   (setq org-agenda-tags-todo-honor-ignore-options t)
   (setq org-agenda-custom-commands
         `(
-          ("n" "Default View"
+          ("n" "Default View"  ; a little faster
+           ((agenda "" ((org-agenda-span 'day) (org-agenda-start-day "+0d")))
+            (tags-todo "-personal-SOMEDAY-yak-@errand/NEXT-BUY"
+                  ((org-agenda-skip-function 'zjn-org-skip-subtree-if-bad-time)
+                   (org-agenda-overriding-header "Work:")))
+            (tags-todo "personal-SOMEDAY-yak-@errand/NEXT-BUY"
+                  ((org-agenda-skip-function 'zjn-org-skip-subtree-if-bad-time)
+                   (org-agenda-overriding-header "Other tasks (excluding errands):")))
+            (tags-todo "-SOMEDAY+@errand+TODO=\"NEXT\""
+                  ((org-agenda-skip-function 'zjn-org-skip-subtree-if-bad-time)
+                   (org-agenda-overriding-header "Errands:")))
+            ))
+          ("f" "Full View"  ; more complete
            ((agenda "" ((org-agenda-span 'day) (org-agenda-start-day "+0d")))
             (stuck "")
             (tags-todo "-personal-SOMEDAY-yak-@errand/NEXT-BUY"
@@ -136,7 +153,7 @@
                   ((org-agenda-overriding-header "All current projects:")))
             (tags-todo "yak-SOMEDAY/NEXT|BUY"
                   ((org-agenda-overriding-header "Yak shaving:")))))
-          ))
+           ))
 
   (setq org-show-context-detail
         (quote
