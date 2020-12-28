@@ -472,8 +472,6 @@
   (defun elfeed-show-browse-url ()
     (interactive)
     (browse-url (elfeed-entry-link elfeed-show-entry)))
-  (map! :mode 'elfeed-search-mode :n "o" #'elfeed-search-browse-url)
-  (map! :mode 'elfeed-show-mode :n "o" #'elfeed-show-browse-url)
 
   ; Instapaper + Elfeed
   (require 'request)
@@ -509,8 +507,6 @@
      (cl-function (lambda (&key data &allow-other-keys)
                     (message "Added to Instapaper!")))))
 
-  (map! :mode 'elfeed-search-mode :n "i" #'add-elfeed-entry-to-instapaper)
-  (map! :mode 'elfeed-show-mode :n "i" #'add-elfeed-shown-to-instapaper)
 
   (defun add-elfeed-entry-to-paper-queue-iacr ()
     (interactive)
@@ -522,8 +518,15 @@
     (interactive)
     (org-capture-string (elfeed-entry-link elfeed-show-entry) "i"))
 
-  (map! :mode 'elfeed-search-mode :n "I" #'add-elfeed-entry-to-paper-queue-iacr)
-  (map! :mode 'elfeed-show-mode :n "I" #'add-elfeed-shown-to-paper-queue-iacr)
+  (map! :mode 'elfeed-search-mode
+        :n "I" #'add-elfeed-entry-to-paper-queue-iacr
+        :n "o" #'elfeed-search-browse-url
+        :n "i" #'add-elfeed-entry-to-instapaper
+
+        :mode 'elfeed-show-mode
+        :n "I" #'add-elfeed-shown-to-paper-queue-iacr
+        :n "o" #'elfeed-show-browse-url
+        :n "i" #'add-elfeed-shown-to-instapaper)
   )
 
 
