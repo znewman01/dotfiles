@@ -64,6 +64,8 @@
     }
   ];
 
+  services.journald.extraConfig = "MaxRetentionSec=1month";
+
   services.printing.enable = true;
   services.printing.clientConf = ''
     ServerName cups.csail.mit.edu
