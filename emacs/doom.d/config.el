@@ -562,6 +562,7 @@
         :n "I" #'add-elfeed-entry-to-paper-queue-iacr
         :n "o" #'elfeed-search-browse-url
         :n "i" #'add-elfeed-entry-to-instapaper
+        :n "u" #'elfeed-update
 
         :mode 'elfeed-show-mode
         :n "I" #'add-elfeed-shown-to-paper-queue-iacr
