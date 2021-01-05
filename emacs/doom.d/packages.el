@@ -52,3 +52,5 @@
 (package! flucui-themes)
 (package! org-ref)
 (package! csv-mode)
+(unpin! nix-mode)
+(package! nix-mode :recipe (:host github :repo "znewman01/nix-mode" :flavor github) :pin nil)
