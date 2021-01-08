@@ -44,6 +44,7 @@
   (setq org-agenda-files
         (list (org-file "personal.org")
               (org-file "gtd.org")
+              (org-file "inbox.org")  ; Beorg
               (org-file "research/default.org")
               ; (org-file "research/hnp.org")
               ; (org-file "research/radio.org")
@@ -62,6 +63,7 @@
   (setq org-adapt-indentation nil)
   (setq org-ctrl-k-protect-subtree t)
   (setq org-catch-invisible-edits 'show-and-error)
+  ; when modifying TODO keywords, update Beorg
   (setq org-todo-keywords
         '((sequence "NEXT(n)" "BUY" "TODO(t)" "|" "DONE(d!)")
           (sequence "HABIT(h)" "|" "HABITDONE(H)")
