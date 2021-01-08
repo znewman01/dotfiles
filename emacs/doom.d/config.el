@@ -499,6 +499,7 @@
           ("https://www.iacr.org/news/rss")
           ("https://slatestarcodex.com/feed/")
           ("http://www.christianmoscardi.com/feed.xml")
+          ("https://danluu.com/atom.xml")
           ("https://mass.streetsblog.org/feed/")
           ("http://scholars-stage.blogspot.com/feeds/posts/default")
           ("http://feeds.feedburner.com/creditslips/feed?format=xml")
@@ -509,6 +510,7 @@
           ("https://schlosser.io/rss.xml")
           ("https://qualiacomputing.com/feed/")
           ("https://algorithmsoup.wordpress.com/feed.xml")
+          ("https://svbn.me/blog/index.xml")
           ("https://www.scottaaronson.com/blog/?feed=rss2")))
 
   (defun elfeed-show-browse-url ()
