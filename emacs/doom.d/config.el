@@ -561,6 +561,8 @@
     (interactive)
     (org-capture-string (elfeed-entry-link elfeed-show-entry) "i"))
 
+  (map! :leader (:prefix-map ("o" . "open")
+                 :desc "RSS" "e" #'=rss))
   (map! :mode 'elfeed-search-mode
         :n "I" #'add-elfeed-entry-to-paper-queue-iacr
         :n "o" #'elfeed-search-browse-url
