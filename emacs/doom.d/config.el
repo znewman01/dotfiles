@@ -103,8 +103,7 @@
   (setq zjn-days-of-week '("sun" "mon" "tue" "wed" "thu" "fri" "sat"))
 
   (defun zjn-current-day-invalid-for-tag (tag)
-    (not (string= (downcase (format-time-string "%a"))
-                  tag)))
+    (not (string= tag (downcase (format-time-string "%a")))))
 
   (defun zjn-org-skip-subtree-if-bad-time ()
     "Skip entries with invalid time tags or day of week tags."
