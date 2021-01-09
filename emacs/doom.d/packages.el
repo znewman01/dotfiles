@@ -52,5 +52,11 @@
 (package! flucui-themes)
 (package! org-ref)
 (package! csv-mode)
+
+; https://github.com/NixOS/nix-mode/pull/120
 (unpin! nix-mode)
 (package! nix-mode :recipe (:host github :repo "znewman01/nix-mode" :flavor github) :pin nil)
+
+; https://github.com/jeremy-compostella/org-msg/issues/80
+(unpin! org-msg)
+(package! org-msg :recipe (:host github :repo "jeremy-compostella/org-msg" :branch "experimental" :flavor github) :pin nil)
