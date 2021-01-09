@@ -57,6 +57,9 @@
    (setq org-agenda-dim-blocked-tasks nil
          org-agenda-inhibit-startup t
          org-agenda-ignore-properties '(effort appt stat category))
+  (defun noop (&rest args) nil)
+  (advice-add #'org-font-lock-add-priority-faces :override #'noop)
+
   (setq org-archive-location "archive/%s::")
   (setq org-default-notes-file (org-file "gtd.org"))
   (setq org-log-done t)
@@ -336,6 +339,7 @@
     mu4e-index-cleanup t      ;; don't do a full cleanup check
     mu4e-index-lazy-check nil)
 
+  (setq mail-user-agent 'mu4e-user-agent)
   (defmacro zjn--make-match (folder)
     `(lambda (msg)
        (when msg
@@ -460,24 +464,7 @@
     (or (message-field-value "Subject")
         (yes-or-no-p "Really send without Subject? ")
         (keyboard-quit)))
-  (add-hook 'message-send-hook #'zjn--confirm-empty-subject)
-
-
-  (defun zjn--fwd ()
-    (interactive)
-    (save-excursion
-      (let ((msg (mu4e-message-at-point))
-            (instapaper-email "readlater.safqxp45y6q@instapaper.com"))
-        (mu4e-context-switch nil "Gmail")
-        (compose-mail instapaper-email
-                      (mu4e-message-field msg :subject))
-        (mu4e-compose-attach-message msg)
-        (if (yes-or-no-p "Forward to instapaper?")
-            (message-send-and-exit)
-          (let ((message-kill-buffer-query nil))
-            (mu4e-message-kill-buffer))
-          (message "Discarded.")))))
-  )
+  (add-hook 'message-send-hook #'zjn--confirm-empty-subject))
 
 (after! elfeed
   (setq elfeed-feeds
