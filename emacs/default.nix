@@ -2,19 +2,18 @@
 
 let
   unstableTarball20200811 = builtins.fetchTarball {
-  name = "nixos-unstable-2020-08-11";
-  url = "https://github.com/nixos/nixpkgs/archive/5c68e3171e457c007a96520a0008f7a131eb2c13.tar.gz";
-  # Hash obtained using `nix-prefetch-url --unpack <url>`
-  sha256 = "0lmwsvprmb6fyzmcfzwfshj32m96z3g77adnk9sq53ikv2pkx9la";
-};
+    name = "nixos-unstable-2020-08-11";
+    url =
+      "https://github.com/nixos/nixpkgs/archive/5c68e3171e457c007a96520a0008f7a131eb2c13.tar.gz";
+    # Hash obtained using `nix-prefetch-url --unpack <url>`
+    sha256 = "0lmwsvprmb6fyzmcfzwfshj32m96z3g77adnk9sq53ikv2pkx9la";
+  };
   dag = config.lib.dag;
-in
-{
+in {
   nixpkgs.config = {
     packageOverrides = pkgs: {
-      unstable20200811 = import unstableTarball20200811 {
-        config = config.nixpkgs.config;
-      };
+      unstable20200811 =
+        import unstableTarball20200811 { config = config.nixpkgs.config; };
     };
   };
 
@@ -33,7 +32,6 @@ in
     executable = true;
   };
 
-
   home.file.".emacs.d.template" = {
     source = pkgs.fetchFromGitHub {
       owner = "hlissner";
@@ -45,16 +43,16 @@ in
       sha256 = "1702vgjx1ry5ykglv1gh37aqwhmjdc80fr1p954576zs56xw4kyz";
     };
     onChange = ''
-        # Hack to prevent re-syncing unless doom is updated.
-        # .emacs.d gets e.g., compiled files in it, so it's not expected to
-        # match the source.
-        rsync \
-            --itemize-changes \
-            --links \
-            --recursive \
-            --checksum \
-            ~/.emacs.d.template/ ~/.emacs.d/
-        EMACSDIR=~/.emacs.d ~/.emacs.d/bin/doom sync
+      # Hack to prevent re-syncing unless doom is updated.
+      # .emacs.d gets e.g., compiled files in it, so it's not expected to
+      # match the source.
+      rsync \
+          --itemize-changes \
+          --links \
+          --recursive \
+          --checksum \
+          ~/.emacs.d.template/ ~/.emacs.d/
+      EMACSDIR=~/.emacs.d ~/.emacs.d/bin/doom sync
     '';
   };
 

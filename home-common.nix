@@ -2,10 +2,8 @@
 
 with lib;
 
-let
-  dag = config.lib.dag;
-in
-{
+let dag = config.lib.dag;
+in {
   imports = [
     # Modules
     ./modules/code.nix
@@ -49,17 +47,17 @@ in
           "VerifyHostKeyDNS" = "yes";
         };
       };
-      "*.csail.mit.edu !jump.csail.mit.edu 128.52.* 128.30.* 128.31.*" = dag.entryAfter [ "jump.csail.mit.edu" ] {
-        extraOptions = {
-          "ProxyJump" = "jump.csail.mit.edu";
-          "GSSAPIAuthentication" = "yes";
-          "GSSAPIDelegateCredentials" = "yes";
-          # "GSSAPIKeyExchange" = "yes";
+      "*.csail.mit.edu !jump.csail.mit.edu 128.52.* 128.30.* 128.31.*" =
+        dag.entryAfter [ "jump.csail.mit.edu" ] {
+          extraOptions = {
+            "ProxyJump" = "jump.csail.mit.edu";
+            "GSSAPIAuthentication" = "yes";
+            "GSSAPIDelegateCredentials" = "yes";
+            # "GSSAPIKeyExchange" = "yes";
+          };
         };
-      };
     };
   };
-
 
   programs.direnv = {
     enable = true;
@@ -70,8 +68,8 @@ in
   programs.gpg.enable = true;
   services.gpg-agent = {
     enable = true;
-    defaultCacheTtl = 86400;  # 24 hrs.
-    maxCacheTtl = 86400;  # 24 hrs.
+    defaultCacheTtl = 86400; # 24 hrs.
+    maxCacheTtl = 86400; # 24 hrs.
     pinentryFlavor = "gtk2";
     # enableScDaemon = false;
   };
@@ -107,13 +105,9 @@ in
   home.links.".authinfo.gpg" = "Dropbox/passwords/authinfo.gpg";
 
   systemd.user.services.dropbox = {
-    Unit = {
-      Description = "Dropbox";
-    };
+    Unit = { Description = "Dropbox"; };
 
-    Install = {
-      WantedBy = [ "graphical-session.target" ];
-    };
+    Install = { WantedBy = [ "graphical-session.target" ]; };
 
     Service = {
       Environment = [
@@ -130,7 +124,9 @@ in
     };
   };
 
-  home.file.".cups/lpoptions".text = "Default 00-dev_null\nDest xerox8/twoside Duplex=DuplexNoTumble sides=two-sided-long-edge";
+  home.file.".cups/lpoptions".text = ''
+    Default 00-dev_null
+    Dest xerox8/twoside Duplex=DuplexNoTumble sides=two-sided-long-edge'';
 
   home.file."bin/beeminder-lichess.sh" = {
     text = ''
@@ -140,12 +136,12 @@ in
       GOAL=lichess-fast
       BEE="https://www.beeminder.com/api/v1"
       BEE_AUTH="auth_token=$(pass show beeminder-auth-token)"
-      
+
       TMP_FILE=$(mktemp)
       curl -s "''${BEE}/users/znewman01/goals/lichess-fast/datapoints.json?''${BEE_AUTH}&count=1" > $TMP_FILE
       BEE_GAMES=$(jq first.value $TMP_FILE)
       echo "Current Beeminder # of games: ''${BEE_GAMES}"
-      
+
       LI_GAMES=$(curl -s https://lichess.org/api/user/znewman01 | jq '.perfs.bullet.games + .perfs.blitz.games')
       echo "Current Lichess # of games: ''${LI_GAMES}"
        
@@ -172,19 +168,18 @@ in
     executable = true;
   };
   systemd.user.services.beeminder-lichess = {
-    Unit = {
-      Description = "update beeminder lichess goal";
-    };
+    Unit = { Description = "update beeminder lichess goal"; };
 
     Service = {
       Type = "oneshot";
-      ExecStart = "${pkgs.bash.out}/bin/bash -c \"${config.home.homeDirectory}/${config.home.file."bin/beeminder-lichess.sh".target}\"";
+      ExecStart = ''
+        ${pkgs.bash.out}/bin/bash -c "${config.home.homeDirectory}/${
+          config.home.file."bin/beeminder-lichess.sh".target
+        }"'';
     };
   };
-  systemd.user.timers.beeminder-lichess= {
-    Unit = {
-      Description = "enforce regular restic-based backups";
-    };
+  systemd.user.timers.beeminder-lichess = {
+    Unit = { Description = "enforce regular restic-based backups"; };
 
     Timer = {
       OnCalendar = "hourly";
@@ -192,16 +187,16 @@ in
       Unit = "beeminder-lichess.service";
     };
 
-    Install = {
-      WantedBy = [ "timers.target" ];
-    };
+    Install = { WantedBy = [ "timers.target" ]; };
   };
 
   code = {
     baseDir = "${config.home.homeDirectory}/git";
     repos = let
       blackFiles = {
-        ".dir-locals.el".text = "((python-mode . ((blacken-mode . t))))\n";
+        ".dir-locals.el".text = ''
+          ((python-mode . ((blacken-mode . t))))
+        '';
       };
     in {
       "fourierhnp" = {
@@ -225,7 +220,9 @@ in
         shell = ./shells/noisy-radio.nix;
         exclude.enable = true;
         extraFiles = {
-          ".dir-locals.el".text = "((latex-mode . ((TeX-master . \"document.tex\"))))\n";
+          ".dir-locals.el".text = ''
+            ((latex-mode . ((TeX-master . "document.tex"))))
+          '';
         };
       };
       "authdict-paper" = {
@@ -253,7 +250,9 @@ in
         exclude.enable = true;
         shell = ./shells/sm-proposal.nix;
         extraFiles = {
-          ".dir-locals.el".text = "((latex-mode . ((TeX-master . \"proposal.tex\"))))\n";
+          ".dir-locals.el".text = ''
+            ((latex-mode . ((TeX-master . "proposal.tex"))))
+          '';
         };
       };
       "spectrum-paper" = {

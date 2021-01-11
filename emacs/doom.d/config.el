@@ -333,7 +333,7 @@
 
 (after! mu4e
   (require 'org-mu4e)
-  (setq mu4e-maildir "~/Maildir")
+  (setq mu4e-root-maildir "~/Maildir")
   ; Speed up indexing. Run "mu index" every once in a while to reindex.
   (setq
     mu4e-index-cleanup t      ;; don't do a full cleanup check
