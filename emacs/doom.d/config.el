@@ -6,6 +6,15 @@
 ; you think we'd know this...needed for "doom" tool to work
 (setenv "EMACSDIR" "~/.emacs.d")
 
+; IACR capture!
+(require 'json)
+(defun zjn--fetch-iacr-info (id)
+  (let* ((default-directory "~/git/iacr-dl")
+         (blob (car (process-lines "nix-shell" "--run" (concat "python -m iacr " id))))
+         (json-object-type 'alist)
+         (json-array-type 'list)
+         (json-key-type nil))
+    (json-read-from-string blob)))
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets.
@@ -32,6 +41,9 @@
 (flucui-themes-load-style 'light)
 (setq doom-font (font-spec :family "Iosevka" :height 11))
 
+(after! deft
+  (setq deft-directory "~/Dropbox/notes/roam"
+        deft-recursive t))
 (after! tex
   (add-to-list 'TeX-command-list '("Tectonic" "tectonic %t" TeX-run-compile nil (latex-mode) :help "Run Tectonic")))
 ;; If you use `org' and don't want your org files in the default location below,
@@ -194,6 +206,39 @@
     (setq buffer-read-only t))
   (add-hook 'org-agenda-finalize-hook #'org-agenda-delete-empty-blocks)
 
+  (setq reftex-default-bibliography '("~/Dropbox/notes/lit/lit.bib")
+        org-ref-default-bibliography '("~/Dropbox/notes/lit/lit.bib")
+        org-ref-completion-library 'org-ref-helm-bibtex
+        org-ref-pdf-directory "~/Dropbox/notes/lit/pdf/")
+  (setq bibtex-completion-bibliography "~/Dropbox/notes/lit/lit.bib"
+        bibtex-completion-library-path "~/Dropbox/notes/lit/pdf"
+        bibtex-completion-notes-path "~/Dropbox/notes/roam/bib")
+  ; (setf (alist-get "IACR" bibtex-completion-fallback-options) "https://duckduckgo.com/?q=site%%3Aeprint.iacr.org+%s")
+
+  (require 'url)
+  (require 'f)
+  (require 's)
+  (defun zjn--import-iacr (id)
+    (interactive "sIACR ePrint ID? ")
+    (let* ((article (zjn--fetch-iacr-info id))
+           (download-fname (format "iacr:%s.pdf" (s-replace "/" ":" (alist-get 'id article))))
+           (download-path (f-join bibtex-completion-library-path download-fname))
+           (fixed-bibtex (s-replace "cryptoeprint" "iacr" (alist-get 'bibtex article))))
+      (message "Found %s." (alist-get 'id article))
+      (write-region fixed-bibtex nil bibtex-completion-bibliography 'append)
+      (url-copy-file (alist-get 'pdf_link article) download-path t)
+      (bibtex-completion-clear-cache)))
+  (require 'org-ref)
+
+  (require 'org-roam)
+  (setq org-roam-directory "~/Dropbox/notes/roam"
+        org-roam-db-update-method 'immediate
+        emacsql-sqlite3-executable (executable-find "sqlite3"))
+  (require 'org-roam-bibtex)
+  (add-hook! org-roam-mode (org-roam-bibtex-mode))
+  (org-roam-mode)
+
+
   (map! :leader "a" (cmd! (org-agenda nil "n")))
 
   (map! :mode org-mode :n "t" #'org-todo)
@@ -208,12 +253,6 @@
           (default . ancestors))))
   (advice-add 'org-id-new :filter-return #'upcase)
 
-  ; IACR capture!
-  (defun zjn--fetch-iacr-info (id)
-    (let ((default-directory "~/git/iacr-dl"))
-      (car (process-lines "nix-shell"
-                          "--run"
-                          (concat "python -m iacr " id)))))
 
 
   (require 'json)
@@ -319,17 +358,7 @@
           "** %i\nURL:\nAuthor(s):\n\n#+BEGIN_SRC bibtex\n#+END_SRC")
         org-capture-templates)
 
-  (setq org-ref-completion-library 'org-ref-ivy-cite)
-  (require 'org-ref)
-  (setq org-latex-pdf-process '("tectonic %f"))
-  (org-ref-find-bibliography)
-  (setq biblio-crossref-user-email-address "z@znewman.net")
-  (require 'biblio)
-  (defun zjn/in-bib (orig &rest args)
-    (with-current-buffer (car (org-ref-find-bibliography))
-      (apply orig args)))
-  (advice-add 'crossref-lookup :around #'zjn/in-bib)
-  )
+  (setq org-latex-pdf-process '("tectonic %f")))
 
 (after! mu4e
   (require 'org-mu4e)

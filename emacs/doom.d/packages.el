@@ -60,3 +60,11 @@
 ; https://github.com/jeremy-compostella/org-msg/issues/80
 (unpin! org-msg)
 (package! org-msg :recipe (:host github :repo "jeremy-compostella/org-msg" :branch "experimental" :flavor github) :pin nil)
+
+; org roam etc.
+(package! org-roam-bibtex
+  :recipe (:host github :repo "org-roam/org-roam-bibtex"))
+;; When using org-roam via the `+roam` flag
+(unpin! org-roam company-org-roam)
+;; When using bibtex-completion via the `biblio` module
+(unpin! bibtex-completion helm-bibtex ivy-bibtex)

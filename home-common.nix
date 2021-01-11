@@ -26,6 +26,7 @@ in {
     tree
     pass
     ripgrep
+    sqlite
     fd
     entr
     libnotify
