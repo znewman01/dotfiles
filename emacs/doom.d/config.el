@@ -21,6 +21,8 @@
 (setq user-full-name "Zachary Newman"
       user-mail-address "z@znewman.net")
 
+(after! company
+  (setq company-idle-delay 0.2))
 ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
 ;; are the three important ones:
 ;;
@@ -206,13 +208,13 @@
     (setq buffer-read-only t))
   (add-hook 'org-agenda-finalize-hook #'org-agenda-delete-empty-blocks)
 
-  (setq reftex-default-bibliography '("~/Dropbox/notes/lit/lit.bib")
-        org-ref-default-bibliography '("~/Dropbox/notes/lit/lit.bib")
+  (setq reftex-default-bibliography '("~/Dropbox/notes/lit/default.bib")
+        org-ref-default-bibliography '("~/Dropbox/notes/lit/default.bib")
         org-ref-completion-library 'org-ref-helm-bibtex
-        org-ref-pdf-directory "~/Dropbox/notes/lit/pdf/")
-  (setq bibtex-completion-bibliography "~/Dropbox/notes/lit/lit.bib"
-        bibtex-completion-library-path "~/Dropbox/notes/lit/pdf"
-        bibtex-completion-notes-path "~/Dropbox/notes/roam/bib")
+        org-ref-pdf-directory "~/Dropbox/notes/lit/")
+  (setq bibtex-completion-bibliography "~/Dropbox/notes/lit/default.bib"
+        bibtex-completion-library-path "~/Dropbox/notes/lit/"
+        bibtex-completion-notes-path "~/Dropbox/notes/roam/bib/")
   ; (setf (alist-get "IACR" bibtex-completion-fallback-options) "https://duckduckgo.com/?q=site%%3Aeprint.iacr.org+%s")
 
   (require 'url)
@@ -229,27 +231,37 @@
       (url-copy-file (alist-get 'pdf_link article) download-path t)
       (bibtex-completion-clear-cache)))
   (require 'org-ref)
+  (org-link-set-parameters "cite" :display 'org-link)
 
   (require 'org-roam)
   (setq org-roam-directory "~/Dropbox/notes/roam"
         org-roam-db-update-method 'immediate
+        org-roam-link-auto-replace nil
+        org-roam-completion-everywhere nil
+        org-roam-tag-sources '(prop last-directory)
         emacsql-sqlite3-executable (executable-find "sqlite3"))
   (require 'org-roam-bibtex)
+
+  (setq orb-templates
+        '(("r" "ref" plain #'org-roam-capture--get-point "" :file-name "bib/${citekey}" :head "#+TITLE: ${title}\n#+ROAM_KEY: ${ref}\n" :unnarrowed t)))
   (add-hook! org-roam-mode (org-roam-bibtex-mode))
   (org-roam-mode)
+  (map! :mode org-mode :leader "n r n" #'orb-note-actions)
 
 
   (map! :leader "a" (cmd! (org-agenda nil "n")))
 
+  (map! :mode org-capture-mode :localleader "s r" #'org-capture-refile)
   (map! :mode org-mode :n "t" #'org-todo)
   (map! :map org-agenda-mode-map :localleader "." #'counsel-org-goto-all
                                  :localleader "/" #'counsel-org-goto-all)
 
+  (setq org-startup-folded 'fold)
   (setq org-show-context-detail
         (quote
-         ((agenda . canonical)
-          (bookmark-jump . lineage)
-          (isearch . lineage)
+         ((agenda . ancestors)
+          (bookmark-jump . ancestors)
+          (isearch . ancestors)
           (default . ancestors))))
   (advice-add 'org-id-new :filter-return #'upcase)
 
@@ -358,6 +370,8 @@
           "** %i\nURL:\nAuthor(s):\n\n#+BEGIN_SRC bibtex\n#+END_SRC")
         org-capture-templates)
 
+  (setq org-preview-latex-default-process 'imagemagick)
+  ; (plist-put org-format-latex-options :background "Transparent")
   (setq org-latex-pdf-process '("tectonic %f")))
 
 (after! mu4e
