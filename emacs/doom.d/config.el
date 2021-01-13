@@ -23,34 +23,21 @@
 
 (after! company
   (setq company-idle-delay 0.2))
-;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
-;; are the three important ones:
-;;
-;; + `doom-font'
-;; + `doom-variable-pitch-font'
-;; + `doom-big-font' -- used for `doom-big-font-mode'; use this for
-;;   presentations or streaming.
-;;
-;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
-;; font string. You generally only need these two:
-;; (setq doom-font (font-spec :family "monospace" :size 12 :weight 'semi-light)
-;;       doom-variable-pitch-font (font-spec :family "sans" :size 13))
 
-;; There are two ways to load a theme. Both assume the theme is installed and
-;; available. You can either set `doom-theme' or manually load a theme with the
-;; `load-theme' function. This is the default:
-; (setq doom-theme 'doom-one-light)
-(flucui-themes-load-style 'light)
+; Make pretty
+(setq doom-theme 'doom-one-light)
 (setq doom-font (font-spec :family "Iosevka" :height 11))
+(setq doom-variable-pitch-font ())
 
 (after! deft
   (setq deft-directory "~/Dropbox/notes/roam"
         deft-recursive t))
 (after! tex
   (add-to-list 'TeX-command-list '("Tectonic" "tectonic %t" TeX-run-compile nil (latex-mode) :help "Run Tectonic")))
-;; If you use `org' and don't want your org files in the default location below,
-;; change `org-directory'. It must be set before org loads!
+
 (setq org-directory "~/notes/")
+(add-hook! org-mode mixed-pitch-mode)
+(add-hook! org-roam-mode (org-roam-bibtex-mode))
 (after! org
   (add-hook 'auto-save-hook 'org-save-all-org-buffers)
   (defun org-file (f)
@@ -233,6 +220,14 @@
   (require 'org-ref)
   (org-link-set-parameters "cite" :display 'org-link)
 
+  ; https://zzamboni.org/post/beautifying-org-mode-in-emacs/
+  (setq org-hide-emphasis-markers t)
+  (font-lock-add-keywords 'org-mode
+                          '(("^ *\\([-]\\) "
+                             (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+  (require 'org-bullets)
+  (require 'mixed-pitch)
+
   (require 'org-roam)
   (setq org-roam-directory "~/Dropbox/notes/roam"
         org-roam-db-update-method 'immediate
@@ -244,7 +239,6 @@
 
   (setq orb-templates
         '(("r" "ref" plain #'org-roam-capture--get-point "" :file-name "bib/${citekey}" :head "#+TITLE: ${title}\n#+ROAM_KEY: ${ref}\n" :unnarrowed t)))
-  (add-hook! org-roam-mode (org-roam-bibtex-mode))
   (org-roam-mode)
   (map! :mode org-mode :leader "n r n" #'orb-note-actions)
 
@@ -621,6 +615,9 @@
   )
 
 (setq tramp-inline-compress-start-size 1000000)
+
+(after! rustic
+  (setq rustic-lsp-server 'rust-analyzer))
 
 (after! lsp-mode
   (push "[/\\\\]\\venv$" lsp-file-watch-ignored)

@@ -49,7 +49,6 @@
 ;(unpin! pinned-package another-pinned-package)
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
-(package! flucui-themes)
 (package! org-ref)
 (package! csv-mode)
 
@@ -69,3 +68,6 @@
 (unpin! org-roam company-org-roam)
 ;; When using bibtex-completion via the `biblio` module
 (unpin! bibtex-completion helm-bibtex ivy-bibtex)
+
+(package! org-bullets)
+(package! mixed-pitch)
