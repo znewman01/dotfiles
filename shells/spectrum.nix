@@ -1,7 +1,8 @@
 with import <nixpkgs> { };
 
 let
-  moz_overlay = import (builtins.fetchTarball https://github.com/mozilla/nixpkgs-mozilla/archive/master.tar.gz);
+  moz_overlay = import (builtins.fetchTarball
+    "https://github.com/mozilla/nixpkgs-mozilla/archive/master.tar.gz");
   nixpkgs = import <nixpkgs> { overlays = [ moz_overlay ]; };
   rustChannel = (nixpkgs.rustChannelOf { date = "2020-08-27"; channel = "nightly"; }).rust.override {
     extensions = [
