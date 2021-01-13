@@ -58,8 +58,9 @@
 (package! nix-mode :recipe (:host github :repo "znewman01/nix-mode" :flavor github) :pin nil)
 
 ; https://github.com/jeremy-compostella/org-msg/issues/80
+; Once we hit 3.2 this can go away
 (unpin! org-msg)
-(package! org-msg :recipe (:host github :repo "jeremy-compostella/org-msg" :branch "experimental" :flavor github) :pin nil)
+(package! org-msg :recipe (:host github :repo "jeremy-compostella/org-msg" :branch "master" :flavor github) :pin nil)
 
 ; org roam etc.
 (package! org-roam-bibtex
