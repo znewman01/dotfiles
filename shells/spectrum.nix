@@ -4,14 +4,12 @@ let
   moz_overlay = import (builtins.fetchTarball
     "https://github.com/mozilla/nixpkgs-mozilla/archive/master.tar.gz");
   nixpkgs = import <nixpkgs> { overlays = [ moz_overlay ]; };
-  rustChannel = (nixpkgs.rustChannelOf { date = "2020-08-27"; channel = "nightly"; }).rust.override {
-    extensions = [
-      "rust-src"
-      "rls-preview"
-      "rust-analysis"
-      "clippy-preview"
-      "rustfmt-preview"
-    ];
+  rustChannel = (nixpkgs.rustChannelOf {
+    date = "2020-12-22";
+    channel = "nightly";
+  }).rust.override {
+    extensions =
+      [ "rust-src" "rust-analysis" "clippy-preview" "rustfmt-preview" ];
   };
   pythonPackages = python38Packages;
 in pkgs.mkShell rec {
@@ -41,9 +39,6 @@ in pkgs.mkShell rec {
     # This execute some shell code to initialize a venv in $venvDir before
     # dropping into the shell
     pythonPackages.venvShellHook
-    # Dependencies
-    pythonPackages.tenacity
-    pythonPackages.asyncssh
     # Linting + development
     pythonPackages.black
     # pythonPackages.pylint
@@ -56,7 +51,7 @@ in pkgs.mkShell rec {
   ];
 
   PROTOC = "${pkgs.protobuf}/bin/protoc";
-  RUST_SRC_PATH = "${rustChannel}/lib/rustlib/src/rust/src";
+  RUST_SRC_PATH = "${rustChannel}/lib/rustlib/src/rust/library";
 
   # Run this command, only after creating the virtual environment
   postVenvCreation = ''
