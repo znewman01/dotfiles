@@ -1,10 +1,9 @@
 { config, pkgs, ... }:
 
 {
-  imports =
-    [ # needs to be absolute since we symlink this file in
-      /etc/nixos/hardware-configuration.nix
-    ];
+  imports = [ # needs to be absolute since we symlink this file in
+    /etc/nixos/hardware-configuration.nix
+  ];
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -27,13 +26,7 @@
 
   time.timeZone = "America/New_York";
 
-  environment.systemPackages = with pkgs; [
-    git
-    vim
-    wget
-    manpages
-    steam
-  ];
+  environment.systemPackages = with pkgs; [ git vim wget manpages steam ];
 
   hardware.opengl.driSupport32Bit = true;
 
@@ -54,15 +47,13 @@
   services.xserver.enable = true;
   services.xserver.layout = "us";
   services.xserver.xkbOptions = "caps:swapescape";
-  services.xserver.desktopManager.session = [
-    {
-      name = "home-manager";
-      start = ''
-        ${pkgs.runtimeShell} $HOME/.hm-xsession &
-        waitPID=$!
-      '';
-    }
-  ];
+  services.xserver.desktopManager.session = [{
+    name = "home-manager";
+    start = ''
+      ${pkgs.runtimeShell} $HOME/.hm-xsession &
+      waitPID=$!
+    '';
+  }];
 
   services.journald.extraConfig = "MaxRetentionSec=1month";
 
@@ -80,10 +71,9 @@
 
   users.users.zjn = {
     isNormalUser = true;
-    extraGroups = [ "networkmanager" "wheel" "audio" "video" "lp" "docker" "libvirtd" ];
-    openssh.authorizedKeys.keyFiles = [
-      ./net/zjn-x1.pub
-    ];
+    extraGroups =
+      [ "networkmanager" "wheel" "audio" "video" "lp" "docker" "libvirtd" ];
+    openssh.authorizedKeys.keyFiles = [ ./net/zjn-x1.pub ];
   };
 
   system.stateVersion = "19.09";
@@ -91,9 +81,7 @@
   # For backlight
   programs.light.enable = true;
 
-  services.redshift = {
-    enable = true;
-  };
+  services.redshift = { enable = true; };
 
   location = {
     latitude = 42.3;
@@ -102,8 +90,6 @@
 
   krb5 = {
     enable = true;
-    libdefaults = {
-      forwardable = true;
-    };
+    libdefaults = { forwardable = true; };
   };
 }
