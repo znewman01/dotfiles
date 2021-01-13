@@ -46,7 +46,7 @@
 
   services.xserver.enable = true;
   services.xserver.layout = "us";
-  services.xserver.xkbOptions = "caps:swapescape";
+  services.xserver.xkbOptions = "caps:swapescape,compose:ralt";
   services.xserver.desktopManager.session = [{
     name = "home-manager";
     start = ''
