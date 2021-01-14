@@ -37,15 +37,16 @@ in {
       owner = "hlissner";
       repo = "doom-emacs";
       # git ls-remote https://github.com/hlissner/doom-emacs/ develop
-      rev = "0c9256411d6bdb6cfc920bcce2216d99ff28a0c5";
+      rev = "b03fdabe4fa8a07a7bd74cd02d9413339a485253";
       # just rerun with the all-0 SHA, it'll tell you what to put
       # (but if it matches a previous SHA it won't update!)
-      sha256 = "1702vgjx1ry5ykglv1gh37aqwhmjdc80fr1p954576zs56xw4kyz";
+      sha256 = "0n4dw8h82jvv12aprgw467c270pj59787vhx5cg1wwjpjxh6fiir";
     };
     onChange = ''
       # Hack to prevent re-syncing unless doom is updated.
       # .emacs.d gets e.g., compiled files in it, so it's not expected to
       # match the source.
+      mkdir -p ~/.emacs.d
       rsync \
           --itemize-changes \
           --links \

@@ -21,23 +21,181 @@
 (setq user-full-name "Zachary Newman"
       user-mail-address "z@znewman.net")
 
+(after! ivy-bibtex (:and org-roam)
+  ;; Basic configuration
+  (setq reftex-default-bibliography '("~/Dropbox/notes/lit/default.bib")
+        bibtex-completion-bibliography "~/Dropbox/notes/lit/default.bib"
+        bibtex-completion-library-path "~/Dropbox/notes/lit/"
+        bibtex-completion-notes-path "~/Dropbox/notes/roam/bib/"
+        biblio-crossref-user-email-address "crossref@z.znewman.net")
+  (setf (alist-get "IACR" bibtex-completion-fallback-options) "https://duckduckgo.com/?q=site%%3Aeprint.iacr.org+%s")
+
+  ;; Now make it work like I want
+  ;; - if there's no match, ask where we want to search
+  ;; - if there is a match and I hit enter, ask what I want to do (abbreviated
+  ;; - to most common actions)
+  (defun zjn--bibtex-open-pdf (keys)
+    (bibtex-completion-open-pdf keys #'bibtex-completion-add-pdf-to-library))
+  (ivy-bibtex-ivify-action zjn--bibtex-open-pdf zjn--ivy-bibtex-pdf)
+
+  (defun zjn--bibtex-open-notes-and-pdf (keys)
+    (let* ((key (first keys))
+           (org-roam-find-file-function (lambda (file) (switch-to-buffer (find-file-noselect file) nil 'force-same-window)))
+           (pdf (bibtex-completion-find-pdf key)))
+      (+workspace-switch key t)
+      (delete-other-windows)
+      (when pdf
+        (let ((pdf-buffer (find-file (first pdf))))
+          (switch-to-buffer pdf-buffer nil 'force-same-window)
+          (split-window-right))
+          (windmove-right))
+      (let ((org-capture-link-is-already-stored t))
+        ; prevent trying to grab a link to the PDF
+        (orb-edit-notes key))))
+  (ivy-bibtex-ivify-action zjn--bibtex-open-notes-and-pdf zjn--ivy-bibtex-notes)
+
+  (setq zjn--ivy-bibtex-short-actions
+        '((?p "[p]df" zjn--ivy-bibtex-pdf)
+          (?n "[n]otes" zjn--ivy-bibtex-notes)
+          (?i "[i]nsert" ivy-bibtex-insert-citation)))
+  (defun zjn--ivy-bibtex-get-action ()
+    (let* ((actions zjn--ivy-bibtex-short-actions)
+           (names (cl-mapcar (lambda (entry) (second entry)) actions))
+           (chars (cl-mapcar (lambda (entry) (first entry)) actions))
+           (prompt (s-concat (s-join " " names) " "))
+           (choice (read-char-choice prompt chars))
+           (entry (cl-find-if (lambda (entry) (= (first entry) choice)) actions))
+           (action (third entry)))
+      action))
+
+  (defun zjn/ivy-bibtex-open-or-search (candidate)
+    "Dispatches to other actions, or searches using fallback options if no match found."
+    (if (listp candidate)
+      (let ((key (cdr (assoc "=key=" (cdr candidate))))
+            (action (zjn--ivy-bibtex-get-action)))
+        (funcall action candidate))
+    (ivy-bibtex-fallback candidate)))
+
+  (setq ivy-bibtex-default-action #'zjn/ivy-bibtex-open-or-search)
+
+  ;; Rename citation keys
+  (defun zjn--bibtex-rename (keys)
+    "Rename the citation key given by the first element of KEYS.
+
+  Updates the .bib file and moves the PDF and .org (notes) file.
+
+  org-roam updates back-references to the notes file, but PDF references and
+  citations are LTTR.
+  "
+    (org-roam-mode 1)  ; for rename-file advice
+    (cl-flet ((update (path new-key suffix)
+                      (when path
+                        (f-join (f-parent path) (concat new-key suffix)))))
+      (let* ((old-key (first keys))
+             (new-key (read-string (format "New cite key (was %s): " old-key)))
+             (old-note (caar (org-roam-db-query
+                               [:select file :from refs :where (= ref $s1)]
+                               old-key)))
+             (new-note (update old-note new-key ".org"))
+             (old-pdfs (bibtex-completion-find-pdf old-key))
+             (old-pdf (first old-pdfs))
+             (new-pdf (update old-pdf new-key ".pdf")))
+        ;; 1. BibTeX entry
+        (save-excursion
+          (bibtex-completion-show-entry (list old-key))
+          (zjn--bib-replace-key new-key)
+          (bibtex-reformat)
+          (save-buffer))
+        ;; 2. PDF
+        (when (> (length old-pdfs) 1)
+          (error "Cannot rename when there's supplemental PDFs."))
+        (rename-file old-pdf new-pdf)
+        ; eventually might have to fix up org-noter or something...
+        ;; 3. org-roam
+        (when old-note
+          (rename-file old-note new-note)
+          (bibtex-completion-clear-cache)
+          (org-roam-build-cache)))))
+  (ivy-bibtex-ivify-action zjn--bibtex-rename zjn--ivy-bibtex-rename)
+  (let ((ivy-actions (copy-alist (plist-get ivy--actions-list 'ivy-bibtex))))
+    (setf (alist-get "r" ivy-actions nil nil #'equal)
+          (list #'zjn--ivy-bibtex-rename "Rename the citation key."))
+    (ivy-set-actions 'ivy-bibtex ivy-actions)))
+
+(defun zjn--bib-get-key (entry)
+  "The key we want to use by default."
+  (save-excursion
+   (with-current-buffer (find-file-noselect bibtex-completion-bibliography)
+    (goto-char (point-max))
+    (bibtex-beginning-of-entry)
+    (read-string "Key: " (s-replace ":" "" (s-replace ":_" ":" (bibtex-generate-autokey)))))))
+(defun zjn--bib-replace-key (new-key)
+  "Replace the bibtex key of the current entry."
+  ; cribbed from bibtex-clean-entry
+  (save-excursion
+    (re-search-forward bibtex-entry-maybe-empty-head)
+    (if (match-beginning bibtex-key-in-head)
+        (delete-region (match-beginning bibtex-key-in-head)
+                       (match-end bibtex-key-in-head)))
+    (insert key)))
+(defun zjn--bib-replace-last-key (new-key)
+  (save-excursion
+    (with-current-buffer (find-file-noselect bibtex-completion-bibliography)
+      (goto-char (point-max))
+      (bibtex-beginning-of-entry)
+      (zjn--bib-replace-key new-key)
+      (bibtex-reformat)
+      (save-buffer))))
+(defun zjn--bib-get-url (entry)
+  (let ((url (alist-get 'url entry))
+        (direct-url (alist-get 'direct-url entry)))
+    (cond
+     (direct-url)
+     ((s-starts-with? "https://eprint.iacr.org/") (s-concat url ".pdf"))
+     (t (read-string "URL (blank for none): ")))))
+(defun zjn--bib-add (bibtex entry)
+  "Add BIBTEX (from ENTRY) to end of a user-specified bibtex file."
+  (write-region (s-concat "\n\n" bibtex) nil bibtex-completion-bibliography 'append)
+  (message "Inserted bibtex entry for %S."
+        (biblio--prepare-title (biblio-alist-get 'title entry)))
+  ;; TODO: special case key for IACR; don't ask
+  (let* ((key (zjn--bib-get-key entry))
+         (url (zjn--bib-get-url entry))
+         (fname (s-concat key ".pdf"))
+         (dest (f-join bibtex-completion-library-path fname)))
+    (zjn--bib-replace-last-key key)
+    (when url
+      (url-copy-file url dest t))))
+(defun zjn/bib-add ()
+  "Insert BibTeX of current entry at the end of user-specified bibtex file and go there."
+  (interactive)
+  (biblio--selection-forward-bibtex #'zjn--bib-add t))
+(after! biblio
+  (setq biblio-crossref-user-email-address "crossref@z.znewman.net")
+  (setq bibtex-autokey-year-length 4)
+  (setq bibtex-autokey-titleword-length 100)
+  (setq bibtex-autokey-titlewords 2)
+  (map! :mode biblio-selection-mode
+        "RET" #'zjn/bib-add))
+
 (after! company
   (setq company-idle-delay 0.2))
 
 ; Make pretty
 (setq doom-theme 'doom-one-light)
-(setq doom-font (font-spec :family "Iosevka" :height 11))
-(setq doom-variable-pitch-font ())
+(setq zjn--mono "Roboto Mono")
+(setq zjn--sans "Bitstream Vera Sans")
+(setq zjn--serif "TeX Gyre Pagella")
+(setq doom-font (font-spec :family zjn--mono :height 80 :weight 'semi-light))
+(setq doom-variable-pitch-font (font-spec :family zjn--serif :height 60))
+(setq-default left-margin-width 1
+              right-margin-width 1)
 
-(after! deft
-  (setq deft-directory "~/Dropbox/notes/roam"
-        deft-recursive t))
 (after! tex
   (add-to-list 'TeX-command-list '("Tectonic" "tectonic %t" TeX-run-compile nil (latex-mode) :help "Run Tectonic")))
 
 (setq org-directory "~/notes/")
-(add-hook! org-mode mixed-pitch-mode)
-(add-hook! org-roam-mode (org-roam-bibtex-mode))
+(map! :leader "a" (cmd! (org-agenda nil "n")))
 (after! org
   (add-hook 'auto-save-hook 'org-save-all-org-buffers)
   (defun org-file (f)
@@ -60,6 +218,40 @@
          org-agenda-ignore-properties '(effort appt stat category))
   (defun noop (&rest args) nil)
   (advice-add #'org-font-lock-add-priority-faces :override #'noop)
+
+  (require 'org-starless)
+  (require 'org-padding)
+  (setq org-padding-block-begin-line-padding '(nil . nil))
+  (setq org-padding-block-end-line-padding '(nil . nil))
+  (setq org-padding-heading-padding-alist
+    '((2.0 . 0.5) (2.0 . 0.5) (2.0 . 0.5) (2.0 . 0.5) (2.0 . 0.5) (2.0 . 0.5) (2.0 . 0.5) (2.0 . 0.5)))
+
+  (require 'org-superstar)
+  (remove-hook! org-mode org-superstar-mode)
+  (setq org-superstar-item-bullet-alist
+  '((?* . ?•)
+    (?+ . ?⁘)
+    (?- . ?–)))
+
+  (define-minor-mode zjn--org-pretty-mode
+    "make org pretty"
+    :lighter "pretty"
+    (if zjn--org-pretty-mode
+        (progn
+          (org-starless-mode 1)
+          (org-padding-mode 1)
+          (org-superstar-mode 1)
+          (setq left-margin-width 8
+                right-margin-width 8)
+          (set-window-buffer (selected-window) (current-buffer))
+          (mixed-pitch-mode 1))
+      (mixed-pitch-mode -1)
+      (org-starless-mode -1)
+      (org-padding-mode -1)
+      (org-superstar-mode -1)
+      (setq left-margin-width (default-value 'left-margin-width)
+            right-margin-width (default-value 'right-margin-width))
+      (set-window-buffer (selected-window) (current-buffer))))
 
   (setq org-archive-location "archive/%s::")
   (setq org-default-notes-file (org-file "gtd.org"))
@@ -195,14 +387,9 @@
     (setq buffer-read-only t))
   (add-hook 'org-agenda-finalize-hook #'org-agenda-delete-empty-blocks)
 
-  (setq reftex-default-bibliography '("~/Dropbox/notes/lit/default.bib")
-        org-ref-default-bibliography '("~/Dropbox/notes/lit/default.bib")
+  (setq org-ref-default-bibliography '("~/Dropbox/notes/lit/default.bib")
         org-ref-completion-library 'org-ref-helm-bibtex
         org-ref-pdf-directory "~/Dropbox/notes/lit/")
-  (setq bibtex-completion-bibliography "~/Dropbox/notes/lit/default.bib"
-        bibtex-completion-library-path "~/Dropbox/notes/lit/"
-        bibtex-completion-notes-path "~/Dropbox/notes/roam/bib/")
-  ; (setf (alist-get "IACR" bibtex-completion-fallback-options) "https://duckduckgo.com/?q=site%%3Aeprint.iacr.org+%s")
 
   (require 'url)
   (require 'f)
@@ -222,28 +409,7 @@
 
   ; https://zzamboni.org/post/beautifying-org-mode-in-emacs/
   (setq org-hide-emphasis-markers t)
-  (font-lock-add-keywords 'org-mode
-                          '(("^ *\\([-]\\) "
-                             (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
-  (require 'org-bullets)
-  (require 'mixed-pitch)
 
-  (require 'org-roam)
-  (setq org-roam-directory "~/Dropbox/notes/roam"
-        org-roam-db-update-method 'immediate
-        org-roam-link-auto-replace nil
-        org-roam-completion-everywhere nil
-        org-roam-tag-sources '(prop last-directory)
-        emacsql-sqlite3-executable (executable-find "sqlite3"))
-  (require 'org-roam-bibtex)
-
-  (setq orb-templates
-        '(("r" "ref" plain #'org-roam-capture--get-point "" :file-name "bib/${citekey}" :head "#+TITLE: ${title}\n#+ROAM_KEY: ${ref}\n" :unnarrowed t)))
-  (org-roam-mode)
-  (map! :mode org-mode :leader "n r n" #'orb-note-actions)
-
-
-  (map! :leader "a" (cmd! (org-agenda nil "n")))
 
   (map! :mode org-capture-mode :localleader "s r" #'org-capture-refile)
   (map! :mode org-mode :n "t" #'org-todo)
@@ -258,8 +424,6 @@
           (isearch . ancestors)
           (default . ancestors))))
   (advice-add 'org-id-new :filter-return #'upcase)
-
-
 
   (require 'json)
   (require 'org-attach)
@@ -367,6 +531,27 @@
   (setq org-preview-latex-default-process 'imagemagick)
   ; (plist-put org-format-latex-options :background "Transparent")
   (setq org-latex-pdf-process '("tectonic %f")))
+
+
+
+(after! deft
+  (setq deft-directory "~/Dropbox/notes/roam"
+        deft-recursive t))
+(after! org-roam
+  (setq org-roam-directory "~/Dropbox/notes/roam"
+        org-roam-db-update-method 'immediate
+        org-roam-link-auto-replace nil
+        org-roam-completion-everywhere nil
+        +org-roam-open-buffer-on-find-file nil
+        org-roam-tag-sources '(prop last-directory)
+        emacsql-sqlite3-executable (executable-find "sqlite3"))
+  (add-hook! org-roam-mode (org-roam-bibtex-mode))
+  (require 'org-roam-bibtex)
+
+  (setq orb-templates
+        '(("r" "ref" plain #'org-roam-capture--get-point "" :file-name "bib/${citekey}" :head "#+TITLE: ${title}\n#+ROAM_KEY: ${ref}\n" :unnarrowed t :immediate-finish t)))
+  (org-roam-mode)
+  (map! :mode org-mode :leader "n r n" #'orb-note-actions))
 
 (after! mu4e
   (require 'org-mu4e)
@@ -584,9 +769,6 @@
   (defun add-elfeed-shown-to-paper-queue-iacr ()
     (interactive)
     (org-capture-string (elfeed-entry-link elfeed-show-entry) "i"))
-
-  (map! :leader (:prefix-map ("o" . "open")
-                 :desc "RSS" "e" #'=rss))
   (map! :mode 'elfeed-search-mode
         :n "I" #'add-elfeed-entry-to-paper-queue-iacr
         :n "o" #'elfeed-search-browse-url
@@ -596,8 +778,9 @@
         :mode 'elfeed-show-mode
         :n "I" #'add-elfeed-shown-to-paper-queue-iacr
         :n "o" #'elfeed-show-browse-url
-        :n "i" #'add-elfeed-shown-to-instapaper)
-  )
+        :n "i" #'add-elfeed-shown-to-instapaper))
+(map! :leader (:prefix-map ("o" . "open")
+               :desc "RSS" "e" #'=rss))
 
 
 ;; This determines the style of line numbers in effect. If set to `nil', line

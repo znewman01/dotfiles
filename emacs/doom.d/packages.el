@@ -69,5 +69,8 @@
 ;; When using bibtex-completion via the `biblio` module
 (unpin! bibtex-completion helm-bibtex ivy-bibtex)
 
-(package! org-bullets)
+; ~~aesthetics~~
 (package! mixed-pitch)
+(package! org-fancy-priorities :disable t)
+(package! org-starless :recipe (:host github :repo "TonCherAmi/org-starless"))
+(package! org-padding :recipe (:host github :repo "TonCherAmi/org-padding"))
