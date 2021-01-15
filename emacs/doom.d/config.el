@@ -80,6 +80,14 @@
 
   (setq ivy-bibtex-default-action #'zjn/ivy-bibtex-open-or-search)
 
+  (defun zjn--ivy-bibtex-insert-or-search (candidate)
+    (if (listp candidate)
+        (ivy-bibtex-insert-citation candidate)
+      (ivy-bibtex-fallback candidate)))
+  (map! :mode org-mode
+        "C-c ]"
+        (cmd! (let ((ivy-bibtex-default-action #'zjn--ivy-bibtex-insert-or-search)) (ivy-bibtex))))
+
   ;; Rename citation keys
   (defun zjn--bibtex-rename (keys)
     "Rename the citation key given by the first element of KEYS.
