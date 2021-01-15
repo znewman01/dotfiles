@@ -21,12 +21,14 @@
 (setq user-full-name "Zachary Newman"
       user-mail-address "z@znewman.net")
 
-(after! ivy-bibtex (:and org-roam)
+(setq bibtex-completion-bibliography "~/Dropbox/notes/lit/default.bib"
+      bibtex-completion-library-path "~/Dropbox/notes/lit/"
+      bibtex-completion-notes-path "~/Dropbox/notes/roam/bib/")
+(after! ivy-bibtex
+  (require 'org-roam)
+  (org-roam-mode)
   ;; Basic configuration
   (setq reftex-default-bibliography '("~/Dropbox/notes/lit/default.bib")
-        bibtex-completion-bibliography "~/Dropbox/notes/lit/default.bib"
-        bibtex-completion-library-path "~/Dropbox/notes/lit/"
-        bibtex-completion-notes-path "~/Dropbox/notes/roam/bib/"
         biblio-crossref-user-email-address "crossref@z.znewman.net")
   (setf (alist-get "IACR" bibtex-completion-fallback-options) "https://duckduckgo.com/?q=site%%3Aeprint.iacr.org+%s")
 
@@ -137,12 +139,16 @@
     (if (match-beginning bibtex-key-in-head)
         (delete-region (match-beginning bibtex-key-in-head)
                        (match-end bibtex-key-in-head)))
-    (insert key)))
+    (insert new-key)))
 (defun zjn--bib-replace-last-key (new-key)
   (save-excursion
     (with-current-buffer (find-file-noselect bibtex-completion-bibliography)
       (goto-char (point-max))
       (bibtex-beginning-of-entry)
+      (while (save-excursion
+               (s-equals? (cdr (assoc-string "=type=" (bibtex-parse-entry)))
+                          "proceedings"))
+        (bibtex-previous-entry))
       (zjn--bib-replace-key new-key)
       (bibtex-reformat)
       (save-buffer))))
@@ -151,7 +157,7 @@
         (direct-url (alist-get 'direct-url entry)))
     (cond
      (direct-url)
-     ((s-starts-with? "https://eprint.iacr.org/") (s-concat url ".pdf"))
+     ((s-starts-with? "https://eprint.iacr.org/" url) (s-concat url ".pdf"))
      (t (read-string "URL (blank for none): ")))))
 (defun zjn--bib-add (bibtex entry)
   "Add BIBTEX (from ENTRY) to end of a user-specified bibtex file."
@@ -164,7 +170,7 @@
          (fname (s-concat key ".pdf"))
          (dest (f-join bibtex-completion-library-path fname)))
     (zjn--bib-replace-last-key key)
-    (when url
+    (when (s-present? url)
       (url-copy-file url dest t))))
 (defun zjn/bib-add ()
   "Insert BibTeX of current entry at the end of user-specified bibtex file and go there."
@@ -231,7 +237,7 @@
   (setq org-superstar-item-bullet-alist
   '((?* . ?•)
     (?+ . ?⁘)
-    (?- . ?–)))
+    (?- . ?•)))
 
   (define-minor-mode zjn--org-pretty-mode
     "make org pretty"
