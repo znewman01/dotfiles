@@ -565,7 +565,17 @@
   (setq orb-templates
         '(("r" "ref" plain #'org-roam-capture--get-point "" :file-name "bib/${citekey}" :head "#+TITLE: ${title}\n#+ROAM_KEY: ${ref}\n" :unnarrowed t :immediate-finish t)))
   (org-roam-mode)
-  (map! :mode org-mode :leader "n r n" #'orb-note-actions))
+  (map! :mode org-mode :leader "n r n" #'orb-note-actions)
+
+  (defun zjn/org-roam-find-file-maybe-other-window (&optional arg)
+    "Like `function:org-roam-find-file' but when called with prefix open in other-window."
+    (interactive "P")
+    (let ((org-roam-find-file-function
+           (if (and arg (not org-roam-find-file-function))
+               #'find-file-other-window
+             org-roam-find-file-function)))
+      (org-roam-find-file)))
+  (map! :leader "n r b" #'zjn/org-roam-find-file-maybe-other-window))
 
 (after! mu4e
   (require 'org-mu4e)
