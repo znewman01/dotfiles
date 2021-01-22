@@ -299,6 +299,7 @@ in {
       "tor-cdn" = {
         url = "git@github.com:iowaguy/tor-cdn.git";
         exclude.enable = true;
+        extraFiles = { "latencies/.projectile".text = ""; };
         shell = ./shells/tor-cdn.nix;
       };
     };
