@@ -128,8 +128,8 @@
           (org-roam-build-cache)))))
   (ivy-bibtex-ivify-action zjn--bibtex-rename zjn--ivy-bibtex-rename)
   (let ((ivy-actions (copy-alist (plist-get ivy--actions-list 'ivy-bibtex))))
-    (setf (alist-get "r" ivy-actions nil nil #'equal)
-          (list #'zjn--ivy-bibtex-rename "Rename the citation key."))
+    (setf (alist-get "m" ivy-actions nil nil #'equal)
+          (list #'zjn--ivy-bibtex-rename "Rename (move) the citation key."))
     (ivy-set-actions 'ivy-bibtex ivy-actions)))
 
 (defun zjn--bib-get-key (entry)
@@ -401,10 +401,6 @@
     (setq buffer-read-only t))
   (add-hook 'org-agenda-finalize-hook #'org-agenda-delete-empty-blocks)
 
-  (setq org-ref-default-bibliography '("~/Dropbox/notes/lit/default.bib")
-        org-ref-completion-library 'org-ref-helm-bibtex
-        org-ref-pdf-directory "~/Dropbox/notes/lit/")
-
   (require 'url)
   (require 'f)
   (require 's)
@@ -418,7 +414,6 @@
       (write-region fixed-bibtex nil bibtex-completion-bibliography 'append)
       (url-copy-file (alist-get 'pdf_link article) download-path t)
       (bibtex-completion-clear-cache)))
-  (require 'org-ref)
   (org-link-set-parameters "cite" :display 'org-link)
 
   ; https://zzamboni.org/post/beautifying-org-mode-in-emacs/
