@@ -47,6 +47,10 @@
   services.xserver.enable = true;
   services.xserver.layout = "us";
   services.xserver.xkbOptions = "caps:swapescape,compose:ralt";
+  # https://bugs.launchpad.net/ubuntu/+source/lightdm/+bug/982889
+  services.xserver.displayManager.job.preStart = ''
+    sleep 3
+  '';
   services.xserver.desktopManager.session = [{
     name = "home-manager";
     start = ''
