@@ -30,7 +30,17 @@
   ;; Basic configuration
   (setq reftex-default-bibliography '("~/Dropbox/notes/lit/default.bib")
         biblio-crossref-user-email-address "crossref@z.znewman.net")
-  (setf (alist-get "IACR" bibtex-completion-fallback-options) "https://duckduckgo.com/?q=site%%3Aeprint.iacr.org+%s")
+  (setq bibtex-completion-fallback-options
+        '(("DBLP (computer science bibliography)      (biblio.el)"
+           . (lambda (search-expression) (biblio--lookup-1 #'biblio-dblp-backend search-expression)))
+          ("CrossRef                                  (biblio.el)"
+          . (lambda (search-expression) (biblio-lookup #'biblio-crossref-backend search-expression)))
+          ("arXiv                                     (biblio.el)"
+           . (lambda (search-expression) (biblio-lookup #'biblio-arxiv-backend search-expression)))
+          ("Google Scholar                            (web)"
+           . "https://scholar.google.com/scholar?q=%s")
+          ("IACR                                      (web)"
+           ."https://duckduckgo.com/?q=site%%3Aeprint.iacr.org+%s")))
 
   ;; Now make it work like I want
   ;; - if there's no match, ask where we want to search
