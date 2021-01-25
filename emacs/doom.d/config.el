@@ -125,6 +125,7 @@
           (bibtex-completion-show-entry (list old-key))
           (zjn--bib-replace-key new-key)
           (bibtex-reformat)
+          (bibtex-sort-buffer)
           (save-buffer))
         ;; 2. PDF
         (when (> (length old-pdfs) 1)
@@ -144,11 +145,13 @@
 
 (defun zjn--bib-get-key (entry)
   "The key we want to use by default."
-  (save-excursion
-   (with-current-buffer (find-file-noselect bibtex-completion-bibliography)
-    (goto-char (point-max))
-    (bibtex-beginning-of-entry)
-    (read-string "Key: " (s-replace ":" "" (s-replace ":_" ":" (bibtex-generate-autokey)))))))
+  (bibtex-beginning-of-entry)
+  (while (save-excursion
+           (s-equals? (cdr (assoc-string "=type=" (bibtex-parse-entry)))
+                      "proceedings"))
+    (bibtex-previous-entry)
+    (bibtex-beginning-of-entry))
+  (read-string "Key: " (s-replace ":" "" (s-replace ":_" ":" (bibtex-generate-autokey)))))
 (defun zjn--bib-replace-key (new-key)
   "Replace the bibtex key of the current entry."
   ; cribbed from bibtex-clean-entry
@@ -159,17 +162,13 @@
                        (match-end bibtex-key-in-head)))
     (insert new-key)))
 (defun zjn--bib-replace-last-key (new-key)
-  (save-excursion
-    (with-current-buffer (find-file-noselect bibtex-completion-bibliography)
-      (goto-char (point-max))
-      (bibtex-beginning-of-entry)
-      (while (save-excursion
-               (s-equals? (cdr (assoc-string "=type=" (bibtex-parse-entry)))
-                          "proceedings"))
-        (bibtex-previous-entry))
-      (zjn--bib-replace-key new-key)
-      (bibtex-reformat)
-      (save-buffer))))
+  (goto-char (point-max))
+  (bibtex-beginning-of-entry)
+  (while (save-excursion
+           (s-equals? (cdr (assoc-string "=type=" (bibtex-parse-entry)))
+                      "proceedings"))
+    (bibtex-previous-entry))
+  (zjn--bib-replace-key new-key))
 (defun zjn--bib-get-url (entry)
   (let ((url (alist-get 'url entry))
         (direct-url (alist-get 'direct-url entry)))
@@ -179,17 +178,23 @@
      (t (read-string "URL (blank for none): ")))))
 (defun zjn--bib-add (bibtex entry)
   "Add BIBTEX (from ENTRY) to end of a user-specified bibtex file."
-  (write-region (s-concat "\n\n" bibtex) nil bibtex-completion-bibliography 'append)
+  (with-temp-file bibtex-completion-bibliography
+    (bibtex-set-dialect)
+    (insert-file-contents bibtex-completion-bibliography)
+    (goto-char (point-max))
+    (insert (s-concat "\n\n" bibtex))
+    (goto-char (point-max))
+    (let ((key (zjn--bib-get-key entry)))
+      (zjn--bib-replace-last-key key)
+      (bibtex-reformat)
+      (bibtex-sort-buffer)
+      (let ((url (zjn--bib-get-url entry)))
+        (when (s-present? url)
+          (let* ((fname (s-concat key ".pdf"))
+                 (dest (f-join bibtex-completion-library-path fname)))
+            (url-copy-file url dest t))))))
   (message "Inserted bibtex entry for %S."
-        (biblio--prepare-title (biblio-alist-get 'title entry)))
-  ;; TODO: special case key for IACR; don't ask
-  (let* ((key (zjn--bib-get-key entry))
-         (url (zjn--bib-get-url entry))
-         (fname (s-concat key ".pdf"))
-         (dest (f-join bibtex-completion-library-path fname)))
-    (zjn--bib-replace-last-key key)
-    (when (s-present? url)
-      (url-copy-file url dest t))))
+        (biblio--prepare-title (biblio-alist-get 'title entry))))
 (defun zjn/bib-add ()
   "Insert BibTeX of current entry at the end of user-specified bibtex file and go there."
   (interactive)
