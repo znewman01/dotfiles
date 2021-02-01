@@ -727,6 +727,7 @@
         '(("http://bristolcrypto.blogspot.com/feeds/posts/default")
           ("https://www.schneier.com/blog/atom.xml")
           ("https://www.mattblaze.org/blog/rss20.xml")
+          ("https://jvns.ca/atom.xml")
           ("https://blog.cryptographyengineering.com/feed/")
           ("https://blog.techorganic.com/atom.xml")
           ("https://joy.recurse.com/feed.atom")
