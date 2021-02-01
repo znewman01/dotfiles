@@ -28,6 +28,7 @@ in pkgs.mkShell rec {
     pkgconfig
     # local testing
     etcd
+    gnuplot
 
     # DevOps -- for running experiments
     packer
