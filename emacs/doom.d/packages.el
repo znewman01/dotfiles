@@ -74,3 +74,4 @@
 (package! org-fancy-priorities :disable t)
 (package! org-starless :recipe (:host github :repo "TonCherAmi/org-starless"))
 (package! org-padding :recipe (:host github :repo "TonCherAmi/org-padding"))
+(package! org-fragtog)

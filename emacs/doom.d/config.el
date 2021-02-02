@@ -554,7 +554,9 @@
 
   (setq org-preview-latex-default-process 'imagemagick)
   ; (plist-put org-format-latex-options :background "Transparent")
-  (setq org-latex-pdf-process '("tectonic %f")))
+  (setq org-latex-pdf-process '("tectonic %f"))
+  (require 'org-fragtog)
+  (add-hook 'org-mode-hook 'org-fragtog-mode))
 
 
 
