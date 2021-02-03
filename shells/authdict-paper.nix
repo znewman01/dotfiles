@@ -3,34 +3,7 @@ with import <nixpkgs> { };
 let
   tex-env = texlive.combine {
     inherit (texlive)
-      scheme-medium
-      blindtext
-      cleveref
-      xifthen
-      ifmtarg
-      preprint  # for authblk
-      mwe
-      todonotes
-      enumitem
-      soul
-      booktabs
-      threeparttable
-      libertine
-      glossaries
-      glossaries-extra
-      forest
-      pgfopts
-      environ
-      trimspaces
-      inlinedef
-      mfirstuc
-      xfor
-      datatool
-      fnpct
-      titlesec
-      titling
-      translations
-      IEEEtran
+      scheme-full
       latexmk;
   };
 in pkgs.mkShell rec {
