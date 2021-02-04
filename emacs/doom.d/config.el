@@ -220,8 +220,16 @@
 (setq-default left-margin-width 1
               right-margin-width 1)
 
-(after! tex
-  (add-to-list 'TeX-command-list '("Tectonic" "tectonic %t" TeX-run-compile nil (latex-mode) :help "Run Tectonic")))
+(after! latex
+  (add-to-list 'TeX-command-list '("Tectonic" "tectonic --synctex %t" TeX-run-compile nil (latex-mode) :help "Run Tectonic"))
+  (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
+  (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
+        TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view))
+        TeX-output-extension "pdf")
+  (add-hook! LaTeX-mode
+    (setq TeX-command-default "Tectonic"
+          TeX-output-extension "pdf")))
+
 
 (setq org-directory "~/notes/")
 (map! :leader "a" (cmd! (org-agenda nil "n")))
