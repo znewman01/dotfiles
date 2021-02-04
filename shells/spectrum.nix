@@ -45,10 +45,6 @@ in pkgs.mkShell rec {
     # pythonPackages.pylint
     pythonPackages.ipython
     nodePackages.pyright
-    # graphs
-    pythonPackages.matplotlib
-    pythonPackages.numpy
-    pythonPackages.pandas
   ];
 
   PROTOC = "${pkgs.protobuf}/bin/protoc";
