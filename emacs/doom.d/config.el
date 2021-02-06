@@ -808,12 +808,13 @@
   (defun add-elfeed-entry-to-paper-queue-iacr ()
     (interactive)
     (let ((entry (elfeed-search-selected :single)))
-      (org-capture-string (elfeed-entry-link entry) "i"))
-    (unless (use-region-p) (forward-line)))
-
+      (zjn--import-iacr (elfeed-entry-link entry))
+      (message "Imported IACR article!")))
   (defun add-elfeed-shown-to-paper-queue-iacr ()
     (interactive)
-    (org-capture-string (elfeed-entry-link elfeed-show-entry) "i"))
+    (zjn--import-iacr (elfeed-entry-link elfeed-show-entry))
+    (message "Imported IACR article!"))
+
   (map! :mode 'elfeed-search-mode
         :n "I" #'add-elfeed-entry-to-paper-queue-iacr
         :n "o" #'elfeed-search-browse-url
