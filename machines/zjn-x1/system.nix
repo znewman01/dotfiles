@@ -1,6 +1,8 @@
 { config, pkgs, ... }:
 
 {
+  networking.hostName = "zjn-x1";
+
   environment.systemPackages = with pkgs; [ sof-firmware ];
   hardware.pulseaudio.extraConfig = ''
     load-module module-alsa-sink device=;w:0,0 channels=4
