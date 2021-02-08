@@ -61,6 +61,6 @@ in {
 
   # # Use a link rather than home.files because we probably want to be able to
   # # hack on this pretty sloppily
-  home.links.".doom.d" = "dotfiles/emacs/doom.d";
+  home.links.".doom.d" = "git/dotfiles/emacs/doom.d";
   home.links."notes" = "Dropbox/notes";
 }

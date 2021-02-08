@@ -76,8 +76,8 @@
     - log in as `zjn`
     - deactivate root password. then proceed
 
-0. Clone this repo: `git clone https://github.com/znewman01/dotfiles.git`
-1. Run `cd dotfiles && sudo ./scripts/install_root.sh && sudo reboot`
+0. Clone this repo: `mkdir -p ~/git && git clone https://github.com/znewman01/dotfiles.git ~/git/dotfiles`
+1. Run `cd ~/git/dotfiles && sudo ./scripts/install_root.sh && sudo reboot`
 2. (Comment out GitHub code.). Run `./scripts/install.sh` (in X!). Wait a while. Reboot.
 3. Run `./scripts/post-install.sh`
 

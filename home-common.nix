@@ -302,6 +302,7 @@ in {
         extraFiles = { "latencies/.projectile".text = ""; };
         shell = ./shells/tor-cdn.nix;
       };
+      "dotfiles" = { url = "git@github.com:znewman01/dotfiles.git"; };
     };
   };
 }
