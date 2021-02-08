@@ -45,6 +45,12 @@ in pkgs.mkShell rec {
     # pythonPackages.pylint
     pythonPackages.ipython
     nodePackages.pyright
+
+    # experiment scripts
+    jq
+    awscli2
+    curl
+    units
   ];
 
   PROTOC = "${pkgs.protobuf}/bin/protoc";
