@@ -47,10 +47,9 @@ in pkgs.mkShell rec {
     nodePackages.pyright
 
     # experiment scripts
-    jq
     awscli2
     curl
-    units
+    tokei
   ];
 
   PROTOC = "${pkgs.protobuf}/bin/protoc";

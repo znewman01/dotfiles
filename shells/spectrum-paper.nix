@@ -16,6 +16,17 @@ let
       ipython
     ];
 in pkgs.mkShell rec {
-  buildInputs =
-    [ tex-env gnumake tectonic python3 (python3.withPackages pythonPackages) ];
+  buildInputs = [
+    tex-env
+    gnumake
+    tectonic
+
+    # plots
+    python3
+    (python3.withPackages pythonPackages)
+
+    # data preprocessing
+    units
+    jq
+  ];
 }
