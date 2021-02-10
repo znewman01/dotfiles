@@ -447,6 +447,7 @@
   (map! :mode org-mode :n "t" #'org-todo)
   (map! :map org-agenda-mode-map :localleader "." #'counsel-org-goto-all
                                  :localleader "/" #'counsel-org-goto-all)
+  (map! :leader "s /" #'counsel-org-goto-all)
 
   (setq org-startup-folded 'fold)
   (setq org-show-context-detail
