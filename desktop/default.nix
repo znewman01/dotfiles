@@ -3,11 +3,12 @@
 let
   # for Zoom 5.1
   unstableTarball20200727 = builtins.fetchTarball {
-  name = "nixos-unstable-2020-07-27";
-  url = "https://github.com/nixos/nixpkgs/archive/c83e13315caadef275a5d074243c67503c558b3b.tar.gz";
-  # Hash obtained using `nix-prefetch-url --unpack <url>`
-  sha256 = "1w8q6y58ddwkxg450i1b98dcalysvx497q3zl7r8py74v4wzrvm5";
-};
+    name = "nixos-unstable-2020-07-27";
+    url =
+      "https://github.com/nixos/nixpkgs/archive/c83e13315caadef275a5d074243c67503c558b3b.tar.gz";
+    # Hash obtained using `nix-prefetch-url --unpack <url>`
+    sha256 = "1w8q6y58ddwkxg450i1b98dcalysvx497q3zl7r8py74v4wzrvm5";
+  };
   # TODO: make module
   fuiTurquoise = "#1abc9c";
   fuiEmerald = "#2ecc71";
@@ -35,19 +36,13 @@ let
   fgColorLight = fuiAsphalt;
   bgColorDark = fuiDarkAsphalt;
   fgColorDark = fuiDarkClouds;
-in
-{
-  imports = [
-    ./xmonad.nix
-    ./fonts.nix
-    ./alacritty.nix
-  ];
+in {
+  imports = [ ./xmonad.nix ./fonts.nix ./alacritty.nix ];
 
   nixpkgs.config = {
     packageOverrides = pkgs: {
-      unstable20200727 = import unstableTarball20200727 {
-        config = config.nixpkgs.config;
-      };
+      unstable20200727 =
+        import unstableTarball20200727 { config = config.nixpkgs.config; };
     };
   };
 
@@ -87,11 +82,13 @@ in
   home.file."bin/alert.sh" = {
     text = ''
       #!/usr/bin/env ${pkgs.bash.out}/bin/bash
-      ${pkgs.pulseaudio.out}/bin/paplay ${config.home.homeDirectory}/${config.home.file."notification.wav".target}
+      ${pkgs.pulseaudio.out}/bin/paplay ${config.home.homeDirectory}/${
+        config.home.file."notification.wav".target
+      }
     '';
     executable = true;
   };
-  programs.bash.shellAliases.beep = "notify-send -t 2000 \"done\"";
+  programs.bash.shellAliases.beep = ''notify-send -t 2000 "done"'';
   services.dunst = {
     enable = true;
     settings = {
@@ -104,7 +101,7 @@ in
         ignore_newline = false;
         stack_duplicates = true;
         hide_duplicates_count = true;
-        geometry = "400x80-30+49"; #   [{width}]x{height}[+/-{x}+/-{y}]
+        geometry = "400x80-30+49"; # [{width}]x{height}[+/-{x}+/-{y}]
         shrink = false;
         idle_threshold = 30;
         follow = "keyboard";
@@ -138,7 +135,9 @@ in
       };
       play_sound = {
         summary = "*";
-        script = "${config.home.homeDirectory}/${config.home.file."bin/alert.sh".target}";
+        script = "${config.home.homeDirectory}/${
+            config.home.file."bin/alert.sh".target
+          }";
       };
     };
   };

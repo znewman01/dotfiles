@@ -28,13 +28,10 @@ let
   fgColorLight = fuiAsphalt;
   bgColorDark = fuiDarkAsphalt;
   fgColorDark = fuiDarkClouds;
-in
-{
+in {
   xsession.enable = true;
 
-  home.packages = with pkgs; [
-    haskellPackages.xmobar
-  ];
+  home.packages = with pkgs; [ haskellPackages.xmobar ];
 
   xsession.windowManager.xmonad = {
     enable = true;
