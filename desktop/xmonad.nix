@@ -65,7 +65,7 @@ in {
 
       xpconfig :: XPConfig
       xpconfig = def
-          { font = "xft:Iosevka:size=12"
+          { font = "xft:Roboto Mono:size=12"
           , bgColor =     "#${colors.base01}"
           , fgColor =     "#${colors.base05}"
           , fgHLight =    "#${colors.base05}"
@@ -127,7 +127,7 @@ in {
 
   xdg.configFile."xmobar/xmobarrc".text = ''
     Config {
-         font =         "xft:Iosevka:size=10,Font Awesome 5 Free Regular:size=9,Font Awesome 5 Free Solid:size=9,Font Awesome 5 Brands:size=9"
+         font =         "xft:Roboto Mono:size=12,Font Awesome 5 Free Regular:size=9,Font Awesome 5 Free Solid:size=9,Font Awesome 5 Brands:size=9"
        , bgColor =      "#${colors.base01}"
        , fgColor =      "#${colors.base05}"
        , border = BottomB
@@ -357,6 +357,6 @@ in {
   programs.rofi = {
     enable = true;
     theme = "/home/zjn/.config/rasi/base16.rasi";
-    font = "Iosevka 9";
+    font = "Roboto Mono 12";
   };
 }

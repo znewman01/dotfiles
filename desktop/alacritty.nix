@@ -5,9 +5,9 @@ in {
   programs.alacritty = {
     enable = true;
     settings.font = {
-      size = 6;
+      size = 12;
       family = [
-        "Iosevka"
+        "Roboto Mono" # TODO: put the fonts in one place
         "Font Awesome 5 Brands"
         "Font Awesome 5 Free"
         "Font Awesome 5 Free Solid"
@@ -44,5 +44,8 @@ in {
         white = "0x${colors.base07}";
       };
     };
+    # https://github.com/alacritty/alacritty/issues/1501
+    # Use pxls, not pts for font
+    settings.env = { "WINIT_X11_SCALE_FACTOR" = "1.0"; };
   };
 }
