@@ -13,11 +13,13 @@ in {
       import Graphics.X11.ExtraTypes.XF86
       import Graphics.X11.Types
       import XMonad
-      import XMonad.Hooks.DynamicLog
-      import XMonad.Hooks.ManageDocks
+      import qualified XMonad.Hooks.DynamicLog as DLog
+      import qualified XMonad.Hooks.DynamicBars as Bars
+      import qualified XMonad.Hooks.ManageDocks as Docks
       import XMonad.Layout.NoBorders
       import XMonad.Layout.Spacing
       import XMonad.Util.EZConfig
+      import qualified XMonad.Util.Run as Run
       import XMonad.Util.NamedScratchpad
       import XMonad.Util.WorkspaceCompare
       import XMonad.Prompt
@@ -33,22 +35,32 @@ in {
 
       main = do
         setPassDir
-        xmonad =<< statusBar "xmobar" myPP toggleStrutsKey myConfig
+        xmonad myConfig
 
       scratchpads = [NS "terminal" "alacritty --title scratchpad" (title =? "scratchpad") (customFloating $ W.RationalRect 0.1 0.2 0.8 0.6)]
 
       -- Command to launch the bar.
-      myPP = xmobarPP
-          { ppCurrent = xmobarColor "#${colors.base09}" ""
-          , ppVisible = xmobarColor "#${colors.base05}" ""
-          , ppHidden = xmobarColor "#${colors.base01}" ""
-          , ppHiddenNoWindows = xmobarColor "#${colors.base01}" ""
-          , ppLayout = const ""
-          , ppTitle = id
-          , ppSort = getSortByIndex
-          , ppUrgent = xmobarColor "#${colors.base08}" ""
+      myLogPP = DLog.xmobarPP
+           { DLog.ppCurrent = DLog.xmobarColor "#${colors.base05}" ""
+           , DLog.ppVisible = const ""
+           , DLog.ppHidden = const ""
+           , DLog.ppHiddenNoWindows = const ""
+           , DLog.ppLayout = const ""
+           , DLog.ppSep = " | "
+           , DLog.ppTitle = id
+           , DLog.ppSort = getSortByIndex
+           , DLog.ppUrgent = DLog.xmobarColor "#${colors.base08}" ""
+           }
+      myLogPPActive = myLogPP
+          { DLog.ppCurrent = DLog.xmobarColor "#${colors.base09}" ""
           }
-      toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
+
+      barCreator :: Bars.DynamicStatusBar
+      barCreator (S sid) = Run.spawnPipe $ "xmobar --screen " ++ show sid
+
+      barDestroyer :: Bars.DynamicStatusBarCleanup
+      barDestroyer = return ()
+      -- toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
 
 
       xpconfig :: XPConfig
@@ -72,11 +84,13 @@ in {
       myConfig = defaultConfig
           { terminal = "alacritty"
           , borderWidth = 3
-          , layoutHook = avoidStruts $ myBorderSpacing $ layoutHook defaultConfig
-          , manageHook = manageHook defaultConfig <+> manageDocks <+> namedScratchpadManageHook scratchpads
+          , layoutHook = Docks.avoidStruts $ myBorderSpacing $ layoutHook defaultConfig
+          , manageHook = manageHook defaultConfig <+> Docks.manageDocks <+> namedScratchpadManageHook scratchpads <+> Docks.manageDocks
           , startupHook = startup
-          , normalBorderColor = "#${colors.base03}"
-          , focusedBorderColor = "#${colors.base04}"
+          , logHook = do Bars.multiPP myLogPPActive myLogPP
+          , handleEventHook = Bars.dynStatusBarEventHook barCreator barDestroyer <+> Docks.docksEventHook
+          , normalBorderColor = "#${colors.base02}"
+          , focusedBorderColor = "#${colors.base05}"
           , workspaces = myWorkspaces
           } `additionalKeysP`
           ( [ ("M-p", spawn "rofi -show run")
@@ -84,6 +98,7 @@ in {
             , ("M-;", namedScratchpadAction scratchpads "terminal")
             , ("S-M-p p", passPrompt xpconfig)
             , ("S-M-p t", passTypePrompt xpconfig)
+            , ("M-C-s", sendMessage Docks.ToggleStruts)
             , ("S-M-l", spawn "i3lock")
             ] ++ [
               (mask ++ "M-" ++ [key], screenWorkspace scr >>= flip whenJust (windows . action))
@@ -106,6 +121,7 @@ in {
       startup :: X ()
       startup = do
         spawn "xsetroot -solid '#${colors.base00}'"
+        Bars.dynStatusBarStartup barCreator barDestroyer
     '';
   };
 
@@ -119,7 +135,7 @@ in {
        , borderWidth = 2
        , position =     Top
        , template = " %StdinReader% }{  %dropbox% |  %KBOS% | %default:Master% |  %wlp3s0wi% |  %battery% |  %date% "
-       , allDesktops =      True    -- show on all desktops
+       , allDesktops = True    -- show on all desktops
        , commands =
             [ Run Weather "KBOS"    [ "-t" , "<fc=#${colors.base06}><tempF></fc>°F"
                                     ] 36000
