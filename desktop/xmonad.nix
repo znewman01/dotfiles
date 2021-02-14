@@ -102,7 +102,7 @@ in {
               , Docks.docksEventHook
               ]
           , normalBorderColor = "#${colors.base02}"
-          , focusedBorderColor = "#${colors.base05}"
+          , focusedBorderColor = "#${colors.base02}"  -- can be the same with window fade
           , workspaces = myWorkspaces
           } `additionalKeysP`
           ( [ ("M-p", spawn "rofi -show run")
@@ -154,7 +154,7 @@ in {
                                     , "-n" , "#${colors.base05}"
                                     , "-h" , "#${colors.base03}"
                                     , "--"
-                                    , "-o" , "<left>% (<fc=${colors.base09}><timeleft></fc>)"
+                                    , "-o" , "<left>% (<fc=#${colors.base05}><timeleft></fc>)"
                                     , "-O" , "<fc=#${colors.base05}>Charging</fc>"
                                     , "-i" , "<fc=#${colors.base03}>Charged</fc>"
                                     ] 50

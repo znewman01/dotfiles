@@ -43,7 +43,7 @@ in {
   services.screen-locker = {
     enable = true;
     inactiveInterval = 10;
-    lockCmd = "${pkgs.i3lock}/bin/i3lock -n";
+    lockCmd = "${pkgs.i3lock}/bin/i3lock -n -c ${colors.base00}";
   };
 
   xsession = {
