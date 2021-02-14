@@ -17,6 +17,8 @@
 
   nixpkgs.config.allowUnfree = true;
 
+  services.dbus.packages = with pkgs; [ gnome3.dconf ];
+
   console = {
     font = "Lat2-Terminus16";
     keyMap = "us";

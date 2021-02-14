@@ -211,7 +211,11 @@
   (setq company-idle-delay 0.2))
 
 ; Make pretty
-(setq doom-theme 'doom-one-light)
+(require 'f)
+; (load-file (f-join doom-private-dir "base16-zjn-theme.el"))
+(add-to-list 'custom-theme-load-path (f-join doom-private-dir "themes"))
+(setq doom-theme nil)
+(load-theme 'base16-zjn t)
 (setq zjn--mono "Roboto Mono")
 (setq zjn--sans "Bitstream Vera Sans")
 (setq zjn--serif "TeX Gyre Pagella")

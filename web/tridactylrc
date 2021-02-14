@@ -1,14 +1,12 @@
-set newtab about:blank
+" set newtab about:blank
 set hintdelay 100
 bind ! fillcmdline !
-colors flucui-light
+colors base16
 " Strike a blow for freedom
 set searchengine duckduckgo
 " I feel the defaults are backwards
 bind J tabnext
 bind K tabprev
-" Make Tridactyl work in more places
-set csp clobber
 " Saner search
 bind / fillcmdline find
 bind ? fillcmdline find -?

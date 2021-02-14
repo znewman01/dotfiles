@@ -1,33 +1,6 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
-let
-  # TODO: make module
-  fuiTurquoise = "#1abc9c";
-  fuiEmerald = "#2ecc71";
-  fuiRiver = "#3498db";
-  fuiAmethyst = "#9b59b6";
-  fuiDeepAsphalt = "#34495e";
-  fuiAsphalt = "#425d78";
-  fuiSunflower = "#f1c40f";
-  fuiCarrot = "#e67e22";
-  fuiAlizarin = "#e74c3c";
-  fuiClouds = "#ecf0f1";
-  fuiConcrete = "#95a5a6";
-  fuiDarkTurquoise = "#16a085";
-  fuiDarkEmerald = "#27ae60";
-  fuiDarkRiver = "#2980b9";
-  fuiDarkAmethyst = "#8e44ad";
-  fuiDarkAsphalt = "#2c3e50";
-  fuiDarkSunflower = "#f39c12";
-  fuiDarkCarrot = "#d35400";
-  fuiDarkAlizarin = "#c0392b";
-  fuiDarkClouds = "#bdc3c7";
-  fuiDeepClouds = "#dce0e1";
-  fuiDarkConcrete = "#7f8c8d";
-  bgColorLight = fuiClouds;
-  fgColorLight = fuiAsphalt;
-  bgColorDark = fuiDarkAsphalt;
-  fgColorDark = fuiDarkClouds;
+let colors = (import ./colors.nix) { lib = lib; };
 in {
   xsession.enable = true;
 
@@ -46,6 +19,7 @@ in {
       import XMonad.Layout.Spacing
       import XMonad.Util.EZConfig
       import XMonad.Util.NamedScratchpad
+      import XMonad.Util.WorkspaceCompare
       import XMonad.Prompt
       import XMonad.Prompt.Pass
       import System.Environment
@@ -65,10 +39,14 @@ in {
 
       -- Command to launch the bar.
       myPP = xmobarPP
-          { ppCurrent = xmobarColor "${fgColorLight}" ""
-          , ppHidden = xmobarColor "${fuiDarkConcrete}" ""
+          { ppCurrent = xmobarColor "#${colors.base09}" ""
+          , ppVisible = xmobarColor "#${colors.base05}" ""
+          , ppHidden = xmobarColor "#${colors.base01}" ""
+          , ppHiddenNoWindows = xmobarColor "#${colors.base01}" ""
           , ppLayout = const ""
-          , ppTitle = const ""
+          , ppTitle = id
+          , ppSort = getSortByIndex
+          , ppUrgent = xmobarColor "#${colors.base08}" ""
           }
       toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
 
@@ -76,11 +54,11 @@ in {
       xpconfig :: XPConfig
       xpconfig = def
           { font = "xft:Iosevka:size=12"
-          , bgColor = "${bgColorLight}"
-          , fgColor = "${fgColorLight}"
-          , fgHLight = "${fgColorLight}"
-          , bgHLight = "${fuiCarrot}"
-          , borderColor = "${fgColorLight}"
+          , bgColor =     "#${colors.base01}"
+          , fgColor =     "#${colors.base05}"
+          , fgHLight =    "#${colors.base05}"
+          , bgHLight =    "#${colors.base02}"
+          , borderColor = "#${colors.base05}"
           , promptBorderWidth = 4
           , position = CenteredAt 0.5 0.5
           , height = 30
@@ -97,8 +75,8 @@ in {
           , layoutHook = avoidStruts $ myBorderSpacing $ layoutHook defaultConfig
           , manageHook = manageHook defaultConfig <+> manageDocks <+> namedScratchpadManageHook scratchpads
           , startupHook = startup
-          , normalBorderColor = "${fuiDarkClouds}"
-          , focusedBorderColor = "${fuiDeepAsphalt}"
+          , normalBorderColor = "#${colors.base03}"
+          , focusedBorderColor = "#${colors.base04}"
           , workspaces = myWorkspaces
           } `additionalKeysP`
           ( [ ("M-p", spawn "rofi -show run")
@@ -127,43 +105,43 @@ in {
 
       startup :: X ()
       startup = do
-        spawn "xsetroot -solid '${fuiClouds}'"
+        spawn "xsetroot -solid '#${colors.base00}'"
     '';
   };
 
-  home.file.".xmobarrc".text = ''
+  xdg.configFile."xmobar/xmobarrc".text = ''
     Config {
          font =         "xft:Iosevka:size=10,Font Awesome 5 Free Regular:size=9,Font Awesome 5 Free Solid:size=9,Font Awesome 5 Brands:size=9"
-       , bgColor =      "${bgColorLight}"
-       , fgColor =      "${fgColorLight}"
+       , bgColor =      "#${colors.base01}"
+       , fgColor =      "#${colors.base05}"
        , border = BottomB
-       , borderColor = "${fuiDarkClouds}"
+       , borderColor = "#${colors.base03}"
        , borderWidth = 2
        , position =     Top
        , template = " %StdinReader% }{  %dropbox% |  %KBOS% | %default:Master% |  %wlp3s0wi% |  %battery% |  %date% "
        , allDesktops =      True    -- show on all desktops
        , commands =
-            [ Run Weather "KBOS"    [ "-t" , "<fc=${fgColorLight}><tempF></fc>°F"
+            [ Run Weather "KBOS"    [ "-t" , "<fc=#${colors.base06}><tempF></fc>°F"
                                     ] 36000
             , Run Battery           [ "-t" , "<acstatus>"
                                     , "-L" , "20"        -- units: %
                                     , "-H" , "75"        -- units: %
-                                    , "-l" , "${fuiAlizarin}"
-                                    , "-n" , "${fuiCarrot}"
-                                    , "-h" , "${fuiEmerald}"
+                                    , "-l" , "#${colors.base08}"
+                                    , "-n" , "#${colors.base05}"
+                                    , "-h" , "#${colors.base03}"
                                     , "--"
-                                    , "-o" , "<left>% (<fc=${fuiCarrot}><timeleft></fc>)"
-                                    , "-O" , "<fc=${fuiEmerald}>Charging</fc>"
-                                    , "-i" , "<fc=${fuiAlizarin}>Charged</fc>"
+                                    , "-o" , "<left>% (<fc=${colors.base09}><timeleft></fc>)"
+                                    , "-O" , "<fc=#${colors.base05}>Charging</fc>"
+                                    , "-i" , "<fc=#${colors.base03}>Charged</fc>"
                                     ] 50
-            , Run Date              "<fc=#6272A4>%F</fc>  %T" "date" 1
+            , Run Date              "<fc=#${colors.base05}>%F</fc>  %T" "date" 1
             , Run Volume "default" "Master"
                                     [ "-t"      , "<status> <volume>%"
                                     , "--"
                                     , "-O"      , ""
-                                    , "-C"      , "${fgColorLight}"
+                                    , "-C"      , "#${colors.base05}"
                                     , "-o"      , ""
-                                    , "-c"      , "${fgColorLight}"
+                                    , "-c"      , "#${colors.base05}"
                                     ] 10
             , Run Wireless "wlp3s0" [ "-t"      , "<essid>"
                                     , "--"
@@ -182,28 +160,187 @@ in {
 
       case "$status" in
               "Up to date")
-                      echo "<fc=${fuiEmerald}></fc>" ;;
+                      echo "<fc=#${colors.base03}></fc>" ;;
               Updating*)
-                      echo "<fc=${fuiCarrot}>↯</fc>" ;;
+                      echo "<fc=#${colors.base0A}>↯</fc>" ;;
               Starting*)
-                      echo "<fc=${fuiCarrot}>↯</fc>" ;;
+                      echo "<fc=#${colors.base0A}>↯</fc>" ;;
               Checking*)
-                      echo "<fc=${fuiCarrot}>↯</fc>" ;;
+                      echo "<fc=#${colors.base0A}>↯</fc>" ;;
               Syncing*)
-                      echo "<fc=${fuiCarrot}>↯</fc>" ;;
+                      echo "<fc=#${colors.base0A}>↯</fc>" ;;
               *)
-                      echo "<fc=${fuiAlizarin}></fc> $status" ;;
+                      echo "<fc=#${colors.base08}></fc> $status" ;;
       esac
     '';
     executable = true;
   };
 
-  # TODO: don't hardcode full path
-  home.file.".config/rasi/dracula.rasi".source = ./dracula.rasi;
-  home.file.".config/rasi/flucui-light.rasi".source = ./flucui-light.rasi;
+  xdg.configFile."rasi/base16.rasi".text = ''
+    * {
+        red:                         rgba ( ${colors.r colors.base08},
+                                            ${colors.g colors.base08},
+                                            ${colors.b colors.base08},
+                                            100 % );
+        blue:                        rgba ( ${colors.r colors.base0D},
+                                            ${colors.g colors.base0D},
+                                            ${colors.b colors.base0D},
+                                            100 % );
+        lightfg:                     rgba ( ${colors.r colors.base06},
+                                            ${colors.g colors.base06},
+                                            ${colors.b colors.base06},
+                                            100 % );
+        lightbg:                     rgba ( ${colors.r colors.base01},
+                                            ${colors.g colors.base01},
+                                            ${colors.b colors.base01},
+                                            100 % );
+        foreground:                  rgba ( ${colors.r colors.base05},
+                                            ${colors.g colors.base05},
+                                            ${colors.b colors.base05},
+                                            100 % );
+        background:                  rgba ( ${colors.r colors.base00},
+                                            ${colors.g colors.base00},
+                                            ${colors.b colors.base00},
+                                            100 % );
+        background-color:            rgba ( ${colors.r colors.base00},
+                                            ${colors.g colors.base00},
+                                            ${colors.b colors.base00},
+                                            0 % );
+        separatorcolor:              @foreground;
+        border-color:                @foreground;
+        selected-normal-foreground:  @lightbg;
+        selected-normal-background:  @lightfg;
+        selected-active-foreground:  @background;
+        selected-active-background:  @blue;
+        selected-urgent-foreground:  @background;
+        selected-urgent-background:  @red;
+        normal-foreground:           @foreground;
+        normal-background:           @background;
+        active-foreground:           @blue;
+        active-background:           @background;
+        urgent-foreground:           @red;
+        urgent-background:           @background;
+        alternate-normal-foreground: @foreground;
+        alternate-normal-background: @lightbg;
+        alternate-active-foreground: @blue;
+        alternate-active-background: @lightbg;
+        alternate-urgent-foreground: @red;
+        alternate-urgent-background: @lightbg;
+        spacing:                     2;
+    }
+    window {
+        background-color: @background;
+        border:           1;
+        padding:          5;
+    }
+    mainbox {
+        border:           0;
+        padding:          0;
+    }
+    message {
+        border:           1px solid 0px 0px ;
+        border-color:     @separatorcolor;
+        padding:          1px ;
+    }
+    textbox {
+        text-color:       @foreground;
+    }
+    listview {
+        fixed-height:     0;
+        border:           2px solid 0px 0px ;
+        border-color:     @separatorcolor;
+        spacing:          2px ;
+        scrollbar:        true;
+        padding:          2px 0px 0px ;
+    }
+    element {
+        border:           0;
+        padding:          1px ;
+    }
+    element normal.normal {
+        background-color: @normal-background;
+        text-color:       @normal-foreground;
+    }
+    element normal.urgent {
+        background-color: @urgent-background;
+        text-color:       @urgent-foreground;
+    }
+    element normal.active {
+        background-color: @active-background;
+        text-color:       @active-foreground;
+    }
+    element selected.normal {
+        background-color: @selected-normal-background;
+        text-color:       @selected-normal-foreground;
+    }
+    element selected.urgent {
+        background-color: @selected-urgent-background;
+        text-color:       @selected-urgent-foreground;
+    }
+    element selected.active {
+        background-color: @selected-active-background;
+        text-color:       @selected-active-foreground;
+    }
+    element alternate.normal {
+        background-color: @alternate-normal-background;
+        text-color:       @alternate-normal-foreground;
+    }
+    element alternate.urgent {
+        background-color: @alternate-urgent-background;
+        text-color:       @alternate-urgent-foreground;
+    }
+    element alternate.active {
+        background-color: @alternate-active-background;
+        text-color:       @alternate-active-foreground;
+    }
+    scrollbar {
+        width:            4px ;
+        border:           0;
+        handle-color:     @normal-foreground;
+        handle-width:     8px ;
+        padding:          0;
+    }
+    sidebar {
+        border:           2px solid 0px 0px ;
+        border-color:     @separatorcolor;
+    }
+    button {
+        spacing:          0;
+        text-color:       @normal-foreground;
+    }
+    button selected {
+        background-color: @selected-normal-background;
+        text-color:       @selected-normal-foreground;
+    }
+    inputbar {
+        spacing:          0px;
+        text-color:       @normal-foreground;
+        padding:          1px ;
+        children:         [ prompt,textbox-prompt-colon,entry,case-indicator ];
+    }
+    case-indicator {
+        spacing:          0;
+        text-color:       @normal-foreground;
+    }
+    entry {
+        spacing:          0;
+        text-color:       @normal-foreground;
+    }
+    prompt {
+        spacing:          0;
+        text-color:       @normal-foreground;
+    }
+    textbox-prompt-colon {
+        expand:           false;
+        str:              ":";
+        margin:           0px 0.3000em 0.0000em 0.0000em ;
+        text-color:       inherit;
+    }
+  '';
+
   programs.rofi = {
     enable = true;
-    theme = "/home/zjn/.config/rasi/flucui-light.rasi";
+    theme = "/home/zjn/.config/rasi/base16.rasi";
     font = "Iosevka 9";
   };
 }
