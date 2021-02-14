@@ -4,7 +4,7 @@ let colors = (import ./colors.nix) { lib = lib; };
 in {
   xsession.enable = true;
 
-  home.packages = with pkgs; [ haskellPackages.xmobar ];
+  home.packages = with pkgs; [ haskellPackages.xmobar hsetroot ];
 
   xsession.windowManager.xmonad = {
     enable = true;
@@ -16,6 +16,7 @@ in {
       import qualified XMonad.Hooks.DynamicLog as DLog
       import qualified XMonad.Hooks.DynamicBars as Bars
       import qualified XMonad.Hooks.ManageDocks as Docks
+      import qualified XMonad.Hooks.FadeInactive as Fade
       import XMonad.Layout.NoBorders
       import XMonad.Layout.Spacing
       import XMonad.Util.EZConfig
@@ -39,7 +40,6 @@ in {
 
       scratchpads = [NS "terminal" "alacritty --title scratchpad" (title =? "scratchpad") (customFloating $ W.RationalRect 0.1 0.2 0.8 0.6)]
 
-      -- Command to launch the bar.
       myLogPP = DLog.xmobarPP
            { DLog.ppCurrent = DLog.xmobarColor "#${colors.base05}" ""
            , DLog.ppVisible = const ""
@@ -60,7 +60,6 @@ in {
 
       barDestroyer :: Bars.DynamicStatusBarCleanup
       barDestroyer = return ()
-      -- toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
 
 
       xpconfig :: XPConfig
@@ -85,10 +84,23 @@ in {
           { terminal = "alacritty"
           , borderWidth = 3
           , layoutHook = Docks.avoidStruts $ myBorderSpacing $ layoutHook defaultConfig
-          , manageHook = manageHook defaultConfig <+> Docks.manageDocks <+> namedScratchpadManageHook scratchpads <+> Docks.manageDocks
-          , startupHook = startup
-          , logHook = do Bars.multiPP myLogPPActive myLogPP
-          , handleEventHook = Bars.dynStatusBarEventHook barCreator barDestroyer <+> Docks.docksEventHook
+          , manageHook = composeAll
+              [ manageHook defaultConfig
+              , Docks.manageDocks
+              , namedScratchpadManageHook scratchpads
+              ]
+          , startupHook = composeAll
+              [ Bars.dynStatusBarStartup barCreator barDestroyer
+              , spawn "hsetroot -solid '#${colors.base00}'"
+              ]
+          , logHook = composeAll
+              [ Bars.multiPP myLogPPActive myLogPP
+              , Fade.fadeInactiveLogHook 0xbbbbbbbb
+              ]
+          , handleEventHook = composeAll
+              [ Bars.dynStatusBarEventHook barCreator barDestroyer
+              , Docks.docksEventHook
+              ]
           , normalBorderColor = "#${colors.base02}"
           , focusedBorderColor = "#${colors.base05}"
           , workspaces = myWorkspaces
@@ -118,10 +130,6 @@ in {
           , ((0, xF86XK_ScreenSaver), spawn "i3lock")
           ]
 
-      startup :: X ()
-      startup = do
-        spawn "xsetroot -solid '#${colors.base00}'"
-        Bars.dynStatusBarStartup barCreator barDestroyer
     '';
   };
 

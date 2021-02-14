@@ -35,6 +35,7 @@ in {
     skype
     signal-desktop
     keybase-gui
+    xcompmgr
   ];
 
   programs.autorandr.enable = true;
@@ -46,7 +47,8 @@ in {
   };
 
   xsession = {
-    initExtra = ''
+    profileExtra = ''
+      xcompmgr &
       slack &
       signal-desktop &
       keybase-gui &
