@@ -49,9 +49,6 @@ in {
   xsession = {
     profileExtra = ''
       xcompmgr &
-      slack &
-      signal-desktop &
-      keybase-gui &
     '';
     scriptPath = ".hm-xsession";
   };

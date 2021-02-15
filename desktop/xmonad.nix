@@ -10,11 +10,14 @@ in {
     enable = true;
     enableContribAndExtras = true;
     config = pkgs.writeText "xmonad.hs" ''
+      import Data.List
+      import Data.Char
       import Graphics.X11.ExtraTypes.XF86
       import Graphics.X11.Types
       import XMonad
       import qualified XMonad.Hooks.DynamicLog as DLog
       import qualified XMonad.Hooks.DynamicBars as Bars
+      import qualified XMonad.Hooks.DynamicProperty as DProp
       import qualified XMonad.Hooks.ManageDocks as Docks
       import qualified XMonad.Hooks.FadeInactive as Fade
       import XMonad.Layout.NoBorders
@@ -22,6 +25,7 @@ in {
       import XMonad.Util.EZConfig
       import qualified XMonad.Util.Run as Run
       import XMonad.Util.NamedScratchpad
+      import XMonad.Util.SpawnOnce
       import XMonad.Util.WorkspaceCompare
       import XMonad.Prompt
       import XMonad.Prompt.Pass
@@ -79,19 +83,39 @@ in {
 
       myWorkspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
 
+      myManageHook = composeAll . concat $
+              [ [ manageHook defaultConfig ]
+              , [ Docks.manageDocks ]
+              , [ title =? "emacsfloat"  --> (customFloating $ W.RationalRect (1/4) (1/8) (1/2) (3/4)) ]
+              , [ title =? "emacslast"  --> doShift "9" ]
+              , [ namedScratchpadManageHook scratchpads ]
+              , [ classMatch app --> doShift "8" | app <- messageApps ]
+              ]
+         where messageApps = ["slack", "signal", "keybase", "skype"]
+               classMatch s = fmap (s `isInfixOf`) (fmap (map toLower) className)
+      myDynPropHook = composeAll . concat $
+          [ [ zoomLike <&&> titleMatch "licensed" --> doShift "8" ]
+          , [ zoomLike <&&> titleMatch "meeting" --> doShift "6" ]
+          , [ zoomLike <&&> titleMatch "choose one" --> doShift "6" ]
+          ]
+        where zoomLike = fmap ("zoom" `isInfixOf`) (fmap (map toLower) className)
+              titleMatch s = fmap (s `isInfixOf`) (fmap (map toLower) title)
+
       -- Main configuration, override the defaults to your liking.
       myConfig = defaultConfig
           { terminal = "alacritty"
           , borderWidth = 3
           , layoutHook = Docks.avoidStruts $ myBorderSpacing $ layoutHook defaultConfig
-          , manageHook = composeAll
-              [ manageHook defaultConfig
-              , Docks.manageDocks
-              , namedScratchpadManageHook scratchpads
-              ]
+          , manageHook =  myManageHook
           , startupHook = composeAll
               [ Bars.dynStatusBarStartup barCreator barDestroyer
               , spawn "hsetroot -solid '#${colors.base00}'"
+              , spawnOnce "slack"
+              , spawnOnce "signal-desktop"
+              , spawnOnce "skypeforlinux"
+              , spawnOnce "zoom-us"
+              , spawnOnce "sleep 1; keybase-gui"
+              , spawnOnce "sleep 4; emacsclient --frame-parameters='(quote (name . \"emacslast\"))' --eval '(org-agenda nil \"n\")' -c"
               ]
           , logHook = composeAll
               [ Bars.multiPP myLogPPActive myLogPP
@@ -100,6 +124,7 @@ in {
           , handleEventHook = composeAll
               [ Bars.dynStatusBarEventHook barCreator barDestroyer
               , Docks.docksEventHook
+              , DProp.dynamicPropertyChange "WM_NAME" myDynPropHook
               ]
           , normalBorderColor = "#${colors.base02}"
           , focusedBorderColor = "#${colors.base02}"  -- can be the same with window fade
@@ -132,6 +157,14 @@ in {
           ]
 
     '';
+  };
+
+  home.file."bin/em-float" = {
+    text = ''
+      #!/bin/sh
+      emacsclient --frame-parameters='(quote (name . "emacsfloat"))' -c $@
+    '';
+    executable = true;
   };
 
   xdg.configFile."xmobar/xmobarrc".text = ''
@@ -365,12 +398,16 @@ in {
 
   xdg.configFile."rofi-pass/config".text = ''
     BROWSER='xdg-open'
-    EDITOR='emacsclient -c'
+    EDITOR='em-float'
     default_do='autotype'
     copy_pass='Ctrl+c'
+    copy_menu="Alt+C"
     type_pass='Ctrl+t'
+    type_menu="Ctrl+T"
     default_user='znewman01'
     open_url='Ctrl+o'
+    action_menu='Ctrl+A'
+    insert_pass='Ctrl+i'
     show='Ctrl+s'
     clip=clipboard
     clip_clear=45
