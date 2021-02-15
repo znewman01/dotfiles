@@ -4,7 +4,7 @@ let colors = (import ./colors.nix) { lib = lib; };
 in {
   xsession.enable = true;
 
-  home.packages = with pkgs; [ haskellPackages.xmobar hsetroot ];
+  home.packages = with pkgs; [ haskellPackages.xmobar hsetroot rofi-pass ];
 
   xsession.windowManager.xmonad = {
     enable = true;
@@ -108,10 +108,11 @@ in {
           ( [ ("M-p", spawn "rofi -show run")
             , ("<F12>", namedScratchpadAction scratchpads "terminal")
             , ("M-;", namedScratchpadAction scratchpads "terminal")
-            , ("S-M-p p", passPrompt xpconfig)
-            , ("S-M-p t", passTypePrompt xpconfig)
+            , ("S-M-p", spawn "rofi-pass")
             , ("M-C-s", sendMessage Docks.ToggleStruts)
-            , ("S-M-l", spawn "i3lock")
+            , ("S-M-l", spawn "i3lock -c ${colors.base00}")
+            , ("S-M-c", spawn "rofi -show calc -modi calc -no-show-match -no-sort -lines 0 -calc-command \"xdotool type '{result}'\" -kb-accept-custom 'Return' -kb-accept-entry \'\'")
+            , ("S-M-d", kill)
             ] ++ [
               (mask ++ "M-" ++ [key], screenWorkspace scr >>= flip whenJust (windows . action))
               | (key, scr)  <- zip "ew" [1,0]
@@ -362,9 +363,23 @@ in {
     }
   '';
 
+  xdg.configFile."rofi-pass/config".text = ''
+    BROWSER='xdg-open'
+    EDITOR='emacsclient -c'
+    default_do='autotype'
+    copy_pass='Ctrl+c'
+    type_pass='Ctrl+t'
+    default_user='znewman01'
+    open_url='Ctrl+o'
+    show='Ctrl+s'
+    clip=clipboard
+    clip_clear=45
+  '';
+
   programs.rofi = {
     enable = true;
     theme = "/home/zjn/.config/rasi/base16.rasi";
+    package = with pkgs; rofi.override { plugins = [ rofi-calc ]; };
     font = "Roboto Mono 12";
   };
 }
