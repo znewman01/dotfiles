@@ -27,6 +27,7 @@ in {
       import XMonad.Util.NamedScratchpad
       import XMonad.Util.SpawnOnce
       import XMonad.Util.WorkspaceCompare
+      import qualified XMonad.Hooks.EwmhDesktops as Ewmh
       import XMonad.Prompt
       import XMonad.Prompt.Pass
       import System.Environment
@@ -40,7 +41,7 @@ in {
 
       main = do
         setPassDir
-        xmonad myConfig
+        xmonad $ Ewmh.ewmh myConfig
 
       scratchpads = [NS "terminal" "alacritty --title scratchpad" (title =? "scratchpad") (customFloating $ W.RationalRect 0.1 0.2 0.8 0.6)]
 
@@ -101,7 +102,7 @@ in {
         where zoomLike = fmap ("zoom" `isInfixOf`) (fmap (map toLower) className)
               titleMatch s = fmap (s `isInfixOf`) (fmap (map toLower) title)
 
-      -- Main configuration, override the defaults to your liking.
+
       myConfig = defaultConfig
           { terminal = "alacritty"
           , borderWidth = 3
@@ -136,7 +137,8 @@ in {
             , ("S-M-p", spawn "rofi-pass")
             , ("M-C-s", sendMessage Docks.ToggleStruts)
             , ("S-M-l", spawn "i3lock -c ${colors.base00}")
-            , ("S-M-c", spawn "rofi -show calc -modi calc -no-show-match -no-sort -lines 0 -calc-command \"xdotool type '{result}'\" -kb-accept-custom 'Return' -kb-accept-entry \'\'")
+            , ("S-M-c",
+                 spawn "rofi -show calc -modi calc -no-show-match -no-sort -lines 0 -calc-command \"xdotool type '{result}'\" -kb-accept-custom 'Return' -kb-accept-entry \'\'")
             , ("S-M-d", kill)
             ] ++ [
               (mask ++ "M-" ++ [key], screenWorkspace scr >>= flip whenJust (windows . action))
@@ -418,5 +420,6 @@ in {
     theme = "/home/zjn/.config/rasi/base16.rasi";
     package = with pkgs; rofi.override { plugins = [ rofi-calc ]; };
     font = "Roboto Mono 12";
+    extraConfig = "rofi.m: -4";
   };
 }
