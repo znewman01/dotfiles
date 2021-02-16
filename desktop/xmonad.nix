@@ -12,6 +12,8 @@ in {
     config = pkgs.writeText "xmonad.hs" ''
       import Data.List
       import Data.Char
+      import Data.Default
+      import Data.Function (on)
       import Graphics.X11.ExtraTypes.XF86
       import Graphics.X11.Types
       import XMonad
@@ -27,6 +29,7 @@ in {
       import XMonad.Util.NamedScratchpad
       import XMonad.Util.SpawnOnce
       import XMonad.Util.WorkspaceCompare
+      import qualified XMonad.Actions.PhysicalScreens as PhysicalScreens
       import qualified XMonad.Hooks.EwmhDesktops as Ewmh
       import XMonad.Prompt
       import XMonad.Prompt.Pass
@@ -102,6 +105,25 @@ in {
         where zoomLike = fmap ("zoom" `isInfixOf`) (fmap (map toLower) className)
               titleMatch s = fmap (s `isInfixOf`) (fmap (map toLower) title)
 
+      -- like PhysicalScreens.getNeighbour and friends, but without wrapping
+      getNeighborNoWrap :: PhysicalScreens.ScreenComparator -> Int -> X ScreenId
+      getNeighborNoWrap (PhysicalScreens.ScreenComparator cmpScreen) d =
+        do w <- gets windowset
+           let ss = map W.screen $ sortBy (cmpScreen `on` PhysicalScreens.getScreenIdAndRectangle) $ W.current w : W.visible w
+               curPos = maybe 0 id $ findIndex (== W.screen (W.current w)) ss
+               pos = max 0 . min ((length ss) - 1) $ curPos + d
+           return $ ss !! pos
+
+      neighborWindowsNoWrap :: PhysicalScreens.ScreenComparator -> Int -> (WorkspaceId -> WindowSet -> WindowSet) -> X ()
+      neighborWindowsNoWrap sc d f = do s <- getNeighborNoWrap sc d
+                                        w <- screenWorkspace s
+                                        whenJust w $ windows . f
+
+      onPrevNeighborNoWrap :: PhysicalScreens.ScreenComparator -> (WorkspaceId -> WindowSet -> WindowSet) -> X ()
+      onPrevNeighborNoWrap sc = neighborWindowsNoWrap sc (-1)
+
+      onNextNeighborNoWrap :: PhysicalScreens.ScreenComparator -> (WorkspaceId -> WindowSet -> WindowSet) -> X ()
+      onNextNeighborNoWrap sc = neighborWindowsNoWrap sc 1
 
       myConfig = defaultConfig
           { terminal = "alacritty"
@@ -132,7 +154,6 @@ in {
           , workspaces = myWorkspaces
           } `additionalKeysP`
           ( [ ("M-p", spawn "rofi -show run")
-            , ("<F12>", namedScratchpadAction scratchpads "terminal")
             , ("M-;", namedScratchpadAction scratchpads "terminal")
             , ("S-M-p", spawn "rofi-pass")
             , ("M-C-s", sendMessage Docks.ToggleStruts)
@@ -142,22 +163,18 @@ in {
             , ("S-M-C-c",
                  spawn "rofi -show calc -modi calc -no-show-match -no-sort -lines 0 -calc-command \"xdotool type '{result}'\" -kb-accept-custom 'Return' -kb-accept-entry \'\' -filter \"$(xclip -o -sel primary)\"")
             , ("S-M-d", kill)
-            ] ++ [
-              (mask ++ "M-" ++ [key], screenWorkspace scr >>= flip whenJust (windows . action))
-              | (key, scr)  <- zip "ew" [1,0]
-            , (action, mask) <- [ (W.view, "") , (W.shift, "S-")]
-            ]--  ++ [ (otherModMasks ++ "M-" ++ [key], action tag)
-             --  | (tag, key)  <- zip myWorkspaces "123456789"
-             --  , (otherModMasks, action) <- [ ("", windows . W.view) -- was W.greedyView
-             --                               , ("S-", windows . W.shift)]
-             --  ]
+            , ("M-w", onPrevNeighborNoWrap def W.view)
+            , ("S-M-w", onPrevNeighborNoWrap def W.shift)
+            , ("M-e", onNextNeighborNoWrap def W.view)
+            , ("S-M-e", onNextNeighborNoWrap def W.shift)
+            ]
           ) `additionalKeys`
           [ ((0, xF86XK_AudioMute), spawn "amixer set Master toggle; amixer set Speaker unmute; amixer set Headphone unmute") -- hack: "toggle" mutes master and individual channels, but only unmutes master
           , ((0, xF86XK_AudioLowerVolume), spawn "amixer sset Master 10%-")
           , ((0, xF86XK_AudioRaiseVolume), spawn "amixer sset Master 10%+")
           , ((0, xF86XK_MonBrightnessUp), spawn "light -A 10")
           , ((0, xF86XK_MonBrightnessDown), spawn "light -U 10")
-          , ((0, xF86XK_ScreenSaver), spawn "i3lock")
+          , ((0, xF86XK_ScreenSaver), spawn "i3lock -c ${colors.base00}")
           ]
 
     '';
