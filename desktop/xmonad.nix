@@ -139,6 +139,8 @@ in {
             , ("S-M-l", spawn "i3lock -c ${colors.base00}")
             , ("S-M-c",
                  spawn "rofi -show calc -modi calc -no-show-match -no-sort -lines 0 -calc-command \"xdotool type '{result}'\" -kb-accept-custom 'Return' -kb-accept-entry \'\'")
+            , ("S-M-C-c",
+                 spawn "rofi -show calc -modi calc -no-show-match -no-sort -lines 0 -calc-command \"xdotool type '{result}'\" -kb-accept-custom 'Return' -kb-accept-entry \'\' -filter \"$(xclip -o -sel primary)\"")
             , ("S-M-d", kill)
             ] ++ [
               (mask ++ "M-" ++ [key], screenWorkspace scr >>= flip whenJust (windows . action))
