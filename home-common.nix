@@ -51,7 +51,7 @@ in {
       "*.csail.mit.edu !jump.csail.mit.edu 128.52.* 128.30.* 128.31.*" =
         dag.entryAfter [ "jump.csail.mit.edu" ] {
           extraOptions = {
-            "ProxyJump" = "jump.csail.mit.edu";
+            "ProxyJump" = "zjn@jump.csail.mit.edu";
             "GSSAPIAuthentication" = "yes";
             "GSSAPIDelegateCredentials" = "yes";
             # "GSSAPIKeyExchange" = "yes";
