@@ -161,6 +161,11 @@ in {
             , ("C-S-M-r w", spawn "record_screen.sh window")
             , ("C-S-M-r a", spawn "record_screen.sh all")
             , ("C-S-M-r f", spawn "record_screen.sh fullscreen")
+            , ("<Print>", spawn "screenshot.sh -s")
+            , ("M-<Print> s", spawn "screenshot.sh -s")
+            , ("M-<Print> w", spawn "screenshot.sh -i $(xdotool getactivewindow)")
+            , ("M-<Print> a", spawn "screenshot.sh '#${colors.base00}'")
+            , ("M-<Print> f", spawn "screenshot.sh fullscreen")
             , ("M-C-s", sendMessage Docks.ToggleStruts)
             , ("S-M-l", spawn "i3lock -c ${colors.base00}")
             , ("S-M-c",
@@ -446,4 +451,5 @@ in {
   };
 
   home.file."bin/record_screen.sh".source = ./record_screen.sh;
+  home.file."bin/screenshot.sh".source = ./screenshot.sh;
 }
