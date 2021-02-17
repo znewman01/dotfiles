@@ -1,3 +1,6 @@
+#+TITLE: Doom Emacs Config
+
+#+begin_src emacs-lisp
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
 ;; Place your private configuration here! Remember, you do not need to run 'doom
@@ -879,3 +882,4 @@
   (push "[/\\\\]\\venv$" lsp-file-watch-ignored)
   (push "[/\\\\]\\.venv$" lsp-file-watch-ignored))
 (remove-hook 'doom-first-buffer-hook #'smartparens-global-mode)
+#+end_src
