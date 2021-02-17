@@ -153,7 +153,7 @@ in {
           , focusedBorderColor = "#${colors.base02}"  -- can be the same with window fade
           , workspaces = myWorkspaces
           } `additionalKeysP`
-          ( [ ("M-p", spawn "rofi -show run")
+            [ ("M-p", spawn "rofi -show run")
             , ("M-;", namedScratchpadAction scratchpads "terminal")
             , ("S-M-p", spawn "rofi-pass")
             , ("S-M-r", spawn "record_screen.sh")  -- shadows 3-monitor bindings but I just make w/e left/right
@@ -172,15 +172,13 @@ in {
             , ("S-M-w", onPrevNeighborNoWrap def W.shift)
             , ("M-e", onNextNeighborNoWrap def W.view)
             , ("S-M-e", onNextNeighborNoWrap def W.shift)
+            , ("<XF86AudioMute>", spawn "amixer set Master toggle; amixer set Speaker unmute; amixer set Headphone unmute") -- hack: "toggle" mutes master and individual channels, but only unmutes master
+            , ("<XF86AudioLowerVolume>", spawn "amixer sset Master 10%-")
+            , ("<XF86AudioRaiseVolume>", spawn "amixer sset Master 10%+")
+            , ("<XF86MonBrightnessUp>", spawn "light -A 10")
+            , ("<XF86MonBrightnessDown>", spawn "light -U 10")
+            , ("<XF86ScreenSaver>", spawn "i3lock -c ${colors.base00}")
             ]
-          ) `additionalKeys`
-          [ ((0, xF86XK_AudioMute), spawn "amixer set Master toggle; amixer set Speaker unmute; amixer set Headphone unmute") -- hack: "toggle" mutes master and individual channels, but only unmutes master
-          , ((0, xF86XK_AudioLowerVolume), spawn "amixer sset Master 10%-")
-          , ((0, xF86XK_AudioRaiseVolume), spawn "amixer sset Master 10%+")
-          , ((0, xF86XK_MonBrightnessUp), spawn "light -A 10")
-          , ((0, xF86XK_MonBrightnessDown), spawn "light -U 10")
-          , ((0, xF86XK_ScreenSaver), spawn "i3lock -c ${colors.base00}")
-          ]
 
     '';
   };
