@@ -29,7 +29,7 @@ dropbox status
 
 read -p "In another terminal, wait until dropbox has actually synced (dropbox status). Then hit [enter]. "
 
-dropbox exclude add "$HOME/Dropbox/Camera Uploads" "$HOME/Dropbox/Photos" "$HOME/Dropbox/Public" "$HOME/Dropbox/Saves" "$HOME/Dropbox/Screenshots"
+dropbox exclude add "$HOME/Dropbox/Camera Uploads" "$HOME/Dropbox/Photos" "$HOME/Dropbox/Saves"
 
 gpg --output "$HOME/Dropbox/keys/${HOSTNAME}.gpg" --export z@znewman.net
 

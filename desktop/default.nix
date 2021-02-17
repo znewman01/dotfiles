@@ -35,6 +35,7 @@ in {
     skype
     signal-desktop
     keybase-gui
+    gist
     xcompmgr
   ];
 

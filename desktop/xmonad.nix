@@ -159,8 +159,9 @@ in {
             , ("S-M-r", spawn "record_screen.sh")  -- shadows 3-monitor bindings but I just make w/e left/right
             , ("C-S-M-r", spawn "ARG=$(echo -e 'selection\nwindow\nall\nfullscreen' | rofi -dmenu -no-custom -p 'Record') && record_screen.sh $ARG")
             , ("<Print>", spawn "screenshot.sh -s")
-            , ("M-C-s", sendMessage Docks.ToggleStruts)
             , ("M-<Print>", spawn "screenshot_rofi.sh -s")
+            , ("S-M-s", spawn "share.sh")
+            , ("C-S-M-s", spawn "mimeify_clipboard.sh")
             , ("S-M-l", spawn "i3lock -c ${colors.base00}")
             , ("S-M-c",
                  spawn "rofi -show calc -modi calc -no-show-match -no-sort -lines 0 -calc-command \"xdotool type '{result}'\" -kb-accept-custom 'Return' -kb-accept-entry \'\'")
@@ -463,4 +464,18 @@ in {
       fi
     '';
   };
+  home.file."bin/mimeify_clipboard.sh" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+      set -e
+      FILE=$(xclip -o)
+      if [ -f $FILE ]; then
+          MIME=$(xdg-mime query filetype $FILE)
+          xclip -t $MIME $FILE -selection clipboard
+          notify-send "Converted $FILE to $MIME in clipboard"
+      fi
+    '';
+  };
+  home.file."bin/share.sh".source = ./share.sh;
 }
