@@ -11,7 +11,7 @@ let
     # Hash obtained using `nix-prefetch-url --unpack <url>`
     sha256 = "1w8q6y58ddwkxg450i1b98dcalysvx497q3zl7r8py74v4wzrvm5";
   };
-  colors = (import ./colors.nix) { lib = lib; };
+  colors = (import ./colors) { lib = lib; };
 in {
   imports = [ ./xmonad.nix ./fonts.nix ./alacritty.nix ];
 
@@ -120,7 +120,7 @@ in {
     enable = true;
     theme = {
       package = pkgs.arc-theme;
-      name = "Arc-Dark";
+      name = if colors.mode == "dark" then "Arc-Dark" else "Arc";
     };
     font = { name = "Bitstream Vera Sans 12"; };
   };

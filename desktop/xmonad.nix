@@ -1,6 +1,6 @@
 { config, pkgs, lib, ... }:
 
-let colors = (import ./colors.nix) { lib = lib; };
+let colors = (import ./colors) { lib = lib; };
 in {
   xsession.enable = true;
 

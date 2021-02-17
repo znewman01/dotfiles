@@ -9,7 +9,7 @@ let
     sha256 = "0lmwsvprmb6fyzmcfzwfshj32m96z3g77adnk9sq53ikv2pkx9la";
   };
   dag = config.lib.dag;
-  colors = (import ./../desktop/colors.nix) { lib = lib; };
+  colors = (import ./../desktop/colors) { lib = lib; };
 in {
   nixpkgs.config = {
     packageOverrides = pkgs: {

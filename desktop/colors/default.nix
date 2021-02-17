@@ -1,3 +1,4 @@
+# TODO: module-ify this
 { lib }:
 with lib;
 let
@@ -31,6 +32,12 @@ let
         "d" = 13;
         "e" = 14;
         "f" = 15;
+        "A" = 10;
+        "B" = 11;
+        "C" = 12;
+        "D" = 13;
+        "E" = 14;
+        "F" = 15;
       };
       chars = stringToCharacters v;
       charsLen = length chars;
@@ -53,27 +60,34 @@ in rec {
   # 0D Functions, Methods, Attribute IDs, Headings
   # 0E Keywords, Storage, Selector, Markup Italic, Diff Changed
   # 0F Deprecated, Opening/Closing Embedded Language Tags, e.g. <?php ?>
+  schemes = {
+    material = import ./material.nix;
+    nord = import ./nord.nix;
+    espresso = import ./espresso.nix;
+    one-light = import ./one-light.nix;
+  };
 
-  # Base16 Espresso
-  base00 = "2d2d2d";
-  base01 = "393939";
-  base02 = "515151";
-  base03 = "777777";
-  base04 = "b4b7b4";
-  base05 = "cccccc";
-  base06 = "e0e0e0";
-  base07 = "ffffff";
-  base08 = "d25252";
-  base09 = "f9a959";
-  base0A = "ffc66d";
-  base0B = "a5c261";
-  base0C = "bed6ff";
-  base0D = "6c99bb";
-  base0E = "d197d9";
-  base0F = "f97394";
+  scheme = schemes.one-light;
+  mode = "light";
+
+  base00 = scheme.base00;
+  base01 = scheme.base01;
+  base02 = scheme.base02;
+  base03 = scheme.base03;
+  base04 = scheme.base04;
+  base05 = scheme.base05;
+  base06 = scheme.base06;
+  base07 = scheme.base07;
+  base08 = scheme.base08;
+  base09 = scheme.base09;
+  base0A = scheme.base0A;
+  base0B = scheme.base0B;
+  base0C = scheme.base0C;
+  base0D = scheme.base0D;
+  base0E = scheme.base0E;
+  base0F = scheme.base0F;
+
   r = string: toString (hexToDec (builtins.substring 0 2 string));
   g = string: toString (hexToDec (builtins.substring 2 2 string));
   b = string: toString (hexToDec (builtins.substring 4 2 string));
-
-  test = builtins.trace "${r base00}" null;
 }

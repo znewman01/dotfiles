@@ -1,6 +1,6 @@
 { config, lib, pkgs, ... }:
 
-let colors = (import ./colors.nix) { lib = lib; };
+let colors = (import ./colors) { lib = lib; };
 in {
   programs.alacritty = {
     enable = true;
