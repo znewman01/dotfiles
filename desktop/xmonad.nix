@@ -156,6 +156,11 @@ in {
           ( [ ("M-p", spawn "rofi -show run")
             , ("M-;", namedScratchpadAction scratchpads "terminal")
             , ("S-M-p", spawn "rofi-pass")
+            , ("S-M-r", spawn "record_screen.sh")  -- shadows 3-monitor bindings but I just make w/e left/right
+            , ("C-S-M-r r", spawn "record_screen.sh select")
+            , ("C-S-M-r w", spawn "record_screen.sh window")
+            , ("C-S-M-r a", spawn "record_screen.sh all")
+            , ("C-S-M-r f", spawn "record_screen.sh fullscreen")
             , ("M-C-s", sendMessage Docks.ToggleStruts)
             , ("S-M-l", spawn "i3lock -c ${colors.base00}")
             , ("S-M-c",
@@ -441,4 +446,6 @@ in {
     font = "Roboto Mono 12";
     extraConfig = "rofi.m: -4";
   };
+
+  home.file."bin/record_screen.sh".source = ./record_screen.sh;
 }
