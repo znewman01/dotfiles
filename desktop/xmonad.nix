@@ -157,16 +157,10 @@ in {
             , ("M-;", namedScratchpadAction scratchpads "terminal")
             , ("S-M-p", spawn "rofi-pass")
             , ("S-M-r", spawn "record_screen.sh")  -- shadows 3-monitor bindings but I just make w/e left/right
-            , ("C-S-M-r r", spawn "record_screen.sh select")
-            , ("C-S-M-r w", spawn "record_screen.sh window")
-            , ("C-S-M-r a", spawn "record_screen.sh all")
-            , ("C-S-M-r f", spawn "record_screen.sh fullscreen")
+            , ("C-S-M-r", spawn "ARG=$(echo -e 'selection\nwindow\nall\nfullscreen' | rofi -dmenu -no-custom -p 'Record') && record_screen.sh $ARG")
             , ("<Print>", spawn "screenshot.sh -s")
-            , ("M-<Print> s", spawn "screenshot.sh -s")
-            , ("M-<Print> w", spawn "screenshot.sh -i $(xdotool getactivewindow)")
-            , ("M-<Print> a", spawn "screenshot.sh '#${colors.base00}'")
-            , ("M-<Print> f", spawn "screenshot.sh fullscreen")
             , ("M-C-s", sendMessage Docks.ToggleStruts)
+            , ("M-<Print>", spawn "screenshot_rofi.sh -s")
             , ("S-M-l", spawn "i3lock -c ${colors.base00}")
             , ("S-M-c",
                  spawn "rofi -show calc -modi calc -no-show-match -no-sort -lines 0 -calc-command \"xdotool type '{result}'\" -kb-accept-custom 'Return' -kb-accept-entry \'\'")
@@ -452,4 +446,21 @@ in {
 
   home.file."bin/record_screen.sh".source = ./record_screen.sh;
   home.file."bin/screenshot.sh".source = ./screenshot.sh;
+  home.file."bin/screenshot_rofi.sh" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+      set -eo pipefail
+      ARG=$(echo -e 'selection\nwindow\nfullscreen\nall' | rofi -dmenu -no-custom -p 'Screenshot')
+      if [ $ARG == "selection" ]; then
+        screenshot.sh -s
+      elif [ $ARG == "window" ]; then
+        screenshot.sh -i $(xdotool getactivewindow)
+      elif [ $ARG == "fullscreen" ]; then
+        screenshot.sh fullscreen
+      elif [ $ARG == "all" ]; then
+        screenshot.sh '#${colors.base00}'
+      fi
+    '';
+  };
 }
