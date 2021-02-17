@@ -300,6 +300,7 @@
   (setq org-archive-location "archive/%s::")
   (setq org-default-notes-file (org-file "gtd.org"))
   (setq org-log-done t)
+  (setq org-log-state-notes-into-drawer t)
   (setq org-adapt-indentation nil)
   (setq org-ctrl-k-protect-subtree t)
   (setq org-catch-invisible-edits 'show-and-error)
