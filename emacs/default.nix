@@ -82,10 +82,10 @@ in {
       owner = "hlissner";
       repo = "doom-emacs";
       # git ls-remote https://github.com/hlissner/doom-emacs/ develop
-      rev = "fd7073240c5f71ba64b9b990f840edc4d7c52138";
+      rev = "28b3ad452979669abbb1a2903dfaa51e304765b5";
       # just rerun with the all-0 SHA, it'll tell you what to put
       # (but if it matches a previous SHA it won't update!)
-      sha256 = "10lgzvhv6g9hmqzamphrfw9p37xvvp7kzr5zb90c8w3k7lmk11cp";
+      sha256 = "0rha366v43r7yadwkic42mngzp9iqb5rn3j3zb6vz0xfvcn9wjdw";
     };
     onChange = ''
       # Hack to prevent re-syncing unless doom is updated.
