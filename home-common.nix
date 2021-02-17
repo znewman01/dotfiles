@@ -175,12 +175,14 @@ in {
 
       if [ $TO_CHARGE -gt 0 ]; then
           echo "Charging..."
-          curl -s -X POST "''${BEE}/charges.json?''${BEE_AUTH}&dryrun=true&amount=''${TO_CHARGE}&note=lichess-fast"
+          curl -s -X POST "''${BEE}/charges.json?''${BEE_AUTH}&amount=''${TO_CHARGE}&note=lichess-fast"
       else
           echo "Not charging."
       fi
       echo curl -X PUT "''${BEE}/users/znewman01/goals/lichess-fast/datapoints/''${DATAPOINT_ID}.json?''${BEE_AUTH}&comment=$TOTAL_CHARGE"
       curl -X PUT "''${BEE}/users/znewman01/goals/lichess-fast/datapoints/''${DATAPOINT_ID}.json?''${BEE_AUTH}&comment=$TOTAL_CHARGE"
+
+      rm -f "''${TMP_FILE}"
     '';
     executable = true;
   };
