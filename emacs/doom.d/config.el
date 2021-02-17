@@ -233,6 +233,9 @@
   (add-hook! LaTeX-mode
     (setq TeX-command-default "Tectonic"
           TeX-output-extension "pdf")))
+(after! pdf
+  (defun zjn/save-buffer-no-args () (save-buffer)) ; needed to make args line up
+  (advice-add 'pdf-annot-edit-contents-commit :after 'zjn/save-buffer-no-args))
 
 
 (setq org-directory "~/notes/")
