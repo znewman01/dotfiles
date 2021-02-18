@@ -892,16 +892,31 @@ Don't send prematurely by accident (this allows a neat trick of leaving the subj
                :desc "RSS" "e" #'=rss))
 #+end_src
 * Theme
+Use base16 theme; this is nice because it's easy to match with the rest of my desktop.
 #+begin_src emacs-lisp
 (require 'f)
 (add-to-list 'custom-theme-load-path (f-join doom-private-dir "themes"))
 (setq doom-theme nil)
 (load-theme 'base16-zjn t)
+#+end_src
+
+I want to be able to see which workspace is selected; the default highlighting is too weak.
+#+begin_src emacs-lisp
+(set-face-background '+workspace-tab-selected-face (plist-get base16-zjn-colors :base02))
+(set-face-foreground '+workspace-tab-selected-face (plist-get base16-zjn-colors :base0D))
+#+end_src
+
+Some reasonable fonts:
+#+begin_src emacs-lisp
 (setq zjn--mono "Roboto Mono")
 (setq zjn--sans "Bitstream Vera Sans")
 (setq zjn--serif "TeX Gyre Pagella")
 (setq doom-font (font-spec :family zjn--mono :height 80 :weight 'semi-light))
 (setq doom-variable-pitch-font (font-spec :family zjn--serif :height 60))
+#+end_src
+
+And some padding:
+#+begin_src emacs-lisp
 (setq-default left-margin-width 1
               right-margin-width 1)
 #+end_src
