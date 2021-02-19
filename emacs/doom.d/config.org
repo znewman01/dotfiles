@@ -1,5 +1,5 @@
 #+TITLE: Doom Emacs Config
-#+PROPERTY: header-args:emacs-lisp    :noweb yes
+#+PROPERTY: header-args:emacs-lisp :noweb yes :results none
 
 * Preliminaries
 Use [[https://www.emacswiki.org/emacs/LexicalBinding][lexical binding]]:
