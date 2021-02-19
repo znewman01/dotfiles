@@ -4,12 +4,14 @@ with lib;
 
 let
   # for Zoom 5.1
-  unstableTarball20200727 = builtins.fetchTarball {
-    name = "nixos-unstable-2020-07-27";
+  unstableTarball20210207 = builtins.fetchTarball {
+    name = "nixos-unstable-2021-02-07";
     url =
-      "https://github.com/nixos/nixpkgs/archive/c83e13315caadef275a5d074243c67503c558b3b.tar.gz";
+      "https://github.com/nixos/nixpkgs/archive/a21a3bd84885c20f7736be84698595cc572c1454.tar.gz";
+
     # Hash obtained using `nix-prefetch-url --unpack <url>`
-    sha256 = "1w8q6y58ddwkxg450i1b98dcalysvx497q3zl7r8py74v4wzrvm5";
+    sha256 = "0sbfv0dw5l13hf8pl0im0xrybnl5vnq3x0sv2x7v6i7hh46ch34a";
+
   };
   colors = (import ./colors) { lib = lib; };
 in {
@@ -17,8 +19,8 @@ in {
 
   nixpkgs.config = {
     packageOverrides = pkgs: {
-      unstable20200727 =
-        import unstableTarball20200727 { config = config.nixpkgs.config; };
+      unstable20210207 =
+        import unstableTarball20210207 { config = config.nixpkgs.config; };
     };
   };
 
@@ -30,7 +32,7 @@ in {
     xclip
     xdotool
     zathura
-    unstable20200727.zoom-us
+    unstable20210207.zoom-us
     slack
     skype
     signal-desktop
