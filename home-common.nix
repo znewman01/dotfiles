@@ -301,7 +301,10 @@ in {
       "tor-cdn" = {
         url = "git@github.com:iowaguy/tor-cdn.git";
         exclude.enable = true;
-        extraFiles = { "latencies/.projectile".text = ""; };
+        extraFiles = {
+          "dataviz/.projectile".text = "";
+          "latencies/.projectile".text = "";
+        };
         shell = ./shells/tor-cdn.nix;
       };
       "dotfiles" = { url = "git@github.com:znewman01/dotfiles.git"; };
