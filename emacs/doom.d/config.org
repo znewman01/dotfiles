@@ -758,6 +758,7 @@ Common views (combined inbox, unread, all recent):
                     (:name "Last 7 days"
                     :query ,(funcall skip-trash-and-sent "date:7d..now")
                     :key ?w)))))
+(setq mu4e-headers-sort-field :date)
 #+end_src
 
 Misc:
