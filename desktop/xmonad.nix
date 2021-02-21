@@ -94,6 +94,7 @@ in {
               , [ title =? "emacslast"  --> doShift "9" ]
               , [ namedScratchpadManageHook scratchpads ]
               , [ classMatch app --> doShift "8" | app <- messageApps ]
+              , [ title =? "xmessage"  --> (customFloating $ W.RationalRect 0.7 0.1 0.2 0.2) ]
               ]
          where messageApps = ["slack", "signal", "keybase", "skype"]
                classMatch s = fmap (s `isInfixOf`) (fmap (map toLower) className)
@@ -104,6 +105,8 @@ in {
           ]
         where zoomLike = fmap ("zoom" `isInfixOf`) (fmap (map toLower) className)
               titleMatch s = fmap (s `isInfixOf`) (fmap (map toLower) title)
+
+
 
       -- like PhysicalScreens.getNeighbour and friends, but without wrapping
       getNeighborNoWrap :: PhysicalScreens.ScreenComparator -> Int -> X ScreenId
@@ -168,10 +171,10 @@ in {
             , ("S-M-C-c",
                  spawn "rofi -show calc -modi calc -no-show-match -no-sort -lines 0 -calc-command \"xdotool type '{result}'\" -kb-accept-custom 'Return' -kb-accept-entry \'\' -filter \"$(xclip -o -sel primary)\"")
             , ("S-M-d", kill)
-            , ("M-w", onPrevNeighborNoWrap def W.view)
-            , ("S-M-w", onPrevNeighborNoWrap def W.shift)
-            , ("M-e", onNextNeighborNoWrap def W.view)
-            , ("S-M-e", onNextNeighborNoWrap def W.shift)
+            , ("M-w", onPrevNeighborNoWrap PhysicalScreens.horizontalScreenOrderer W.view)
+            , ("S-M-w", onPrevNeighborNoWrap PhysicalScreens.horizontalScreenOrderer $ W.shift)
+            , ("M-e", onNextNeighborNoWrap PhysicalScreens.horizontalScreenOrderer $ W.view)
+            , ("S-M-e", onNextNeighborNoWrap PhysicalScreens.horizontalScreenOrderer $ W.shift)
             , ("<XF86AudioMute>", spawn "amixer set Master toggle; amixer set Speaker unmute; amixer set Headphone unmute") -- hack: "toggle" mutes master and individual channels, but only unmutes master
             , ("<XF86AudioLowerVolume>", spawn "amixer sset Master 10%-")
             , ("<XF86AudioRaiseVolume>", spawn "amixer sset Master 10%+")

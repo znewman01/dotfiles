@@ -52,6 +52,7 @@ in {
   xsession = {
     profileExtra = ''
       xcompmgr &
+      autorandr -c &
     '';
     scriptPath = ".hm-xsession";
   };
