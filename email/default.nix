@@ -2,15 +2,10 @@
 
 with lib;
 
-let
-  passBin = "${pkgs.pass}/bin/pass";
-in
-{
+let passCmd = entry: "${pkgs.pass}/bin/pass ${entry} 2> /dev/null";
+in {
 
-  home.packages = with pkgs; [
-    mu
-    isync
-  ];
+  home.packages = with pkgs; [ mu isync ];
 
   # concatStringsSep trick is a half-hearted attempt to prevent email harvesting.
   accounts.email = {
@@ -21,7 +16,7 @@ in
       mit = {
         address = concatStringsSep "@" [ "zjn" "mit.edu" ];
         userName = concatStringsSep "@" [ "zjn" "mit.edu" ];
-        passwordCommand = "${passBin} show mit";
+        passwordCommand = passCmd "mit";
 
         folders = {
           inbox = "Inbox";
@@ -76,7 +71,7 @@ in
         userName = concatStringsSep "@" [ "z" "znewman.net" ];
         address = concatStringsSep "@" [ "z" "znewman.net" ];
         maildir.path = "fastmail";
-        passwordCommand = "${passBin} show fastmail-app";
+        passwordCommand = passCmd "fastmail-app";
         primary = true;
 
         folders = {
@@ -107,7 +102,7 @@ in
         userName = concatStringsSep "@" [ "zjn" "csail.mit.edu" ];
         address = concatStringsSep "@" [ "zjn" "csail.mit.edu" ];
         maildir.path = "fastmail";
-        passwordCommand = "${passBin} show csail-imap";
+        passwordCommand = passCmd "csail-imap";
 
         folders = {
           inbox = "INBOX";
@@ -129,7 +124,7 @@ in
         userName = concatStringsSep "@" [ "znewman01" "gmail.com" ];
         maildir.path = "gmail";
         flavor = "gmail.com";
-        passwordCommand = "${passBin} show gmail-imap";
+        passwordCommand = passCmd "gmail-imap";
 
         folders = {
           inbox = "Inbox";
@@ -177,24 +172,24 @@ in
 
   };
   # programs.mbsync = {
-    # enable = true;
-    # extraConfig = ''
-    #   CopyArrivalDate yes
-    #   Create Both
-    #   Expunge Both
+  # enable = true;
+  # extraConfig = ''
+  #   CopyArrivalDate yes
+  #   Create Both
+  #   Expunge Both
 
-    # '';
-    # TODO: this is all borked. Groups just need channel names, and don't take
-    # comma-separated.
-    #
-    # groups = {
-    #   mit = {
-    #     mit = [ "mit-rest" "mit-sent" "mit-junk" "mit-trash" ];
-    #   };
-    #   gmail = {
-    #     gmail = [ "gmail-rest" "gmail-inbox" "gmail-sent" "gmail-all" ];
-    #   };
-    # };
+  # '';
+  # TODO: this is all borked. Groups just need channel names, and don't take
+  # comma-separated.
+  #
+  # groups = {
+  #   mit = {
+  #     mit = [ "mit-rest" "mit-sent" "mit-junk" "mit-trash" ];
+  #   };
+  #   gmail = {
+  #     gmail = [ "gmail-rest" "gmail-inbox" "gmail-sent" "gmail-all" ];
+  #   };
+  # };
   # };
 
   home.file.".mbsyncrc".text = import ./mbsyncrc.nix { pkgs = pkgs; };

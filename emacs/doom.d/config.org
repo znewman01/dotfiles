@@ -700,10 +700,10 @@ Quit, dang it!
         ,(make-mu4e-context
           :name "CSAIL"
           :match-func (zjn--make-match "csail")
-          :vars '((mu4e-trash-folder . "/csail/Trash")
-                  (mu4e-sent-folder . "/csail/Sent")
-                  (mu4e-drafts-folder . "/csail/Drafts")
-                  (mu4e-refile-folder . "/csail/Archive")
+          :vars '((mu4e-trash-folder . "/csail/INBOX..Trash")
+                  (mu4e-sent-folder . "/csail/INBOX..Sent")
+                  (mu4e-drafts-folder . "/csail/INBOX..Drafts")
+                  (mu4e-refile-folder . "/csail/INBOX..Archive")
                   (user-mail-address . "zjn@csail.mit.edu")
                   (user-full-name . "Zachary Newman")
                   (smtpmail-local-domain . "csail.mit.edu")
