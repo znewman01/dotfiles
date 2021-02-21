@@ -56,16 +56,11 @@
 (unpin! nix-mode)
 (package! nix-mode :recipe (:host github :repo "znewman01/nix-mode" :flavor github) :pin nil)
 
-; https://github.com/jeremy-compostella/org-msg/issues/80
-; Once we hit 3.2 this can go away
-(unpin! org-msg)
-(package! org-msg :recipe (:host github :repo "jeremy-compostella/org-msg" :branch "master" :flavor github) :pin nil)
-
 ; org roam etc.
 (package! org-roam-bibtex
   :recipe (:host github :repo "org-roam/org-roam-bibtex"))
 ;; When using org-roam via the `+roam` flag
-(unpin! org-roam company-org-roam)
+(unpin! org-roam)
 ;; When using bibtex-completion via the `biblio` module
 (unpin! bibtex-completion helm-bibtex ivy-bibtex)
 
