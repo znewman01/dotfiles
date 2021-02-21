@@ -92,6 +92,7 @@ in {
               , [ Docks.manageDocks ]
               , [ title =? "emacsfloat"  --> (customFloating $ W.RationalRect (1/4) (1/8) (1/2) (3/4)) ]
               , [ title =? "emacslast"  --> doShift "9" ]
+              , [ title =? "htop"  --> doShift "1" ]
               , [ namedScratchpadManageHook scratchpads ]
               , [ classMatch app --> doShift "8" | app <- messageApps ]
               , [ title =? "xmessage"  --> (customFloating $ W.RationalRect 0.7 0.1 0.2 0.2) ]
@@ -140,6 +141,7 @@ in {
               , spawnOnce "signal-desktop"
               , spawnOnce "skypeforlinux"
               , spawnOnce "zoom-us"
+              , spawnOnce "alacritty --title htop --command nix-shell -p htop --command htop"
               , spawnOnce "sleep 1; keybase-gui"
               , spawnOnce "sleep 4; emacsclient --frame-parameters='(quote (name . \"emacslast\"))' --eval '(org-agenda nil \"n\")' -c"
               ]
