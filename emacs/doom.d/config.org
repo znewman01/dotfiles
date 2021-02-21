@@ -933,6 +933,7 @@ Now that that's all out of the way, we can get to actual work.
     (let ((modes '(mu4e-headers-mode mu4e-main-mode mu4e-view-mode org-agenda-mode)))
       (if (memq major-mode modes) "~/Dropbox/notes")))
                                         ; (push 'zjn-projectile-root-for-some-major-modes projectile-project-root-files-functions))
+  (setq +workspaces-on-switch-project-behavior t)
   )
 #+end_src
 ** Coding
