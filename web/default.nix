@@ -19,6 +19,7 @@ in {
         "privacy.resistFingerprinting.block_mozAddonManager" = true;
         "extensions.webextensions.restrictedDomains" = "";
         "tridactyl.unfixedamo2" = true;
+        "systemUsesDarkTheme" = if colors.mode == "dark" then 1 else 0;
       };
     };
   };

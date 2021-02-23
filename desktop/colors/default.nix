@@ -2,6 +2,7 @@
 { lib }:
 with lib;
 let
+  themeName = builtins.getEnv "NIXOS_THEME";
   pow = let
     pow' = base: exponent: value:
       # FIXME: It will silently overflow on values > 2**62 :(
@@ -60,15 +61,39 @@ in rec {
   # 0D Functions, Methods, Attribute IDs, Headings
   # 0E Keywords, Storage, Selector, Markup Italic, Diff Changed
   # 0F Deprecated, Opening/Closing Embedded Language Tags, e.g. <?php ?>
-  schemes = {
-    material = import ./material.nix;
-    nord = import ./nord.nix;
-    espresso = import ./espresso.nix;
-    one-light = import ./one-light.nix;
+  themes = {
+    "material" = {
+      scheme = import ./material.nix;
+      mode = "light";
+    };
+    "nord" = {
+      scheme = import ./nord.nix;
+      mode = "dark";
+    };
+    "espresso" = {
+      scheme = import ./espresso.nix;
+      mode = "dark";
+    };
+    "one-light" = {
+      scheme = import ./one-light.nix;
+      mode = "light";
+    };
+    "dark" = { # default dark theme
+      scheme = import ./espresso.nix;
+      mode = "dark";
+    };
+    "light" = { # default light theme
+      scheme = import ./one-light.nix;
+      mode = "light";
+    };
+    "" = { # default
+      scheme = import ./one-light.nix;
+      mode = "light";
+    };
   };
 
-  scheme = schemes.one-light;
-  mode = "light";
+  scheme = (builtins.getAttr themeName themes).scheme;
+  mode = (builtins.getAttr themeName themes).mode;
 
   base00 = scheme.base00;
   base01 = scheme.base01;
