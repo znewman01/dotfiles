@@ -37,11 +37,11 @@ main () {
     SCREENSHOT_PATH="$SCREENSHOT_DIR/$SCREENSHOT_PREFIX$(date '+%Y%m%d-%H%M%S').png"
     if [ "$1" == "fullscreen" ]; then
         read WIDTH HEIGHT X Y <<< $(get_current_screen_geometry)
-        maim --geometry="${WIDTH}x${HEIGHT}+${X}+${Y}" > "$SCREENSHOT_PATH"
+        maim --hidecursor --geometry="${WIDTH}x${HEIGHT}+${X}+${Y}" > "$SCREENSHOT_PATH"
     elif [[ "$1" =~ ^#[0-9a-fA-F]{6}$ ]]; then
-        maim | convert - -background "$1" -alpha remove -alpha off - > "$SCREENSHOT_PATH"
+        maim --hidecursor | convert - -background "$1" -alpha remove -alpha off - > "$SCREENSHOT_PATH"
     else
-        maim $@ > "$SCREENSHOT_PATH"
+        maim --hidecursor $@ > "$SCREENSHOT_PATH"
     fi
 
     echo $SCREENSHOT_PATH | xclip -selection clipboard
