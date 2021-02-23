@@ -474,11 +474,13 @@ in {
     text = ''
       #!/usr/bin/env bash
       set -e
-      FILE=$(xclip -o)
-      if [ -f $FILE ]; then
-          MIME=$(xdg-mime query filetype $FILE)
-          xclip -t $MIME $FILE -selection clipboard
+      FILE=$(xclip -selection clipboard -o)
+      if [ -f "$FILE" ]; then
+          MIME=$(xdg-mime query filetype "$FILE")
+          xclip -t $MIME "$FILE" -selection clipboard
           notify-send "Converted $FILE to $MIME in clipboard"
+      else
+          notify-send "Clipboard contents not a file that exists: $(echo $FILE | head -c 100)"
       fi
     '';
   };
