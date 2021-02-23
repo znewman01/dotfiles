@@ -102,6 +102,14 @@ in {
     '';
   };
 
+  home.file."bin/emacsmail" = {
+    text = ''
+      #!/usr/bin/env bash
+      emacsclient -c --eval "(browse-url-mail \"$@\")"
+    '';
+    executable = true;
+  };
+
   programs.bash.sessionVariables."EMACSDIR" = "~/.emacs.d";
 
   # # Use a link rather than home.files because we probably want to be able to
