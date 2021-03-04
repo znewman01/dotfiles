@@ -28,5 +28,6 @@ in pkgs.mkShell rec {
     # data preprocessing
     units
     jq
+    envsubst
   ];
 }
