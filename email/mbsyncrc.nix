@@ -57,7 +57,7 @@ in ''
 
   Channel csail
   Create Both
-  Expunge Both
+  Expunge Slave
   Master :csail-remote:
   Patterns *
   Remove Slave
