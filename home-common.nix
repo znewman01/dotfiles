@@ -282,7 +282,6 @@ in {
       "spectrum-impl" = {
         url = "git@github.com:znewman01/spectrum-impl.git";
         exclude.enable = true;
-        shell = ./shells/spectrum.nix;
       };
       "bellman-bignat" = {
         url = "git@github.com:znewman01/bellman-bignat.git";
