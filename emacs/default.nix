@@ -25,7 +25,7 @@ in {
   };
   services.emacs.enable = true;
 
-  home.file.".doom.d/themes/base16-zjn-theme.el".text = ''
+  home.file.".doom-themes/base16-zjn-theme.el".text = ''
      (require 'base16-theme)
      (defvar base16-zjn-colors
        '(:base00 "#${colors.base00}"

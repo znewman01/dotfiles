@@ -896,7 +896,7 @@ Don't send prematurely by accident (this allows a neat trick of leaving the subj
 Use base16 theme; this is nice because it's easy to match with the rest of my desktop.
 #+begin_src emacs-lisp
 (require 'f)
-(add-to-list 'custom-theme-load-path (f-join doom-private-dir "themes"))
+(add-to-list 'custom-theme-load-path "~/.doom-themes")
 (setq doom-theme nil)
 (load-theme 'base16-zjn t)
 #+end_src
