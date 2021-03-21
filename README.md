@@ -10,6 +10,7 @@
 ## Manual steps
 
 - Install NixOS: https://nixos.org/nixos/manual/index.html
+  - I recommend setting up [erase-on-boot](https://grahamc.com/blog/erase-your-darlings).
   - You may need to configure WiFi:
 
     ```sh
@@ -23,7 +24,7 @@
     - log in as root,
     - set `passwd zjn`
     - log in as `zjn`
-    - deactivate root password. then proceed
+    - deactivate root password (`passwd -l root`). then proceed
 
 0. Clone this repo: `mkdir -p ~/git && git clone https://github.com/znewman01/dotfiles.git ~/git/dotfiles`
 1. Run `cd ~/git/dotfiles && sudo ./scripts/install_root.sh && sudo reboot`
