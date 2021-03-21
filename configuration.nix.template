@@ -1,8 +1,5 @@
 { config, pkgs, ... }:
 
 {
-  imports = [
-    ./common.nix
-  ];
-  networking.hostName = "{{HOSTNAME}}";
+  imports = [ ./common.nix ./machines/zjn-{{HOSTNAME}}/system.nix ];
 }

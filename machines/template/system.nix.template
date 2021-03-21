@@ -1,0 +1,7 @@
+{ config, pkgs, ... }:
+
+{
+  networking.hostName = "{{HOSTNAME}}";
+  networking.hostId = "{{HOSTID}}";
+  system.stateVersion = "{{STATEVERSION}}";
+}
