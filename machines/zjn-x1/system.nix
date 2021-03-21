@@ -2,6 +2,7 @@
 
 {
   networking.hostName = "zjn-x1";
+  system.stateVersion = "19.09";
 
   environment.systemPackages = with pkgs; [ sof-firmware ];
   hardware.pulseaudio.extraConfig = ''

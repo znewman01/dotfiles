@@ -82,8 +82,6 @@
     openssh.authorizedKeys.keyFiles = [ ./net/zjn-x1.pub ];
   };
 
-  system.stateVersion = "19.09";
-
   # For backlight
   programs.light.enable = true;
 
