@@ -80,6 +80,7 @@
     extraGroups =
       [ "networkmanager" "wheel" "audio" "video" "lp" "docker" "libvirtd" ];
     openssh.authorizedKeys.keyFiles = [ ./net/zjn-x1.pub ];
+    hashedPassword = "$6$O1ia1YA5iKh9m$SVD17ySqqyicSpo2tzqTw4xRHm8C50.vMuoQPaLxTA9hsfJ7HQ/neioEYhOjZvPT..HNclbjd4JX4ydBcMvC7.";
   };
 
   # For backlight
