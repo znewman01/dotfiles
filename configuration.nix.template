@@ -1,5 +1,5 @@
 { config, pkgs, ... }:
 
 {
-  imports = [ ./common.nix ./machines/zjn-{{HOSTNAME}}/system.nix ];
+  imports = [ ./common.nix ./machines/{{HOSTNAME}}/system.nix ];
 }
