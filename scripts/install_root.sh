@@ -14,9 +14,7 @@ NORMAL_USER=zjn
 NORMAL_GROUP=users
 
 HOSTID=$(head -c 8 /etc/machine-id)
-STATEVERSION=$(nix eval -f '<nixpkgs/nixos>' 'config.system.stateVersion')
-
-rsync -r machines/template/ "machines/${HOSTNAME}"
+STATEVERSION=$(nix eval -f '<nixpkgs/nixos>' 'config.system.stateVersion' | tr -d '"')
 
 for template_file in $(find . -name '*.template'); do
   f="${template_file%.template}"
@@ -25,6 +23,12 @@ for template_file in $(find . -name '*.template'); do
   sed -i -e "s'{{HOSTID}}'${HOSTID}'g" "$f"
   sed -i -e "s'{{STATEVERSION}}'${STATEVERSION}'g"  "$f"
   # TODO: delete extra files
+done
+
+rsync -riub machines/template/ "machines/${HOSTNAME}"
+rm "machines/${HOSTNAME}/"*.template
+for template_file in machines/template/*.template; do
+  rm "${template_file%.template}"
 done
 
 if [ -f /etc/nixos/configuration.nix ]; then
