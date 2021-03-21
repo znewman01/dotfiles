@@ -23,14 +23,13 @@
     font = "Lat2-Terminus16";
     keyMap = "us";
   };
+  fonts.fontconfig.enable = true;
 
   i18n.defaultLocale = "en_US.UTF-8";
 
   time.timeZone = "America/New_York";
 
-  environment.systemPackages = with pkgs; [ git vim wget manpages steam ];
-
-  hardware.opengl.driSupport32Bit = true;
+  environment.systemPackages = with pkgs; [ git vim wget manpages ];
 
   documentation.dev.enable = true;
 
