@@ -7,7 +7,6 @@ in {
   imports = [
     # Modules
     ./modules/code.nix
-    ./modules/make-links.nix
     # Config
     ./backup
     ./desktop
@@ -101,8 +100,10 @@ in {
     '';
   };
 
-  home.links.".password-store" = "Dropbox/passwords";
-  home.links.".authinfo.gpg" = "Dropbox/passwords/authinfo.gpg";
+  systemd.user.tmpfiles.rules = [
+    "L %h/.password-store - - - - %h/Dropbox/passwords"
+    "L %h/.authinfo.gpg - - - - %h/Dropbox.passwords/authinfo.gpg"
+  ];
 
   systemd.user.services.dropbox = {
     Unit = { Description = "Dropbox"; };

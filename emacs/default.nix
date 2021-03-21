@@ -112,8 +112,10 @@ in {
 
   programs.bash.sessionVariables."EMACSDIR" = "~/.emacs.d";
 
-  # # Use a link rather than home.files because we probably want to be able to
-  # # hack on this pretty sloppily
-  home.links.".doom.d" = "git/dotfiles/emacs/doom.d";
-  home.links."notes" = "Dropbox/notes";
+  # Use a link rather than home.files because we probably want to be able to
+  # hack on this pretty sloppily
+  systemd.user.tmpfiles.rules = [
+    "L %h/notes - - - - %h/Dropbox/notes"
+    "L %h/.doom.d - - - - %h/git/dotfiles/emacs/doom.d"
+  ];
 }
