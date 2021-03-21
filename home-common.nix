@@ -36,7 +36,6 @@ in {
   ];
 
   services.keybase.enable = true;
-  services.kbfs.enable = true;
 
   programs.ssh = {
     enable = true;
