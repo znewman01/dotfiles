@@ -48,7 +48,9 @@ in {
     in {
       text = colors.mode;
       onChange = ''
-        nix-shell -p jq moreutils --command 'cat ${slackConfig} | jq "setpath([\"settings\", \"userTheme\"]; \"${colors.mode}\")" | sponge ${slackConfig}'
+        if [ -e ${slackConfig} ]; then
+          nix-shell -p jq moreutils --command 'cat ${slackConfig} | jq "setpath([\"settings\", \"userTheme\"]; \"${colors.mode}\")" | sponge ${slackConfig}'
+        fi
       '';
     };
 
@@ -60,7 +62,9 @@ in {
   in {
     text = colors.mode;
     onChange = ''
-      nix-shell -p jq moreutils --command 'cat ${keybaseConfig} | jq "setpath([\"ui\", \"darkMode\"]; \"${darkMode}\")" | sponge ${keybaseConfig}'
+      if [ -e ${keybaseConfig} ]; then
+        nix-shell -p jq moreutils --command 'cat ${keybaseConfig} | jq "setpath([\"ui\", \"darkMode\"]; \"${darkMode}\")" | sponge ${keybaseConfig}'
+      fi
     '';
   };
 
