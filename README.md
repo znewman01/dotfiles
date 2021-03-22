@@ -28,8 +28,13 @@
 
 0. Clone this repo: `mkdir -p ~/git && git clone https://github.com/znewman01/dotfiles.git ~/git/dotfiles`
 1. Run `cd ~/git/dotfiles && sudo ./scripts/install_root.sh && sudo reboot`
-2. (Comment out GitHub code.). Run `./scripts/install.sh` (in X!). Wait a while. Reboot.
+2. (Comment out GitHub code.). Run `./scripts/install.sh`.
 3. Run `./scripts/post-install.sh`
+   - Firefox
+   - MIT certs (broken)
+   - email
+   - GitHub (generate yourself an SSH key, share with GitHub; broken/removed)
+   - CSAIL WiFi
 
 You're probably going to have to restart Firefox, Emacs a couple of times each
 until things work. Such is life.

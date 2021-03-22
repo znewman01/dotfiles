@@ -18,6 +18,10 @@ in {
     };
   };
 
+  home.packages = with pkgs; [
+    emacs-all-the-icons-fonts
+  ];
+
   programs.emacs = {
     package = with pkgs; unstable20200811.emacs;
     extraPackages = epkgs: [ epkgs.use-package ];
@@ -91,13 +95,18 @@ in {
       # Hack to prevent re-syncing unless doom is updated.
       # .emacs.d gets e.g., compiled files in it, so it's not expected to
       # match the source.
-      mkdir -p ~/.emacs.d
+      if [ -d /persist/zjn/emacs.d ]; then
+        DST=/persist/zjn/emacs.d
+      else
+        DST="$HOME/.emacs.d"
+        mkdir -p "$DST"
+      fi
       rsync \
           --itemize-changes \
           --links \
           --recursive \
           --checksum \
-          ~/.emacs.d.template/ ~/.emacs.d/
+          ~/.emacs.d.template/ "$DST"
       EMACSDIR=~/.emacs.d ~/.emacs.d/bin/doom sync
     '';
   };
@@ -117,5 +126,6 @@ in {
   systemd.user.tmpfiles.rules = [
     "L %h/notes - - - - %h/Dropbox/notes"
     "L %h/.doom.d - - - - %h/git/dotfiles/emacs/doom.d"
+    "L %h/.emacs.d - - - - /persist/zjn/emacs.d"
   ];
 }

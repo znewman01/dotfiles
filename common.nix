@@ -68,8 +68,6 @@ in
     '';
   }];
 
-  services.journald.extraConfig = "MaxRetentionSec=1month";
-
   services.printing.enable = true;
   services.printing.clientConf = ''
     ServerName cups.csail.mit.edu
@@ -84,8 +82,9 @@ in
 
   users.users.zjn = {
     isNormalUser = true;
+    createHome = true;
     extraGroups =
-      [ "networkmanager" "wheel" "audio" "video" "lp" "docker" "libvirtd" ];
+      [ "networkmanager" "wheel" "audio" "video" "lp" "docker" "libvirtd" "systemd-journal" ];
     openssh.authorizedKeys.keyFiles = [ ./net/zjn-x1.pub ];
     hashedPassword = "$6$O1ia1YA5iKh9m$SVD17ySqqyicSpo2tzqTw4xRHm8C50.vMuoQPaLxTA9hsfJ7HQ/neioEYhOjZvPT..HNclbjd4JX4ydBcMvC7.";
   };

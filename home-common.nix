@@ -105,24 +105,9 @@ in {
     "L %h/.authinfo.gpg - - - - %h/Dropbox.passwords/authinfo.gpg"
   ];
 
-  systemd.user.services.dropbox = {
-    Unit = { Description = "Dropbox"; };
-
-    Install = { WantedBy = [ "graphical-session.target" ]; };
-
-    Service = {
-      Environment = [
-        "QT_PLUGIN_PATH=/run/current-system/sw/${pkgs.qt5.qtbase.qtPluginPrefix}"
-        "QML2_IMPORT_PATH=/run/current-system/sw/${pkgs.qt5.qtbase.qtQmlPrefix}"
-      ];
-      ExecStart = "${pkgs.dropbox.out}/bin/dropbox";
-      ExecReload = "${pkgs.coreutils.out}/bin/kill -HUP $MAINPID";
-      KillMode = "control-group"; # upstream recommends process
-      Restart = "on-failure";
-      PrivateTmp = true;
-      ProtectSystem = "full";
-      Nice = 10;
-    };
+  services.dropbox = {
+    enable = true;
+    path = "${config.home.homeDirectory}/Dropbox";
   };
 
   home.file.".cups/lpoptions".text = ''

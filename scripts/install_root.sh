@@ -35,7 +35,6 @@ if [ -f /etc/nixos/configuration.nix ]; then
   mv "$SYSTEM_WIDE_CONFIG" "${SYSTEM_WIDE_CONFIG}.bak"
 fi
 
-ln -s ${PWD}/configuration.nix /etc/nixos/configuration.nix
 chown -R "$NORMAL_USER:$NORMAL_GROUP" *
 
 nixos-rebuild --upgrade boot
