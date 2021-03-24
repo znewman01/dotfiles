@@ -18,6 +18,11 @@ in {
 
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
+  systemd.extraConfig = ''
+    DefaultTimeoutStartSec = 20s
+    DefaultTimeoutStopSec = 20s
+  '';
+
   networking.networkmanager.enable = true;
   # SBUX wifi
   networking.extraHosts = "172.31.98.1 aruba.odyssys.net";
