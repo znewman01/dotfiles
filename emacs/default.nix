@@ -79,7 +79,7 @@ in {
     Keywords=Text;Editor;
   '';
 
-  home.file.".emacs.d.template" = {
+  home.file.".emacs.d.template/emacs.d" = {
     source = pkgs.fetchFromGitHub {
       owner = "hlissner";
       repo = "doom-emacs";
@@ -104,8 +104,7 @@ in {
           --links \
           --recursive \
           --checksum \
-          ~/.emacs.d.template/ "$DST"
-      EMACSDIR=~/.emacs.d ~/.emacs.d/bin/doom sync
+          ~/.emacs.d.template/emacs.d "$DST"
     '';
   };
 
@@ -124,6 +123,5 @@ in {
   systemd.user.tmpfiles.rules = [
     "L %h/notes - - - - %h/Sync/notes"
     "L %h/.doom.d - - - - %h/git/dotfiles/emacs/doom.d"
-    "L %h/.emacs.d - - - - /persist/zjn/emacs.d"
   ];
 }
