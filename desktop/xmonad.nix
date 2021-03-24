@@ -40,7 +40,7 @@ in {
       myBorderSpacing = spacingRaw False (Border 4 4 4 4) True (Border 4 4 4 4) True
 
       setPassDir :: IO ()
-      setPassDir = setEnv "PASSWORD_STORE_DIR" "${config.home.homeDirectory}/Dropbox/passwords"
+      setPassDir = setEnv "PASSWORD_STORE_DIR" "${config.home.homeDirectory}/.password-store"
 
       main = do
         setPassDir

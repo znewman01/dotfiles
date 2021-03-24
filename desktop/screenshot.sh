@@ -3,7 +3,7 @@
 set -x
 set -eo pipefail
 
-SCREENSHOT_DIR="$HOME/Dropbox/Screenshots"
+SCREENSHOT_DIR="$HOME/Sync/screenshots"
 SCREENSHOT_PREFIX="screenshot-"
 
 # Copied from record_screen.sh

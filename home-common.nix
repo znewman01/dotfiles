@@ -35,6 +35,9 @@ in {
   ];
 
   services.keybase.enable = true;
+  services.kbfs.enable = true;
+
+  services.syncthing.enable = true;
 
   programs.ssh = {
     enable = true;
@@ -101,8 +104,8 @@ in {
   };
 
   systemd.user.tmpfiles.rules = [
-    "L %h/.password-store - - - - %h/Dropbox/passwords"
-    "L %h/.authinfo.gpg - - - - %h/Dropbox.passwords/authinfo.gpg"
+    "L %h/.password-store - - - - %h/Sync/passwords"
+    "L %h/.authinfo.gpg - - - - %h/Sync/passwords/authinfo.gpg"
   ];
 
   services.dropbox = {

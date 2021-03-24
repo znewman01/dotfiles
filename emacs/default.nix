@@ -124,7 +124,7 @@ in {
   # Use a link rather than home.files because we probably want to be able to
   # hack on this pretty sloppily
   systemd.user.tmpfiles.rules = [
-    "L %h/notes - - - - %h/Dropbox/notes"
+    "L %h/notes - - - - %h/Sync/notes"
     "L %h/.doom.d - - - - %h/git/dotfiles/emacs/doom.d"
     "L %h/.emacs.d - - - - /persist/zjn/emacs.d"
   ];

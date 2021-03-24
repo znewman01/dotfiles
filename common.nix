@@ -22,6 +22,14 @@ in
   networking.networkmanager.enable = true;
   # SBUX wifi
   networking.extraHosts = "172.31.98.1 aruba.odyssys.net";
+  networking.firewall.allowedTCPPorts = [
+    3000 # for messing around
+    22000 # syncthing
+  ];
+  networking.firewall.allowedUDPPorts = [
+    22000 # syncthing
+    21027 # syncthing
+  ];
 
   nixpkgs.config.allowUnfree = true;
 

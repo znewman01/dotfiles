@@ -17,7 +17,7 @@ RECORDING_PATH_FILE="${TMPDIR}/byzanz-path"
 LOCK_FILE="${TMPDIR}/byzanz.lock"
 
 # Directory to save recordings in
-RECORDINGS_DIR="$HOME/Dropbox/recordings"
+RECORDINGS_DIR="$HOME/Sync/recordings"
 # Recording will be called "${RECORDING_PREFIX}<date>"
 RECORDING_PREFIX="recording-"
 

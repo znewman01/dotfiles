@@ -402,10 +402,10 @@ Send URLs to [[https://www.instapaper.com/][Instapaper]] for offline reading.
 
 
 (after! deft
-  (setq deft-directory "~/Dropbox/notes/roam"
+  (setq deft-directory "~/Sync/notes/roam"
         deft-recursive t))
 (after! org-roam
-  (setq org-roam-directory "~/Dropbox/notes/roam"
+  (setq org-roam-directory "~/Sync/notes/roam"
         org-roam-db-update-method 'immediate
         org-roam-link-auto-replace nil
         org-roam-completion-everywhere nil
@@ -433,14 +433,14 @@ Send URLs to [[https://www.instapaper.com/][Instapaper]] for offline reading.
 * Bibliography
 Eventually will sort through this.
 #+begin_src emacs-lisp
-(setq bibtex-completion-bibliography "~/Dropbox/notes/lit/default.bib"
-      bibtex-completion-library-path "~/Dropbox/notes/lit/"
-      bibtex-completion-notes-path "~/Dropbox/notes/roam/bib/")
+(setq bibtex-completion-bibliography "~/Sync/notes/lit/default.bib"
+      bibtex-completion-library-path "~/Sync/notes/lit/"
+      bibtex-completion-notes-path "~/Sync/notes/roam/bib/")
 (after! ivy-bibtex
   (require 'org-roam)
   (org-roam-mode)
   ;; Basic configuration
-  (setq reftex-default-bibliography '("~/Dropbox/notes/lit/default.bib")
+  (setq reftex-default-bibliography '("~/Sync/notes/lit/default.bib")
         biblio-crossref-user-email-address "crossref@z.znewman.net")
   (setq bibtex-completion-fallback-options
         '(("DBLP (computer science bibliography)      (biblio.el)"
@@ -931,7 +931,7 @@ Now that that's all out of the way, we can get to actual work.
   (defun zjn-projectile-root-for-some-major-modes (_dir)
     (message "%s" major-mode)
     (let ((modes '(mu4e-headers-mode mu4e-main-mode mu4e-view-mode org-agenda-mode)))
-      (if (memq major-mode modes) "~/Dropbox/notes")))
+      (if (memq major-mode modes) "~/Sync/notes")))
                                         ; (push 'zjn-projectile-root-for-some-major-modes projectile-project-root-files-functions))
   (setq +workspaces-on-switch-project-behavior t)
   )
