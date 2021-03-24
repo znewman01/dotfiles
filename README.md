@@ -11,6 +11,8 @@
 
 - Install NixOS: https://nixos.org/nixos/manual/index.html
   - I recommend setting up [erase-on-boot](https://grahamc.com/blog/erase-your-darlings).
+  - {root,nix,cache,persist} datasets seems to make sense
+  - If using ZFS, set autosnapshot where applicable.
   - You may need to configure WiFi:
 
     ```sh
