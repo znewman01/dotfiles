@@ -18,9 +18,7 @@ in {
     };
   };
 
-  home.packages = with pkgs; [
-    emacs-all-the-icons-fonts
-  ];
+  home.packages = with pkgs; [ emacs-all-the-icons-fonts ];
 
   programs.emacs = {
     package = with pkgs; unstable20200811.emacs;
