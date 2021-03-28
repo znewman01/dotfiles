@@ -27,9 +27,7 @@ in {
     fd
     entr
     libnotify
-    pinentry-gtk2
     keybase
-    google-chrome
   ];
 
   services.keybase.enable = true;

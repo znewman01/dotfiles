@@ -37,6 +37,7 @@ in {
     skype
     signal-desktop
     keybase-gui # TODO: change color in $XDG_CONFIG/keybase/gui_config.json
+    pinentry-gtk2
     gist
     xcompmgr
   ];

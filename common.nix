@@ -10,6 +10,7 @@ in {
   imports = [ # needs to be absolute since we symlink this file in
     /etc/nixos/hardware-configuration.nix
     (import "${home-manager}/nixos")
+    ./desktop/system.nix
   ];
 
   boot.loader.systemd-boot.enable = true;
@@ -18,14 +19,7 @@ in {
 
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
-  systemd.extraConfig = ''
-    DefaultTimeoutStartSec = 20s
-    DefaultTimeoutStopSec = 20s
-  '';
-
   networking.networkmanager.enable = true;
-  # SBUX wifi
-  networking.extraHosts = "172.31.98.1 aruba.odyssys.net";
   networking.firewall.allowedTCPPorts = [
     3000 # for messing around
     22000 # syncthing
@@ -53,32 +47,10 @@ in {
 
   documentation.dev.enable = true;
 
-  sound.enable = true;
-  hardware.pulseaudio = {
-    enable = true;
-    package = pkgs.pulseaudioFull;
-  };
-  nixpkgs.config.pulseaudio = true;
-
   services.openssh.enable = true;
   # TODO: move to home.nix when rycee/home-manager#1087 resolved
   # https://github.com/rycee/home-manager/issues/1087
   programs.ssh.startAgent = true;
-
-  services.xserver.enable = true;
-  services.xserver.layout = "us";
-  services.xserver.xkbOptions = "caps:swapescape,compose:ralt";
-  # https://bugs.launchpad.net/ubuntu/+source/lightdm/+bug/982889
-  services.xserver.displayManager.job.preStart = ''
-    sleep 3
-  '';
-  services.xserver.desktopManager.session = [{
-    name = "home-manager";
-    start = ''
-      ${pkgs.runtimeShell} $HOME/.hm-xsession &
-      waitPID=$!
-    '';
-  }];
 
   services.printing.enable = true;
   services.printing.clientConf = ''
@@ -115,22 +87,8 @@ in {
     pkgs = pkgs;
   };
 
-  # For backlight
-  programs.light.enable = true;
-
-  services.redshift = { enable = true; };
-
-  location = {
-    latitude = 42.3;
-    longitude = -71.1;
-  };
-
   krb5 = {
     enable = true;
     libdefaults = { forwardable = true; };
   };
-
-  # keep me signed in to skype
-  # can't use home-manager due to https://github.com/nix-community/home-manager/issues/1454
-  services.gnome3.gnome-keyring.enable = true;
 }

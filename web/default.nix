@@ -173,4 +173,6 @@ in {
     }
   '';
   xdg.configFile."tridactyl/tridactylrc".source = ./tridactylrc;
+
+  home.packages = [ pkgs.google-chrome ];
 }
