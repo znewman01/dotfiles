@@ -108,5 +108,5 @@ in {
     Default 00-dev_null
     Dest xerox8/twoside Duplex=DuplexNoTumble sides=two-sided-long-edge'';
 
-  code = (import ./code.nix) { config = config; };
+  code = (import ./shells/code.nix) { config = config; };
 }
