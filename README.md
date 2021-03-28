@@ -3,7 +3,6 @@
 ## TODO
 
 - [ ] TRIM on your SSD
-- [ ] xmobar dropbox script should be scoped to just xmobar world
 - [ ] work through nix-pills
 - [ ] different xmobar configs
 

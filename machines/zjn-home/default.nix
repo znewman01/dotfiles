@@ -10,7 +10,7 @@ in {
   # Things that should get real backups.
   # Heuristic: are the source of truth and important.
   # So: keys, cloud-based things where local changes might need to be recovered
-  # (Dropbox/Syncthing/code)
+  # (Syncthing/code)
   home.persistence."/persist/zjn" = {
     directories = [
       "git"

@@ -165,7 +165,6 @@ in {
             , ("C-S-M-r", spawn "ARG=$(echo -e 'selection\nwindow\nall\nfullscreen' | rofi -dmenu -no-custom -p 'Record') && record_screen.sh $ARG")
             , ("<Print>", spawn "screenshot.sh -s")
             , ("M-<Print>", spawn "screenshot_rofi.sh -s")
-            , ("S-M-s", spawn "share.sh")
             , ("C-S-M-s", spawn "mimeify_clipboard.sh")
             , ("S-M-l", spawn "i3lock -c ${colors.base00}")
             , ("S-M-c",
@@ -205,7 +204,7 @@ in {
        , borderColor = "#${colors.base03}"
        , borderWidth = 2
        , position =     Top
-       , template = " %StdinReader% }{  %dropbox% |  %KBOS% | %default:Master% |  %wlp3s0wi% |  %battery% |  %date% "
+       , template = " %StdinReader% }{  %KBOS% | %default:Master% |  %wlp3s0wi% |  %battery% |  %date% "
        , allDesktops = True    -- show on all desktops
        , commands =
             [ Run Weather "KBOS"    [ "-t" , "<fc=#${colors.base06}><tempF></fc>°F"
@@ -233,35 +232,10 @@ in {
             , Run Wireless "wlp3s0" [ "-t"      , "<essid>"
                                     , "--"
                                     ] 10
-            , Run Com "/home/zjn/bin/xmobar-dropbox" [] "dropbox" 10
             , Run StdinReader
             ]
        }
   '';
-
-  home.file."bin/xmobar-dropbox" = {
-    text = ''
-      #!/bin/sh
-
-      status="$(dropbox status)"
-
-      case "$status" in
-              "Up to date")
-                      echo "<fc=#${colors.base03}></fc>" ;;
-              Updating*)
-                      echo "<fc=#${colors.base0A}>↯</fc>" ;;
-              Starting*)
-                      echo "<fc=#${colors.base0A}>↯</fc>" ;;
-              Checking*)
-                      echo "<fc=#${colors.base0A}>↯</fc>" ;;
-              Syncing*)
-                      echo "<fc=#${colors.base0A}>↯</fc>" ;;
-              *)
-                      echo "<fc=#${colors.base08}></fc> $status" ;;
-      esac
-    '';
-    executable = true;
-  };
 
   xdg.configFile."rasi/base16.rasi".text = ''
     * {
@@ -484,5 +458,4 @@ in {
       fi
     '';
   };
-  home.file."bin/share.sh".source = ./share.sh;
 }

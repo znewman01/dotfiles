@@ -20,7 +20,6 @@ in {
   xdg.enable = true;
 
   home.packages = with pkgs; [
-    dropbox-cli
     tree
     pass
     ripgrep
@@ -106,11 +105,6 @@ in {
     "L %h/.password-store - - - - %h/Sync/passwords"
     "L %h/.authinfo.gpg - - - - %h/Sync/passwords/authinfo.gpg"
   ];
-
-  services.dropbox = {
-    enable = true;
-    path = "${config.home.homeDirectory}/Dropbox";
-  };
 
   home.file.".cups/lpoptions".text = ''
     Default 00-dev_null
