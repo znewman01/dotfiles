@@ -8,7 +8,6 @@ in {
     # Modules
     ./modules/code.nix
     # Config
-    ./backup
     ./desktop
     ./emacs
     ./email
