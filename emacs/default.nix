@@ -93,8 +93,8 @@ in {
       # Hack to prevent re-syncing unless doom is updated.
       # .emacs.d gets e.g., compiled files in it, so it's not expected to
       # match the source.
-      if [ -d /persist/zjn/emacs.d ]; then
-        DST=/persist/zjn/emacs.d
+      if [ -d /cache/zjn/emacs.d ]; then
+        DST=/cache/zjn/emacs.d
       else
         DST="$HOME/.emacs.d"
         mkdir -p "$DST"

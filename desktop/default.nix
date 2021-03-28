@@ -43,7 +43,7 @@ in {
 
   # Slack theme
   # Hack: only way to configure this is to modify the root-state.json file. So we use a proxy file as a trigger.
-  xdg.configFile."Slack/storage/color.txt" =
+  xdg.configFile.".slack-color.txt" =
     let slackConfig = "~/.config/Slack/storage/root-state.json";
     in {
       text = colors.mode;
@@ -56,7 +56,7 @@ in {
 
   # Keybase theme
   # Same hack as for slack.
-  xdg.configFile."keybase/color.txt" = let
+  xdg.configFile.".keybase-color.txt" = let
     keybaseConfig = "~/.config/keybase/gui_config.json";
     darkMode = if colors.mode == "dark" then "alwaysDark" else "alwaysLight";
   in {

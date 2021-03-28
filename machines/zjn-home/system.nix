@@ -14,12 +14,10 @@
   '';
   services.zfs.autoSnapshot.enable = true;
   services.openssh = {
-    hostKeys = [
-      {
-        path = "/persist/ssh/ssh_host_ed25519_key";
-        type = "ed25519";
-      }
-    ];
+    hostKeys = [{
+      path = "/persist/ssh/ssh_host_ed25519_key";
+      type = "ed25519";
+    }];
   };
   systemd.tmpfiles.rules = [
     "L /etc/nixos/configuration.nix - - - - /persist/zjn/git/dotfiles/configuration.nix"

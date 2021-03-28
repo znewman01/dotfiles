@@ -2,8 +2,7 @@
 
 let
   impermanence = builtins.fetchTarball {
-    url =
-      "https://github.com/nix-community/impermanence/archive/master.tar.gz";
+    url = "https://github.com/nix-community/impermanence/archive/master.tar.gz";
   };
 in {
   imports = [ "${impermanence}/home-manager.nix" ];
@@ -13,7 +12,16 @@ in {
   # So: keys, cloud-based things where local changes might need to be recovered
   # (Dropbox/Syncthing/code)
   home.persistence."/persist/zjn" = {
-    directories = [ "git" ".gnupg" ".dropbox-hm" ".ssh" ".emacs.d" "Sync" ];
+    directories = [
+      "git"
+      ".gnupg"
+      ".ssh"
+      "Sync"
+      ".config/keybase"
+      ".config/Signal"
+      ".config/syncthing"
+      ".config/Slack"
+    ];
     files = [ ".gist" ];
     allowOther = true;
   };
@@ -21,7 +29,18 @@ in {
   # Things that are annoying to reconfigure/rebuild/redownload but not a real
   # problem to lose.
   home.persistence."/cache/zjn" = {
-    directories = [ ".cache/mu" "Maildir" ".emacs.d.template" ".mozilla" ".config/syncthing" ".local/share/direnv" ];
+    directories = [
+      ".cache/mu"
+      "Maildir"
+      ".emacs.d"
+      ".emacs.d.template"
+      ".mozilla"
+      ".local/share/direnv"
+      ".local/share/keyrings"
+      ".local/share/tridactyl"
+      ".config/skypeforlinux"
+      ".vagrant.d"
+    ];
     allowOther = true;
   };
 }
