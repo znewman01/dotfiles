@@ -20,7 +20,6 @@ in {
       ".config/keybase"
       ".config/Signal"
       ".config/syncthing"
-      ".config/Slack"
     ];
     files = [ ".gist" ];
     allowOther = true;
@@ -39,6 +38,7 @@ in {
       ".local/share/keyrings"
       ".local/share/tridactyl"
       ".config/skypeforlinux"
+      ".config/Slack"
       ".vagrant.d"
     ];
     allowOther = true;
