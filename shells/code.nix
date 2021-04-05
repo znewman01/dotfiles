@@ -79,10 +79,6 @@
       exclude.enable = true;
       shell = ./bellman-bignat.nix;
     };
-    "vDBx1000" = {
-      url = "git@github.com:aluex/vDBx1000.git";
-      exclude.enable = true;
-    };
     "sm-thesis" = {
       url = "git@github.mit.edu:zjn/sm-thesis.git";
       exclude.enable = true;
