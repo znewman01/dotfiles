@@ -30,6 +30,7 @@ in {
   home.persistence."/cache/zjn" = {
     directories = [
       ".cache/mu"
+      ".cache/Tectonic"
       "Maildir"
       ".emacs.d"
       ".emacs.d.template"
