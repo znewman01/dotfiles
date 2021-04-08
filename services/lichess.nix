@@ -2,8 +2,10 @@
 
 {
   home.file."bin/beeminder-lichess.sh" = {
-    text = "#! /usr/bin/env ${pkgs.nix.out}/bin/nix-shell"
-      + builtins.readFile ./beeminder-lichess.sh;
+    text = ''
+      #! ${pkgs.nix.out}/bin/nix-shell
+      ${builtins.readFile ./beeminder-lichess.sh}
+    '';
     executable = true;
   };
 
