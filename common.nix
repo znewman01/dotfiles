@@ -52,6 +52,16 @@ in {
   # https://github.com/rycee/home-manager/issues/1087
   programs.ssh.startAgent = true;
 
+  services.avahi = {
+    enable = true;
+    publish = {
+      workstation = true;
+      enable = true;
+      addresses = true;
+    };
+    nssmdns = true;
+  };
+
   services.printing.enable = true;
   services.printing.clientConf = ''
     ServerName cups.csail.mit.edu
