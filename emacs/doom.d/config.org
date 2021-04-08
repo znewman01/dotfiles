@@ -841,6 +841,7 @@ Don't send prematurely by accident (this allows a neat trick of leaving the subj
           ("https://schlosser.io/rss.xml")
           ("https://weekly.nixos.org/feeds/all.rss.xml")
           ("https://qualiacomputing.com/feed/")
+          ("https://vitalik.ca/feed.xml")
           ("https://algorithmsoup.wordpress.com/feed.xml")
           ("https://svbn.me/blog/index.xml")
           ("https://www.scottaaronson.com/blog/?feed=rss2")))
