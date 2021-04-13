@@ -871,6 +871,8 @@ Don't send prematurely by accident (this allows a neat trick of leaving the subj
                     (message "Added to Instapaper!")))))
 
 
+  (require 'elfeed-db)
+  (add-hook 'elfeed-show-mode-hook #'elfeed-db-save)
   (defun add-elfeed-entry-to-paper-queue-iacr ()
     (interactive)
     (let ((entry (elfeed-search-selected :single)))
