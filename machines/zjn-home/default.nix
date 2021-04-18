@@ -21,7 +21,6 @@ in {
       ".config/Signal"
       ".config/syncthing"
     ];
-    files = [ ".gist" ];
     allowOther = true;
   };
 
@@ -42,6 +41,7 @@ in {
       ".config/Slack"
       ".vagrant.d"
     ];
+    files = [ ".gist" ];
     allowOther = true;
   };
 }
