@@ -1,13 +1,8 @@
 # dotfiles
 
-## TODO
-
-- [ ] TRIM on your SSD
-- [ ] work through nix-pills
-- [ ] different xmobar configs
-
 ## Manual steps
 
+- Preconfigure: copy an existing setup to `machines/$HOSTNAME`
 - Install NixOS: https://nixos.org/nixos/manual/index.html
   - I recommend setting up [erase-on-boot](https://grahamc.com/blog/erase-your-darlings).
   - {root,nix,cache,persist} datasets seems to make sense
@@ -20,17 +15,14 @@
     iwconfig wlp3s0 essid ...
     sleep 10 && ping 8.8.8.8  # repeat as needed
     ```
-  - make sure to add `zjn` user, hostname, git/vim/wget in configuration.nix
+  - Clone this repo on the new machine; symlink configuration.nix in and run `nixos-rebuild boot`
   - on reboot:
-    - log in as root,
-    - set `passwd zjn`
     - log in as `zjn`
-    - deactivate root password (`passwd -l root`). then proceed
+    - deactivate root password (`sudo passwd -l root`). then proceed
 
 0. Clone this repo: `mkdir -p ~/git && git clone https://github.com/znewman01/dotfiles.git ~/git/dotfiles`
-1. Run `cd ~/git/dotfiles && sudo ./scripts/install_root.sh && sudo reboot`
-2. (Comment out GitHub code.). Run `./scripts/install.sh`.
-3. Run `./scripts/post-install.sh`
+1. (Comment out GitHub code.). Run `./scripts/install.sh`.
+2. Run `./scripts/post-install.sh`
    - Firefox
    - MIT certs (broken)
    - email
