@@ -9,7 +9,7 @@ curl -s "${BEE}/users/znewman01/goals/lichess-fast/datapoints.json?${BEE_AUTH}&c
 BEE_GAMES=$(jq first.value $TMP_FILE)
 echo "Current Beeminder # of games: ${BEE_GAMES}"
 
-LI_GAMES=$(curl -s https://lichess.org/api/user/znewman01 | jq '.perfs.bullet.games + .perfs.blitz.games')
+LI_GAMES=$(curl -s https://lichess.org/api/user/znewman01 | jq '.perfs.bullet.games + .perfs.blitz.games - 40')
 echo "Current Lichess # of games: ${LI_GAMES}"
 
 if [ $LI_GAMES -eq $BEE_GAMES ]; then
@@ -18,11 +18,12 @@ if [ $LI_GAMES -eq $BEE_GAMES ]; then
 fi
 
 echo "Posting the new data point..."
-# TODO: get the response
 DATAPOINT_ID=$(curl -s -X POST \
     --data "${BEE_AUTH}&value=${LI_GAMES}" \
     "${BEE}/users/znewman01/goals/${GOAL}/datapoints.json" \
     | jq '.id' | sed 's/"//g')
+
+sleep 1
 
 BAREMIN=$(curl -s "${BEE}/users/znewman01/goals/lichess-fast?${BEE_AUTH}&count=1" | jq '.baremin' | sed 's/["+]//g')
 if [ $BAREMIN -ge 0 ]; then
@@ -41,7 +42,8 @@ echo "Need to charge: ${TO_CHARGE}"
 
 if [ $TO_CHARGE -gt 0 ]; then
     echo "Charging..."
-    curl -s -X POST "${BEE}/charges.json?${BEE_AUTH}&amount=${TO_CHARGE}&note=lichess-fast"
+    echo "(not really)"
+    echo curl -s -X POST "${BEE}/charges.json?${BEE_AUTH}&amount=${TO_CHARGE}&note=lichess-fast"
 else
     echo "Not charging."
 fi
