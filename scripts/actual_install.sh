@@ -21,7 +21,8 @@ parted $DISK -- set 2 esp on
 PART_PREFIX=/dev/nvme0n1p  # TODO: prompt (maybe ls $DISK/*)
 # 2. format
 mkfs.fat -F 32 -n boot ${PART_PREFIX}2
-zpool create tank ${PART_PREFIX}1
+zpool create -f tank ${PART_PREFIX}1
+zfs set com.sun:auto-snapshot=true tank
 zfs create -p -o mountpoint=legacy tank/safe/persist
 zfs create -p -o mountpoint=legacy tank/local/root
 zfs create -p -o mountpoint=legacy tank/local/cache
