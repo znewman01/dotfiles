@@ -86,7 +86,7 @@
     };
     "tor-cdn" = {
       url = "git@github.com:iowaguy/tor-cdn.git";
-      exclude.enable = true;
+      exclude.enable = false;
       extraFiles = {
         "dataviz/.projectile".text = "";
         "latencies/.projectile".text = "";
