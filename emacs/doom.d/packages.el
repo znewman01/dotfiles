@@ -52,6 +52,8 @@
 (package! org-ref)
 (package! csv-mode)
 
+(package! evil-escape :disable t)  ; let me type "jk"!
+
 ; https://github.com/NixOS/nix-mode/pull/120
 (unpin! nix-mode)
 (package! nix-mode :recipe (:host github :repo "znewman01/nix-mode" :flavor github) :pin nil)
