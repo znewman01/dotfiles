@@ -764,6 +764,7 @@ Common views (combined inbox, unread, all recent):
 Misc:
 #+begin_src emacs-lisp
 (setq mu4e-attachment-dir "/home/zjn/Downloads")
+(mkdir mu4e-attachment-dir t)
 (setq mu4e-view-show-addresses t)
 (setq mu4e-change-filenames-when-moving t)
 #+end_src
