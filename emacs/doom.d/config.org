@@ -978,6 +978,7 @@ Now that that's all out of the way, we can get to actual work.
 *** Python
 #+begin_src emacs-lisp
 (after! lsp-mode
+  (push "[/\\\\]\\.hypothesis" lsp-file-watch-ignored)
   (push "[/\\\\]\\venv$" lsp-file-watch-ignored)
   (push "[/\\\\]\\.venv$" lsp-file-watch-ignored))
 #+end_src
