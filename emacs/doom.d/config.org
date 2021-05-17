@@ -331,41 +331,41 @@ Send URLs to [[https://www.instapaper.com/][Instapaper]] for offline reading.
                  region))
            (api-url (format "http://export.arxiv.org/api/query?id_list=%s" id)))
       (request
-        api-url
-        :parser (lambda () (libxml-parse-xml-region (point) (point-max)))
-        :success
-        (cl-function
-         (lambda (&key data &allow-other-keys)
-           (let* ((entry (first (xml-get-children data 'entry)))
-                  (title (replace-regexp-in-string " *\n *" " " (caddar (xml-get-children entry 'title))))
-                  (authors (mapconcat (lambda (x) (caddr (caddr x)))
-                                      (xml-get-children entry 'author) ", "))
-                  (pdf-link
-                   (concat (cdr
-                            (assoc 'href
-                                   (cadar
-                                    (cl-remove-if-not
-                                     (lambda (x)
-                                       (string= (cdr (assoc 'title (cadr x))) "pdf"))
-                                     (xml-get-children entry 'link)))))
-                           ".pdf"))
-                  (article-link
-                   (cdr (assoc 'href (cadar
-                                      (cl-remove-if-not
-                                       (lambda (x)
-                                         (string= (cdr (assoc 'rel (cadr x))) "alternate"))
-                                       (xml-get-children entry 'link)))))))
-             (save-excursion
-               (org-back-to-heading t)
-               (end-of-line)
-               (insert title
-                       "\n"
-                       article-link
-                       "\nAuthor(s): "
-                       authors)
-               (sit-for 0.1)
-               (let ((org-attach-directory "~/notes/data"))
-                 (org-attach-attach pdf-link nil 'url))))))))
+       api-url
+       :parser (lambda () (libxml-parse-xml-region (point) (point-max)))
+       :success
+       (cl-function
+        (lambda (&key data &allow-other-keys)
+          (let* ((entry (first (xml-get-children data 'entry)))
+                 (title (replace-regexp-in-string " *\n *" " " (caddar (xml-get-children entry 'title))))
+                 (authors (mapconcat (lambda (x) (caddr (caddr x)))
+                                     (xml-get-children entry 'author) ", "))
+                 (pdf-link
+                  (concat (cdr
+                           (assoc 'href
+                                  (cadar
+                                   (cl-remove-if-not
+                                    (lambda (x)
+                                      (string= (cdr (assoc 'title (cadr x))) "pdf"))
+                                    (xml-get-children entry 'link)))))
+                          ".pdf"))
+                 (article-link
+                  (cdr (assoc 'href (cadar
+                                     (cl-remove-if-not
+                                      (lambda (x)
+                                        (string= (cdr (assoc 'rel (cadr x))) "alternate"))
+                                      (xml-get-children entry 'link)))))))
+            (save-excursion
+              (org-back-to-heading t)
+              (end-of-line)
+              (insert title
+                      "\n"
+                      article-link
+                      "\nAuthor(s): "
+                      authors)
+              (sit-for 0.1)
+              (let ((org-attach-directory "~/notes/data"))
+                (org-attach-attach pdf-link nil 'url))))))))
     "")
 
 
