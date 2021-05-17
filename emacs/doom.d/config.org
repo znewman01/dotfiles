@@ -404,6 +404,14 @@ Send URLs to [[https://www.instapaper.com/][Instapaper]] for offline reading.
 (after! deft
   (setq deft-directory "~/Sync/notes/roam"
         deft-recursive t))
+(use-package! org-roam-bibtex
+  :after org-roam
+  :hook (org-roam-mode . org-roam-bibtex-mode)
+  :config
+  (require 'org-ref))
+(after! org-ref
+  (setq org-ref-default-bibliography '("~/Sync/notes/lit/default.bib")
+        org-ref-pdf-directory "~/Sync/notes/lit/"))
 (after! org-roam
   (setq org-roam-directory "~/Sync/notes/roam"
         org-roam-db-update-method 'immediate
@@ -412,8 +420,6 @@ Send URLs to [[https://www.instapaper.com/][Instapaper]] for offline reading.
         +org-roam-open-buffer-on-find-file nil
         org-roam-tag-sources '(prop last-directory)
         emacsql-sqlite3-executable (executable-find "sqlite3"))
-  (add-hook! org-roam-mode (org-roam-bibtex-mode))
-  (require 'org-roam-bibtex)
 
   (setq orb-templates
         '(("r" "ref" plain #'org-roam-capture--get-point "" :file-name "bib/${citekey}" :head "#+TITLE: ${title}\n#+ROAM_KEY: ${ref}\n" :unnarrowed t :immediate-finish t)))
@@ -998,7 +1004,9 @@ Now that that's all out of the way, we can get to actual work.
 ** Reading
 Good readers take notes; great readers don't exit their PDFs and lose all those notes.
 #+begin_src emacs-lisp
-(after! pdf
+(after! pdf-view
+  (require 'inheritenv)
+  (inheritenv-add-advice 'pdf-annot-print-annotation)
   (defun zjn/save-buffer-no-args () (save-buffer)) ; needed to make args line up
   (advice-add 'pdf-annot-edit-contents-commit :after 'zjn/save-buffer-no-args))
 #+end_src

@@ -54,6 +54,9 @@
 
 (package! evil-escape :disable t)  ; let me type "jk"!
 
+; some things break due to envrc
+(package! inheritenv)
+
 ; https://github.com/NixOS/nix-mode/pull/120
 (unpin! nix-mode)
 (package! nix-mode :recipe (:host github :repo "znewman01/nix-mode" :flavor github) :pin nil)
