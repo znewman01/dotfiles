@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: mathbb
+# uuid: mathbb
+# key: bb
+# --
+\mathbb{`yas-selected-text`$1}$0

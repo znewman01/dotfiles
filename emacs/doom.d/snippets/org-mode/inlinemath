@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# contributor: Zachary Newman
+# name: Inline math \( ... \) (org-mode)
+# key: $
+# --
+\\(`yas-selected-text`$1\\)$0

@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: mathsf
+# key: sf
+# condition: t
+# --
+\mathsf{$1}$0

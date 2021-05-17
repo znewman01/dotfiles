@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: zeroone
+# uuid: zeroone
+# key: zo
+# --
+\\{0, 1\\}$0
