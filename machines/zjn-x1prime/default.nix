@@ -40,6 +40,7 @@ in {
       ".config/skypeforlinux"
       ".config/Slack"
       ".vagrant.d"
+      ".terraform.d"
     ];
     files = [ ".gist" ];
     allowOther = true;
