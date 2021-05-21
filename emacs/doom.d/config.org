@@ -190,6 +190,7 @@ Send URLs to [[https://www.instapaper.com/][Instapaper]] for offline reading.
         nil)))
 
   (setq org-startup-indented nil)
+  (setq org-startup-with-latex-preview t)
   (setq org-stuck-projects '("-SOMEDAY/PROJ" ("NEXT" "BUY") nil ""))
   (setq org-agenda-todo-ignore-scheduled 'past)
   (setq org-agenda-todo-ignore-deadlines 'near)
