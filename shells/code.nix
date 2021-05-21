@@ -91,7 +91,6 @@
         "dataviz/.projectile".text = "";
         "latencies/.projectile".text = "";
       };
-      shell = ./tor-cdn.nix;
     };
     "dotfiles" = { url = "git@github.com:znewman01/dotfiles.git"; };
   };
