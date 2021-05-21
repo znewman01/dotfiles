@@ -22,6 +22,12 @@ Take a hint from Vim on to extra key commands (use ~,~).
 #+begin_src emacs-lisp
 (setq doom-localleader-key ",")
 #+end_src
+
+And make an insert-mode leader that doesn't conflict with XMonad:
+#+begin_src emacs-lisp
+(setq doom-leader-alt-key "s-SPC")
+(setq doom-localleader-alt-key "s-SPC m")
+#+end_src
 * Utilities
 A smart person once told me: if you have to call a unit of code "util" or "lib", you haven't thought very hard about how to structure your program.
 ** IACR ePrints
