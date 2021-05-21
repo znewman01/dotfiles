@@ -7,7 +7,7 @@ Use [[https://www.emacswiki.org/emacs/LexicalBinding][lexical binding]]:
 ;;; -*- lexical-binding: t; -*-
 #+end_src
 
-Make the ~doom~ CLI tool work (hack because I :
+Make the ~doom~ CLI tool work (hack due to Nix chicanery):
 #+begin_src emacs-lisp
 (setenv "EMACSDIR" "~/.emacs.d")
 #+end_src
