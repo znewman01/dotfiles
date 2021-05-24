@@ -68,6 +68,8 @@
 (unpin! org-roam)
 ;; When using bibtex-completion via the `biblio` module
 (unpin! bibtex-completion helm-bibtex ivy-bibtex)
+(unpin! org-re-reveal)
+(package! org-re-reveal-ref :pin nil)
 
 ; ~~aesthetics~~
 (package! mixed-pitch)
