@@ -853,6 +853,7 @@ Don't send prematurely by accident (this allows a neat trick of leaving the subj
           ("https://windowsontheory.org/feed/")
           ("https://www.interfluidity.com/feed")
           ("https://schlosser.io/rss.xml")
+          ("https://blog.sigstore.dev/feed")
           ("https://weekly.nixos.org/feeds/all.rss.xml")
           ("https://qualiacomputing.com/feed/")
           ("https://vitalik.ca/feed.xml")
