@@ -5,7 +5,7 @@ let
     url = "https://github.com/nix-community/impermanence/archive/master.tar.gz";
   };
 in {
-  imports = [ "${impermanence}/home-manager.nix" ];
+  imports = [ "${impermanence}/home-manager.nix" ./autorandr.nix ];
 
   # Things that should get real backups.
   # Heuristic: are the source of truth and important.
