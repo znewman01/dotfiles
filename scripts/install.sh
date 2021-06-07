@@ -15,7 +15,7 @@ FINGERPRINT=$(gpg --list-keys | grep "Key fingerprint" | head -n 1 | cut -d= -f2
 
 read -p "On a viable machine, run:
     $ gpg --import $HOME/Sync/keys/${HOSTNAME}.gpg
-    $ gpg --edit-key $FINGERPRINT trust quit
+    $ echo '$FINGERPRINT:6' | gpg --import-ownertrust
     $ xargs pass init $FINGERPRINT < $HOME/.password-store/.gpg-id
 
 Verify that you can now read passwords on this machine. Then hit [enter]. "

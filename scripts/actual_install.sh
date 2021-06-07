@@ -23,6 +23,7 @@ PART_PREFIX=/dev/nvme0n1p  # TODO: prompt (maybe ls $DISK/*)
 mkfs.fat -F 32 -n boot ${PART_PREFIX}2
 zpool create -f tank ${PART_PREFIX}1
 zfs set com.sun:auto-snapshot=true tank
+zfs set compression=lz4 tank
 zfs create -p -o mountpoint=legacy tank/safe/persist
 zfs create -p -o mountpoint=legacy tank/local/root
 zfs create -p -o mountpoint=legacy tank/local/cache
@@ -56,3 +57,6 @@ nixos-generate-config --root /mnt --show-hardware-config \
 ln -s /mnt/persist/hardware-configuration.nix /etc/nixos/
 # 6. do the thing
 nixos-install
+
+# TODO:
+# - permissions on /persist/zjn, /cache/zjn

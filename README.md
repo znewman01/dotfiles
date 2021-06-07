@@ -21,6 +21,7 @@
     - deactivate root password (`sudo passwd -l root`). then proceed
 
 0. Clone this repo: `mkdir -p ~/git && git clone https://github.com/znewman01/dotfiles.git /mnt/persist/zjn/git/dotfiles`
+   - syncthing: http://localhost:8384 on both machines
 1. (Comment out GitHub code.). Run `./scripts/install.sh`.
 2. Run `./scripts/post-install.sh`
    - Firefox
