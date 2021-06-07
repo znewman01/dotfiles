@@ -87,7 +87,8 @@ in {
       "libvirtd"
       "systemd-journal"
     ];
-    openssh.authorizedKeys.keyFiles = [ ./net/zjn-x1.pub ./net/zjn-home.pub ];
+    openssh.authorizedKeys.keyFiles =
+      [ ./net/zjn-x1.pub ./net/zjn-home.pub ./net/zjn-x1prime.pub ];
     hashedPassword =
       "$6$O1ia1YA5iKh9m$SVD17ySqqyicSpo2tzqTw4xRHm8C50.vMuoQPaLxTA9hsfJ7HQ/neioEYhOjZvPT..HNclbjd4JX4ydBcMvC7.";
   };
