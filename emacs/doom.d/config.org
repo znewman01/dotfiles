@@ -568,6 +568,18 @@ Eventually will sort through this.
           (list #'zjn--ivy-bibtex-rename "Rename (move) the citation key."))
     (ivy-set-actions 'ivy-bibtex ivy-actions)))
 
+
+(defun zjn--default-key-name ()
+  (bibtex-beginning-of-entry)
+  (let* ((entry (bibtex-parse-entry))
+         (author-string (cdr (assoc-string "author" entry)))
+         (authors (s-split " and " (s-collapse-whitespace author-string)))
+         (year (cdr (assoc-string "year" entry))))
+    (concat
+     (cond ((= (length authors) 1) (substring (car (last (s-split " " (car authors)))) 0 3))
+           ((> (length authors) 4) (concat (apply 'concat (mapcar (lambda (a) (substring (car (last (s-split " " a))) 0 1)) (subseq authors 0 3))) "+"))
+           (t (apply 'concat (mapcar (lambda (a) (substring (car (last (s-split " " a))) 0 1)) authors))))
+     (substring year -2))))
 (defun zjn--bib-get-key (entry)
   "The key we want to use by default."
   (bibtex-beginning-of-entry)
@@ -576,7 +588,7 @@ Eventually will sort through this.
                       "proceedings"))
     (bibtex-previous-entry)
     (bibtex-beginning-of-entry))
-  (read-string "Key: " (s-replace ":" "" (s-replace ":_" ":" (bibtex-generate-autokey)))))
+  (read-string "Key: " (zjn--default-key-name)))
 (defun zjn--bib-replace-key (new-key)
   "Replace the bibtex key of the current entry."
                                         ; cribbed from bibtex-clean-entry
