@@ -858,7 +858,7 @@ Don't send prematurely by accident (this allows a neat trick of leaving the subj
           ("http://www.christianmoscardi.com/feed.xml")
           ("https://danluu.com/atom.xml")
           ("https://mass.streetsblog.org/feed/")
-          ("http://scholars-stage.blogspot.com/feeds/posts/default")
+          ("https://scholars-stage.org/?feed=atom")
           ("http://feeds.feedburner.com/creditslips/feed?format=xml")
           ("https://this-week-in-rust.org/atom.xml")
           ("http://squidarth.com/feed.xml")
