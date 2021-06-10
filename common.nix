@@ -3,8 +3,8 @@
 let
   home-manager = builtins.fetchGit {
     url = "https://github.com/nix-community/home-manager.git";
-    rev = "209566c752c4428c7692c134731971193f06b37c";
-    ref = "release-20.09";
+    rev = "148d85ee8303444fb0116943787aa0b1b25f94df";
+    ref = "release-21.05";
   };
 in {
   imports = [ # needs to be absolute since we symlink this file in
@@ -16,8 +16,6 @@ in {
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.cleanTmpDir = true;
-
-  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   networking.networkmanager.enable = true;
   networking.firewall.allowedTCPPorts = [

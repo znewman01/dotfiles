@@ -414,7 +414,7 @@ in {
     theme = "/home/zjn/.config/rasi/base16.rasi";
     package = with pkgs; rofi.override { plugins = [ rofi-calc ]; };
     font = "Roboto Mono 12";
-    extraConfig = "rofi.m: -4";
+    extraConfig = { m = -4; };
   };
 
   home.file."bin/record_screen.sh".source = ./record_screen.sh;

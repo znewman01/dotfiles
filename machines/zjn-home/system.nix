@@ -5,7 +5,6 @@
   networking.hostId = "2f4cf0b0";
   system.stateVersion = "20.09";
   programs.fuse.userAllowOther = true;
-  boot.kernelPackages = pkgs.linuxPackages_5_10;
   boot.initrd.postDeviceCommands = lib.mkAfter ''
     zfs destroy -R tank/local/lastroot
     zfs rename tank/local/root tank/local/lastroot

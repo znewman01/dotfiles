@@ -2,27 +2,9 @@
 
 with lib;
 
-let
-  # for Zoom 5.1
-  unstableTarball20210207 = builtins.fetchTarball {
-    name = "nixos-unstable-2021-02-07";
-    url =
-      "https://github.com/nixos/nixpkgs/archive/a21a3bd84885c20f7736be84698595cc572c1454.tar.gz";
-
-    # Hash obtained using `nix-prefetch-url --unpack <url>`
-    sha256 = "0sbfv0dw5l13hf8pl0im0xrybnl5vnq3x0sv2x7v6i7hh46ch34a";
-
-  };
-  colors = (import ./colors) { lib = lib; };
+let colors = (import ./colors) { lib = lib; };
 in {
   imports = [ ./xmonad.nix ./fonts.nix ./alacritty.nix ];
-
-  nixpkgs.config = {
-    packageOverrides = pkgs: {
-      unstable20210207 =
-        import unstableTarball20210207 { config = config.nixpkgs.config; };
-    };
-  };
 
   home.packages = with pkgs; [
     anki
@@ -32,7 +14,7 @@ in {
     xclip
     xdotool
     zathura
-    unstable20210207.zoom-us
+    zoom-us
     slack # TODO: change color in $XDG_CONFIG/Slack/storage/root-state.json
     skype
     signal-desktop

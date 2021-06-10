@@ -28,7 +28,7 @@
 
   # keep me signed in to skype
   # can't use home-manager due to https://github.com/nix-community/home-manager/issues/1454
-  services.gnome3.gnome-keyring.enable = true;
+  services.gnome.gnome-keyring.enable = true;
 
   sound.enable = true;
   hardware.pulseaudio = {
