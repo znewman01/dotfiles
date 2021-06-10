@@ -79,29 +79,33 @@ in {
     Keywords=Text;Editor;
   '';
 
-  home.file.".emacs.d.template/emacs.d" = {
+  home.file.".emacs.d.template/emacs.d" = let rev = "2731685095d1e6101b3215aa689426e1834ce00f"; in
+ {
     source = pkgs.fetchFromGitHub {
       owner = "hlissner";
       repo = "doom-emacs";
       # git ls-remote https://github.com/hlissner/doom-emacs/ develop
-      rev = "2731685095d1e6101b3215aa689426e1834ce00f";
+      rev = rev;
       # just rerun with the all-0 SHA, it'll tell you what to put
       # (but if it matches a previous SHA it won't update!)
       sha256 = "1b7dgpfch0brggz29d5m3qkyas41q0q6zn3fjpypj6psxqr71m3f";
     };
     onChange = ''
+      DST="$HOME/.emacs.d"
+      mkdir -p "$DST"
       # Hack to prevent re-syncing unless doom is updated.
       # .emacs.d gets e.g., compiled files in it, so it's not expected to
       # match the source.
-      DST="$HOME/.emacs.d"
-      mkdir -p "$DST"
-      rsync \
-          --itemize-changes \
-          --links \
-          --recursive \
-          --checksum \
-          ~/.emacs.d.template/emacs.d/ "$DST"
-      $DST/bin/doom sync
+      if [ "$(cat ~/.emacs.d/.rev)" != "${rev}" ]; then
+        rsync \
+            --itemize-changes \
+            --links \
+            --recursive \
+            --checksum \
+            ~/.emacs.d.template/emacs.d/ "$DST"
+        echo ${rev} > ~/.emacs.d/.rev
+        $DST/bin/doom sync
+      fi
     '';
   };
 
