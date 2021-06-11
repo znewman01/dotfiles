@@ -79,6 +79,7 @@ in {
     userName = "Zachary Newman";
     extraConfig.pull.rebase = "true";
     extraConfig.github.user = "znewman01";
+    extraConfig.init.defaultBranch = "main";
   };
 
   programs.bash = {
