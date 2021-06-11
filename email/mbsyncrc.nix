@@ -5,7 +5,7 @@ in ''
   CopyArrivalDate yes
   Create Both
   Expunge Both
-  Remove Slave
+  Remove Near
   SyncState *
 
 
@@ -29,10 +29,10 @@ in ''
   Channel fastmail
   Create Both
   Expunge Both
-  Master :fastmail-remote:
+  Far :fastmail-remote:
   Patterns *
-  Remove Slave
-  Slave :fastmail-local:
+  Remove Near
+  Near :fastmail-local:
 
 
   IMAPAccount csail
@@ -57,11 +57,11 @@ in ''
 
   Channel csail
   Create Both
-  Expunge Slave
-  Master :csail-remote:
+  Expunge Near
+  Far :csail-remote:
   Patterns *
-  Remove Slave
-  Slave :csail-local:
+  Remove Near
+  Near :csail-local:
 
 
   IMAPAccount gmail
@@ -82,20 +82,20 @@ in ''
   SubFolders Verbatim
 
   Channel gmail-inbox
-  Master ":gmail-remote:Inbox"
-  Slave ":gmail-local:Inbox"
+  Far ":gmail-remote:INBOX"
+  Near ":gmail-local:Inbox"
 
   Channel gmail-sent
-  Master ":gmail-remote:[Gmail]/Sent Mail"
-  Slave ":gmail-local:[Gmail]/SentMail"
+  Far ":gmail-remote:[Gmail]/Sent Mail"
+  Near ":gmail-local:[Gmail]/SentMail"
 
   Channel gmail-all
-  Master ":gmail-remote:[Gmail]/All Mail"
-  Slave ":gmail-local:[Gmail]/AllMail"
+  Far ":gmail-remote:[Gmail]/All Mail"
+  Near ":gmail-local:[Gmail]/AllMail"
 
   Channel gmail-rest
-  Master :gmail-remote:
-  Slave :gmail-local:
+  Far :gmail-remote:
+  Near :gmail-local:
   Patterns "[Gmail]/Drafts" "[Gmail]/Spam" "[Gmail]/Trash"
 
 
@@ -118,24 +118,24 @@ in ''
   SubFolders Verbatim
 
   Channel mit-sent
-  Master ":mit-remote:Sent Items"
-  Slave ":mit-local:Sent"
+  Far ":mit-remote:Sent Items"
+  Near ":mit-local:Sent"
 
   Channel mit-junk
-  Master ":mit-remote:Junk E-Mail"
-  Slave ":mit-local:Junk"
+  Far ":mit-remote:Junk E-Mail"
+  Near ":mit-local:Junk"
 
   Channel mit-trash
-  Master ":mit-remote:Deleted Items"
-  Slave ":mit-local:Deleted"
+  Far ":mit-remote:Deleted Items"
+  Near ":mit-local:Deleted"
 
   Channel mit-inbox
-  Master ":mit-remote:Inbox"
-  Slave ":mit-local:Inbox"
+  Far ":mit-remote:INBOX"
+  Near ":mit-local:Inbox"
 
   Channel mit-rest
-  Master :mit-remote:
-  Slave :mit-local:
+  Far :mit-remote:
+  Near :mit-local:
   Patterns "Archive" "Drafts"
 
 
