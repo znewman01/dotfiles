@@ -13,6 +13,10 @@ let
     "DP-2-1" =
       "00ffffffffffff001e6d955bb76600000c1e010380462778ea9fd1a2574c9c240c5054256b807140818081c0a9c0b300d1c08100d1cf565e00a0a0a0295030203500ba882100001a000000fd00304b1e701f010a202020202020000000fc004c4720484452205148440a2020000000ff003031324e54565330533239350a011d020331f14b0103049012131f225d5e5f23090707830100006d030c002000983e200060010203e305c000e6060501595928023a801871382d40582c4500ba882100001e011d007251d01e206e285500ba882100001e30750090a0a0285030203500ba882100001a0000000000000000000000ba00000000000000000000000014";
   };
+  fingerprintDellTiny = {
+    "DVI-I-1-1" =
+      "00ffffffffffff0010ac5b404c3843430c16010380261e78eeee95a3544c99260f5054a54b00714f8180010101010101010101010101302a009851002a4030701300782d1100001e000000ff004d33394d4432334e4343384c0a000000fc0044454c4c2050313930530a2020000000fd00384c1e510e000a2020202020200090";
+  };
 in {
   programs.autorandr.profiles = {
     "unplugged" = {
@@ -41,11 +45,26 @@ in {
         };
         "eDP-1" = {
           enable = true;
-          position =
-            "3760x500"; # hdmi1 + 500
+          position = "3760x500"; # hdmi1 + 500
           primary = true;
           mode = "1368x768";
 
+        };
+      };
+    };
+    "office" = {
+      fingerprint = fingerprintBuiltin // fingerprintDellTiny;
+      config = {
+        "DVI-I-1-1" = {
+          enable = true;
+          position = "0x0";
+          mode = "1280x1024";
+        };
+        "eDP-1" = {
+          enable = true;
+          position = "1280x0";
+          primary = true;
+          mode = "1368x768";
         };
       };
     };

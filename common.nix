@@ -13,6 +13,7 @@ in {
     ./desktop/system.nix
   ];
 
+  boot.kernelPackages = pkgs.linuxPackages_5_11;
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.cleanTmpDir = true;

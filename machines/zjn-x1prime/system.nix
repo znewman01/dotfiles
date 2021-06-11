@@ -40,4 +40,7 @@
     , ATTRS{subsystem_device}=="0x2292" \
     , RUN+="${pkgs.lshw}/bin/lshw"
   '';
+
+  # To get DisplayLink (USB video for dock at work) working
+  services.xserver.videoDrivers = [ "displaylink" "modesetting" ];
 }
