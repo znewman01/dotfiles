@@ -190,12 +190,11 @@ in
       let
         dirname = getDirname name repo;
         shell = repo.shell;
-        envrc = "${dirname}/.envrc";
         shellNixFiles = optionalAttrs (repo.shell != null) {
           "${dirname}/shell.nix".source = repo.shell;
-          "${envrc}" = {
+          "${dirname}/.envrc" = {
             text = "use_nix";
-            onChange = "$DRY_RUN_CMD ${pkgs.direnv}/bin/direnv allow ${envrc}";
+            onChange = "$DRY_RUN_CMD ${pkgs.direnv}/bin/direnv allow ${dirname}";
           };
         };
         ourFiles = concatMapStringsSep "\n"
