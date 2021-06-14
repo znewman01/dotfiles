@@ -13,6 +13,7 @@ in {
     ./email
     ./web
     ./services/lichess.nix
+    ./persist/home.nix
   ];
   programs.home-manager.enable = true;
   nixpkgs.config.allowUnfree = true;

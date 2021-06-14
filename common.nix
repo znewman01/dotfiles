@@ -11,6 +11,7 @@ in {
     /etc/nixos/hardware-configuration.nix
     (import "${home-manager}/nixos")
     ./desktop/system.nix
+    ./persist/system.nix
   ];
 
   boot.kernelPackages = pkgs.linuxPackages_5_11;
