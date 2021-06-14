@@ -61,7 +61,10 @@ in {
 
   documentation.dev.enable = true;
 
-  services.openssh.enable = true;
+  services.openssh = {
+    enable = true;
+    forwardX11 = true;
+  };
   # TODO: move to home.nix when rycee/home-manager#1087 resolved
   # https://github.com/rycee/home-manager/issues/1087
   programs.ssh.startAgent = true;
