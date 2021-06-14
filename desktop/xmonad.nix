@@ -25,6 +25,7 @@ in {
       import XMonad.Layout.NoBorders
       import XMonad.Layout.Spacing
       import XMonad.Util.EZConfig
+      import XMonad.Layout.Fullscreen
       import qualified XMonad.Util.Run as Run
       import XMonad.Util.NamedScratchpad
       import XMonad.Util.SpawnOnce
@@ -95,6 +96,7 @@ in {
               , [ namedScratchpadManageHook scratchpads ]
               , [ classMatch app --> doShift "8" | app <- messageApps ]
               , [ title =? "xmessage"  --> (customFloating $ W.RationalRect 0.7 0.1 0.2 0.2) ]
+              , [ fullscreenManageHook ]
               ]
          where messageApps = ["slack", "signal", "keybase", "skype"]
                classMatch s = fmap (s `isInfixOf`) (fmap (map toLower) className)
@@ -146,6 +148,7 @@ in {
               [ Bars.dynStatusBarEventHook barCreator barDestroyer
               , Docks.docksEventHook
               , DProp.dynamicPropertyChange "WM_NAME" myDynPropHook
+              , fullscreenEventHook
               ]
           , normalBorderColor = "#${colors.base02}"
           , focusedBorderColor = "#${colors.base02}"  -- can be the same with window fade
