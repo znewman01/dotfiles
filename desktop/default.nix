@@ -69,6 +69,14 @@ in {
     scriptPath = ".hm-xsession";
   };
 
+  home.file."bin/extra-monitor.sh" = {
+    text = ''
+      #! ${pkgs.nix.out}/bin/nix-shell
+      ${builtins.readFile ./extra-monitor.sh}
+    '';
+    executable = true;
+  };
+
   home.file."notification.wav".source = ./notification.wav;
   home.file."bin/alert.sh" = {
     text = ''
