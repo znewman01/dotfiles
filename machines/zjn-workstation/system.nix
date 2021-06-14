@@ -21,9 +21,16 @@
 
   networking.wireguard.interfaces.wg0 = {
     ips = [ "10.100.0.1/24" ];
-    peers = [{ # zjn-x1prime
-      publicKey = "aaPN21zthpwZ1T2wDJ1nMNqH9p2Y2ml8w4JSOjg3TBY=";
-      allowedIPs = [ "10.100.0.2/32" ];
-    }];
+    peers = [
+      { # zjn-x1prime
+        publicKey = "aaPN21zthpwZ1T2wDJ1nMNqH9p2Y2ml8w4JSOjg3TBY=";
+        allowedIPs = [ "10.100.0.2/32" ];
+      }
+      { # zjn-home
+        publicKey = "MWgkaRpaHRAOPshJjyzZMj1btM92go/eP1/Phk8q+xc=";
+        allowedIPs = [ "10.100.0.3/32" ];
+      }
+
+    ];
   };
 }
