@@ -22,6 +22,8 @@ in {
     pinentry-gtk2
     gist
     xcompmgr
+    x11vnc
+    remmina
   ];
 
   # Slack theme
