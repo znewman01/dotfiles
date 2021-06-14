@@ -836,6 +836,7 @@ Don't send prematurely by accident (this allows a neat trick of leaving the subj
 * RSS
 #+begin_src emacs-lisp
 (after! elfeed
+  (setq elfeed-db-directory (expand-file-name "~/Sync/.elfeed"))
   (setq elfeed-feeds
         '(("http://bristolcrypto.blogspot.com/feeds/posts/default")
           ("https://www.schneier.com/blog/atom.xml")
