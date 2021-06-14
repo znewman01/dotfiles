@@ -27,7 +27,16 @@ in {
   networking.firewall.allowedUDPPorts = [
     22000 # syncthing
     21027 # syncthing
+    51820 # wireguard
   ];
+
+  networking.wireguard.enable = true;
+  networking.wireguard.interfaces = {
+    wg0 = {
+      listenPort = 51820;
+      privateKeyFile = "/persist/wireguard/private";
+    };
+  };
 
   nixpkgs.config.allowUnfree = true;
 

@@ -23,4 +23,14 @@
 
   # To get DisplayLink (USB video for dock at work) working
   services.xserver.videoDrivers = [ "displaylink" "modesetting" ];
+
+  networking.wireguard.interfaces.wg0 = {
+    ips = [ "10.100.0.2/24" ];
+    peers = [{ # zjn-workstation
+      publicKey = "RCRTXUu4hPEoxzIvry0bnBtjnnK/2KuhwHEUPWSKZjI=";
+      allowedIPs = [ "10.100.0.0/24" ];
+      endpoint = "zjn-workstation.csail.mit.edu:51820";
+      # persistentKeepalive = 25;
+    }];
+  };
 }
