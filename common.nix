@@ -30,6 +30,11 @@ in {
     51820 # wireguard
   ];
 
+  networking.extraHosts = ''
+    10.100.0.1 zjn-workstation
+    10.100.0.2 zjn-x1prime
+  '';
+
   networking.wireguard.enable = true;
   networking.wireguard.interfaces = {
     wg0 = {
