@@ -5,6 +5,9 @@
   networking.hostId = "e2102671";
   system.stateVersion = "20.09";
 
+  # For DisplayLink stuff: must be >5.10
+  boot.kernelPackages = pkgs.linuxPackages_5_11;
+
   environment.systemPackages = with pkgs; [ sof-firmware ];
   hardware.pulseaudio.extraConfig = ''
     load-module module-alsa-sink device=;w:0,0 channels=4

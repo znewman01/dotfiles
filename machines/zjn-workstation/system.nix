@@ -1,6 +1,9 @@
 { config, pkgs, lib, ... }:
 
 {
+  # ZFS broken in 5.12
+  boot.kernelPackages = pkgs.linuxPackages_5_10;
+
   networking.hostName = "zjn-workstation";
   networking.hostId = "201f3f68";
   networking.domain = "csail.mit.edu";
