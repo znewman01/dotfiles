@@ -23,7 +23,7 @@ in {
     gist
     xcompmgr
     x11vnc
-    remmina
+    gnome.vinagre
   ];
 
   # Slack theme

@@ -4,7 +4,6 @@ set -x
 
 HOST=zjn-workstation.local
 PRIMARY=HDMI-5  # primary for the host; we'll be to the right
-
 RESOLUTION=$(xrandr | grep \* | awk '{print $1}')
 WIDTH=$(echo $RESOLUTION | sed 's/x.*//')
 HEIGHT=$(echo $RESOLUTION | sed 's/.*x//')
