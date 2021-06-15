@@ -10,8 +10,10 @@
   networking.interfaces.enp0s31f6.useDHCP = false;
   networking.interfaces.enp0s31f6.ipv4.addresses = [{
     address = "128.30.93.6";
-    prefixLength = 24;
+    prefixLength = 23;
   }];
+  networking.defaultGateway = "128.30.92.1";
+  networking.nameservers = ["8.8.8.8"];
   system.stateVersion = "21.05";
 
   # wireguard
