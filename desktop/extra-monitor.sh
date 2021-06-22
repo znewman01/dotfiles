@@ -2,9 +2,8 @@
 set -e
 set -x
 
-HOST=zjn-workstation
-OUTPUT=HDMI-1  # should be unused on the host
-PRIMARY=HDMI-3  # primary for the host; we'll be to the right
+HOST=zjn-workstation.local
+PRIMARY=HDMI-5  # primary for the host; we'll be to the right
 
 RESOLUTION=$(xrandr | grep \* | awk '{print $1}')
 WIDTH=$(echo $RESOLUTION | sed 's/x.*//')
@@ -12,6 +11,7 @@ HEIGHT=$(echo $RESOLUTION | sed 's/.*x//')
 FREQ=$(xrandr  | grep \* | awk '{print $2}' | sed 's/\*.*//')
 ssh $HOST -- DISPLAY=:0 gtf $WIDTH $HEIGHT $FREQ | grep Modeline
 MODELINE=$(ssh $HOST -- gtf $WIDTH $HEIGHT $FREQ | grep Modeline | sed 's/  */ /g' | cut -d' ' -f 4-)
+OUTPUT=$(ssh $HOST -- DISPLAY=:0 xrandr | grep "disconnected" | grep HDMI | head -n 1 | awk '{print $1}')
 # MODE="${WIDTH}x${HEIGHT}_${FREQ}"
 MODE="$(hostname)"
 # Ensure cleaned up properly

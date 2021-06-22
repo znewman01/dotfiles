@@ -70,10 +70,7 @@ in {
   };
 
   home.file."bin/extra-monitor.sh" = {
-    text = ''
-      #! ${pkgs.nix.out}/bin/nix-shell
-      ${builtins.readFile ./extra-monitor.sh}
-    '';
+    text = builtins.readFile ./extra-monitor.sh;
     executable = true;
   };
 
