@@ -41,6 +41,7 @@ in {
       ".config/Slack"
       ".vagrant.d"
       ".terraform.d"
+      ".packer.d"
     ];
     files = [ ".gist" ];
     allowOther = true;
