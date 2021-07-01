@@ -1,8 +1,10 @@
 { config, pkgs, ... }:
 
 let
-  impermanence = builtins.fetchTarball {
-    url = "https://github.com/nix-community/impermanence/archive/master.tar.gz";
+  impermanence = builtins.fetchGit {
+    url = "https://github.com/nix-community/impermanence.git";
+    rev = "58558845bc68dcf2bb32caa80564f7fe3f6cbc61";
+    ref = "master";
   };
 in {
   imports = [ "${impermanence}/home-manager.nix" ];

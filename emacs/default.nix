@@ -65,12 +65,13 @@ in {
     Keywords=Text;Editor;
   '';
 
-  home.file.".emacs.d.template/emacs.d" = let rev = "2731685095d1e6101b3215aa689426e1834ce00f"; in
- {
+  home.file.".emacs.d.template/emacs.d" = let
+    # git ls-remote https://github.com/hlissner/doom-emacs/ develop
+    rev = "2731685095d1e6101b3215aa689426e1834ce00f";
+  in {
     source = pkgs.fetchFromGitHub {
       owner = "hlissner";
       repo = "doom-emacs";
-      # git ls-remote https://github.com/hlissner/doom-emacs/ develop
       rev = rev;
       # just rerun with the all-0 SHA, it'll tell you what to put
       # (but if it matches a previous SHA it won't update!)
