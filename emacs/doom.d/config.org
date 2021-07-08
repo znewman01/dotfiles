@@ -1013,6 +1013,8 @@ Now that that's all out of the way, we can get to actual work.
 #+end_src
 ** Authoring
 #+begin_src emacs-lisp
+(after! pdf-tools
+  (set-popup-rule! "^\\*Edit Annotation " :quit nil))
 (after! latex
   (add-to-list 'TeX-command-list '("Tectonic" "tectonic --synctex %t" TeX-run-compile nil (latex-mode) :help "Run Tectonic"))
   (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
