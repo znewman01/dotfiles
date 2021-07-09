@@ -67,7 +67,7 @@ in {
 
   home.file.".emacs.d.template/emacs.d" = let
     # git ls-remote https://github.com/hlissner/doom-emacs/ develop
-    rev = "2731685095d1e6101b3215aa689426e1834ce00f";
+    rev = "42ff36914280a18230626f775d9da0487438e282";
   in {
     source = pkgs.fetchFromGitHub {
       owner = "hlissner";
@@ -75,7 +75,7 @@ in {
       rev = rev;
       # just rerun with the all-0 SHA, it'll tell you what to put
       # (but if it matches a previous SHA it won't update!)
-      sha256 = "1b7dgpfch0brggz29d5m3qkyas41q0q6zn3fjpypj6psxqr71m3f";
+      sha256 = "1c03wbxnrgmyv5r08ggwln9gihvbr8hzidbwkhdgcip6bafdr6mc";
     };
     onChange = ''
       DST="$HOME/.emacs.d"
