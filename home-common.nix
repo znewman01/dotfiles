@@ -50,7 +50,7 @@ in {
           "VerifyHostKeyDNS" = "yes";
         };
       };
-      "*.csail.mit.edu !jump.csail.mit.edu 128.52.* 128.30.* 128.31.*" =
+      "*.csail.mit.edu !jump.csail.mit.edu 128.52.* 128.30.* 128.31.* !128.31.26.*" =
         dag.entryAfter [ "jump.csail.mit.edu" ] {
           extraOptions = {
             "ProxyJump" = "zjn@jump.csail.mit.edu";
