@@ -2,7 +2,10 @@
 
 with lib;
 
-let dag = config.lib.dag;
+let
+  dag = config.lib.dag;
+  tex-env =
+    pkgs.texlive.combine { inherit (pkgs.texlive) scheme-full latexmk; };
 in {
   imports = [
     # Modules
@@ -29,6 +32,7 @@ in {
     entr
     libnotify
     keybase
+    tex-env
   ];
 
   services.keybase.enable = true;
