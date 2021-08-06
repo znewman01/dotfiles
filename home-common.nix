@@ -33,6 +33,7 @@ in {
     libnotify
     keybase
     tex-env
+    imagemagick
   ];
 
   services.keybase.enable = true;

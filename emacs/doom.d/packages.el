@@ -80,3 +80,6 @@
 (package! org-padding :recipe (:host github :repo "TonCherAmi/org-padding"))
 (package! org-fragtog)
 (package! base16-theme)
+
+; https://news.ycombinator.com/item?id=26359043
+(package! sql-indent)
