@@ -84,7 +84,6 @@ Send URLs to [[https://www.instapaper.com/][Instapaper]] for offline reading.
               (org-file "research/broadcast.org")
               (org-file "research/accumulators.org")
               (org-file "research/tor.org")
-              (org-file "6852-ta.org")
               (org-file "school.org")))
                                         ; performance
   (setq org-agenda-dim-blocked-tasks nil
