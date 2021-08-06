@@ -442,6 +442,27 @@ Send URLs to [[https://www.instapaper.com/][Instapaper]] for offline reading.
       (org-roam-find-file)))
   (map! :leader "n r b" #'zjn/org-roam-find-file-maybe-other-window))
 #+end_src
+** org-babel
+Easier NixOS and org-babel integration:
+#+begin_src emacs-lisp
+(require 's)
+(defun zjn/with-pkgs (&rest pkgs)
+  (s-concat
+    "#!/usr/bin/env nix-shell\n"
+     "#!nix-shell -p " (s-join " " pkgs) " -i bash"))
+#+end_src
+
+Use like so:
+
+#+begin_example
+#+begin_src bash
+hello:shebang (zjn/with-pkgs "hello") :results verbatim
+#+end_src
+
+#+RESULTS:
+: Hello, world!
+#+end_example
+
 * Bibliography
 Eventually will sort through this.
 #+begin_src emacs-lisp
