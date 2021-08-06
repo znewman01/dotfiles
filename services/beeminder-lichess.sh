@@ -9,7 +9,7 @@ curl -s "${BEE}/users/znewman01/goals/lichess-fast/datapoints.json?${BEE_AUTH}&c
 BEE_GAMES=$(jq first.value $TMP_FILE)
 echo "Current Beeminder # of games: ${BEE_GAMES}"
 
-LI_GAMES=$(curl -s https://lichess.org/api/user/znewman01 | jq '.perfs.bullet.games + .perfs.blitz.games - 40')
+LI_GAMES=$(curl -s https://lichess.org/api/user/znewman01 | jq '.perfs.bullet.games + .perfs.blitz.games')
 echo "Current Lichess # of games: ${LI_GAMES}"
 
 if [ $LI_GAMES -eq $BEE_GAMES ]; then
