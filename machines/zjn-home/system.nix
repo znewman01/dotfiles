@@ -7,7 +7,6 @@
   boot.kernelPackages = pkgs.linuxPackages_5_10;
 
   networking.hostName = "zjn-home";
-  networking.hostId = "2f4cf0b0";
   system.stateVersion = "20.09";
 
   networking.wireguard.interfaces.wg0 = {
