@@ -16,7 +16,6 @@
     }];
   };
   systemd.tmpfiles.rules = [
-    "L /etc/nixos/configuration.nix - - - - /persist/zjn/git/dotfiles/configuration.nix"
     "L /etc/NetworkManager/system-connections - - - - /persist/nm-system-connections"
   ];
 }

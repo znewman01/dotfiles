@@ -1,0 +1,29 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -p morph -i bash
+
+
+function deploy() {
+    morph deploy ./network.nix --keep-result switch --passwd --on="$1"
+}
+
+function main() {
+
+    if [ "$1" == "all" ]; then
+        # deploy all
+        targets=$(grep -oP '(?<=")[a-z-]+(?=" =)' network.nix)
+        for target in $targets; do
+            ping -c1 -w2 $target >/dev/null || continue
+            echo $target online; deploying
+            deploy $target
+        done
+    elif [ ! -z "$1" ]; then
+        # deploy to specific host(s)
+        # for >1 you need to specify "{host1,host2}"
+        deploy $1
+    else
+        # deploy
+        deploy $(hostname)
+    fi
+}
+
+main $@

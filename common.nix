@@ -13,6 +13,8 @@ in {
     ./persist/system.nix
   ];
 
+  nix.trustedUsers = [ "@wheel" ];
+
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.cleanTmpDir = true;
@@ -116,5 +118,37 @@ in {
   krb5 = {
     enable = true;
     libdefaults = { forwardable = true; };
+  };
+
+  systemd.services.initdirs = {
+    description = "Set up directories if they don't exist.";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "persist.mount" "cache.mount" ];
+    before = [ "home-manager-zjn.service" "sshd.service" ];
+    path = [ "/run/current-system/sw/" ];
+    script = with pkgs; ''
+      set -eux
+      mkdir -p /cache/zjn /persist/zjn /persist/ssh
+      chown zjn:users /cache/zjn /persist/zjn
+    '';
+    serviceConfig = { Type = "oneshot"; };
+  };
+
+  systemd.services.wgkeys = {
+    description = "Set up wireguard keys if they don't exist.";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "persist.mount" ];
+    before = [ "wireguard-wg0.service" ];
+    path = [ "/run/current-system/sw/" ];
+    script = with pkgs; ''
+      set -eux
+      mkdir -p /persist/wireguard
+      if [ ! -f /persist/wireguard/private ]; then
+        umask 077
+        wg genkey > /persist/wireguard/private
+        wg pubkey < /persist/wireguard/private > /persist/wireguard/public
+      fi
+    '';
+    serviceConfig = { Type = "oneshot"; };
   };
 }
