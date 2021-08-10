@@ -15,7 +15,7 @@
     prefixLength = 23;
   }];
   networking.defaultGateway = "128.30.92.1";
-  networking.nameservers = ["8.8.8.8"];
+  networking.nameservers = [ "8.8.8.8" ];
   system.stateVersion = "21.05";
 
   # wireguard
@@ -33,6 +33,10 @@
       { # zjn-home
         publicKey = "MWgkaRpaHRAOPshJjyzZMj1btM92go/eP1/Phk8q+xc=";
         allowedIPs = [ "10.100.0.3/32" ];
+      }
+      { # zjn-work
+        publicKey = "BEbArNy/1PXq7ajme3ENJiAUGdZrr93IhnCwLTNBSE0=";
+        allowedIPs = [ "10.100.0.4/32" ];
       }
 
     ];
