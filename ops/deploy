@@ -13,7 +13,7 @@ function main() {
         targets=$(grep -oP '(?<=")[a-z-]+(?=" =)' network.nix)
         for target in $targets; do
             ping -c1 -w2 $target >/dev/null || continue
-            echo $target online; deploying
+            echo $target online: deploying
             deploy $target
         done
     elif [ ! -z "$1" ]; then

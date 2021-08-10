@@ -45,7 +45,7 @@ read -p "On a viable machine, run:
     $ gpg --import $HOME/Sync/keys/${HOSTNAME}.gpg
     $ echo '${FINGERPRINT}:6' | gpg --import-ownertrust
     $ echo $FINGERPRINT >> $HOME/.password-store/.gpg-id
-    $ while true; xargs pass init < $HOME/.password-store/.gpg-id && break; done
+    $ xargs pass init < $HOME/.password-store/.gpg-id
 
 Verify that you can now read passwords on this machine. Then hit [enter]. "
 
