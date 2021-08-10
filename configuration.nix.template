@@ -1,5 +1,0 @@
-{ config, pkgs, ... }:
-
-{
-  imports = [ ./common.nix ./machines/{{HOSTNAME}}/system.nix ];
-}

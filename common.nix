@@ -111,10 +111,6 @@ in {
       "$6$O1ia1YA5iKh9m$SVD17ySqqyicSpo2tzqTw4xRHm8C50.vMuoQPaLxTA9hsfJ7HQ/neioEYhOjZvPT..HNclbjd4JX4ydBcMvC7.";
   };
   home-manager.verbose = true;
-  home-manager.users.zjn = (import ./home.nix) {
-    config = config;
-    pkgs = pkgs;
-  };
 
   krb5 = {
     enable = true;
