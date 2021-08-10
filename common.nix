@@ -8,7 +8,6 @@ let
   };
 in {
   imports = [ # needs to be absolute since we symlink this file in
-    /etc/nixos/hardware-configuration.nix
     (import "${home-manager}/nixos")
     ./desktop/system.nix
     ./persist/system.nix

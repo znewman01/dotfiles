@@ -1,6 +1,8 @@
 { config, pkgs, lib, ... }:
 
 {
+  imports = [ ./hardware-configuration.nix ];
+
   networking.hostName = "zjn-x1prime";
   networking.hostId = "e2102671";
   system.stateVersion = "20.09";
