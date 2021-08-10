@@ -104,6 +104,7 @@ in ''
   CertificateFile /etc/ssl/certs/ca-certificates.crt
   Host imap.exchange.mit.edu
   PassCmd "${passBin} show mit 2> /dev/null"
+  PipelineDepth 1
   Port 993
   SSLType IMAPS
   User zjn@mit.edu
