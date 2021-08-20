@@ -416,37 +416,24 @@ Send URLs to [[https://www.instapaper.com/][Instapaper]] for offline reading.
 (after! deft
   (setq deft-directory "~/Sync/notes/roam"
         deft-recursive t))
-(use-package! org-roam-bibtex
-  :after org-roam
-  :hook (org-roam-mode . org-roam-bibtex-mode)
-  :config
-  (require 'org-ref))
+; (use-package! org-roam-bibtex
+;   :after org-roam
+;   :hook (org-roam-mode . org-roam-bibtex-mode)
+;   :config
+;   (require 'org-ref))
 (after! org-ref
   (setq org-ref-default-bibliography '("~/Sync/notes/lit/default.bib")
         org-ref-pdf-directory "~/Sync/notes/lit/"))
 (after! org-roam
   (setq org-roam-directory "~/Sync/notes/roam"
-        org-roam-db-update-method 'immediate
-        org-roam-link-auto-replace nil
         org-roam-completion-everywhere nil
-        +org-roam-open-buffer-on-find-file nil
-        org-roam-tag-sources '(prop last-directory)
-        emacsql-sqlite3-executable (executable-find "sqlite3"))
-
-  (setq orb-templates
-        '(("r" "ref" plain #'org-roam-capture--get-point "" :file-name "bib/${citekey}" :head "#+TITLE: ${title}\n#+ROAM_KEY: ${ref}\n" :unnarrowed t :immediate-finish t)))
-  (org-roam-mode)
-  (map! :mode org-mode :leader "n r n" #'orb-note-actions)
-
-  (defun zjn/org-roam-find-file-maybe-other-window (&optional arg)
-    "Like `function:org-roam-find-file' but when called with prefix open in other-window."
-    (interactive "P")
-    (let ((org-roam-find-file-function
-           (if (and arg (not org-roam-find-file-function))
-               #'find-file-other-window
-             org-roam-find-file-function)))
-      (org-roam-find-file)))
-  (map! :leader "n r b" #'zjn/org-roam-find-file-maybe-other-window))
+        +org-roam-open-buffer-on-find-file nil))
+;
+; TODO: replace with org-roam-capture-templates
+;  (setq orb-templates
+;        '(("r" "ref" plain #'org-roam-capture--get-point "" :file-name "bib/${citekey}" :head "#+TITLE: ${title}\n#+ROAM_KEY: ${ref}\n" :unnarrowed t :immediate-finish t)))
+;   (org-roam-mode)
+;  (map! :mode org-mode :leader "n r n" #'orb-note-actions))
 #+end_src
 ** org-babel
 Easier NixOS and org-babel integration:
@@ -477,7 +464,7 @@ Eventually will sort through this.
       bibtex-completion-notes-path "~/Sync/notes/roam/bib/")
 (after! ivy-bibtex
   (require 'org-roam)
-  (org-roam-mode)
+  (org-roam-setup)
   ;; Basic configuration
   (setq reftex-default-bibliography '("~/Sync/notes/lit/default.bib")
         biblio-crossref-user-email-address "crossref@z.znewman.net")
@@ -558,7 +545,7 @@ Eventually will sort through this.
   org-roam updates back-references to the notes file, but PDF references and
   citations are LTTR.
   "
-    (org-roam-mode 1)  ; for rename-file advice
+    ; (org-roam-mode 1)  ; for rename-file advice
     (cl-flet ((update (path new-key suffix)
                       (when path
                         (f-join (f-parent path) (concat new-key suffix)))))
