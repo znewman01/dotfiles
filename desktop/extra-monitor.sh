@@ -3,7 +3,7 @@ set -e
 set -x
 
 HOST=zjn-workstation.local
-MODENAME="$(hostname)"
+MODENAME="$(hostname)-foo"
 
 # Compute local things
 RESOLUTION=$(xrandr | grep \* | awk '{print $1}')

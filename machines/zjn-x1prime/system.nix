@@ -34,6 +34,8 @@
     peers = [{ # zjn-work
       publicKey = "BEbArNy/1PXq7ajme3ENJiAUGdZrr93IhnCwLTNBSE0=";
       allowedIPs = [ "10.100.0.0/24" ];
+      # allowedIPs = [ "0.0.0.0/0" ];
       endpoint = "zjn-work.csail.mit.edu:51820";
     }];
+  };
 }
