@@ -31,10 +31,9 @@ in {
   ];
 
   networking.extraHosts = ''
-    10.100.0.1 zjn-workstation
+    10.100.0.1 zjn-work
     10.100.0.2 zjn-x1prime
     10.100.0.3 zjn-home
-    10.100.0.4 zjn-work
   '';
 
   networking.wireguard.enable = true;
