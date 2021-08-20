@@ -19,7 +19,6 @@ in {
   boot.loader.efi.canTouchEfiVariables = true;
   boot.cleanTmpDir = true;
 
-  networking.networkmanager.enable = true;
   networking.firewall.allowedTCPPorts = [
     3000 # for messing around
     22000 # syncthing
@@ -29,6 +28,7 @@ in {
     21027 # syncthing
     51820 # wireguard
   ];
+  networking.firewall.trustedInterfaces = [ "wg0" ];
 
   networking.extraHosts = ''
     10.100.0.1 zjn-work
