@@ -686,12 +686,12 @@ Make it a little faster (must run ~mu index~ every once in a while to reindex):
 #+end_src
 
 I forget why this is here:
-#+begin_src
+#+begin_src emacs-lisp
 (setq mu4e-completing-read-function 'completing-read)
 #+end_src
 
 Quit, dang it!
-#+begin_src
+#+begin_src emacs-lisp
 (setq mu4e-confirm-quit nil)
 #+end_src
 ** Accounts
@@ -808,13 +808,13 @@ Misc:
 #+end_src
 
 Some keybindings:
-#+begin_src
+#+begin_src emacs-lisp
 (require 'mu4e-mark)
 ; Don't ask for confirmation when executing (TODO: does this work?)
-(define-key mu4e-headers-mode-map (kbd "x") (lambda() (interactive) (mu4e-mark-execute-all t)
-                                              (switch-to-buffer "*mu4e-headers*")))
-(define-key mu4e-headers-mode-map (kbd "C-c c") 'org-mu4e-store-and-capture)
-(define-key mu4e-view-mode-map    (kbd "C-c c") 'org-mu4e-store-and-capture)
+; (define-key mu4e-headers-mode-map (kbd "x") (lambda() (interactive) (mu4e-mark-execute-all t)
+;                                               (switch-to-buffer "*mu4e-headers*")))
+; (define-key mu4e-headers-mode-map (kbd "C-c c") 'org-mu4e-store-and-capture)
+; (define-key mu4e-view-mode-map    (kbd "C-c c") 'org-mu4e-store-and-capture)
 #+end_src
 
 Move to trash, don't just delete ([[http://cachestocaches.com/2017/3/complete-guide-email-emacs-using-mu-and-/][source]]):
@@ -826,6 +826,11 @@ Move to trash, don't just delete ([[http://cachestocaches.com/2017/3/complete-gu
              :action
              (lambda (docid msg target)
                (mu4e~proc-move docid (mu4e~mark-check-target target) "-N"))))
+#+end_src
+
+Don't count deleted emails in "unread" for modeline:
+#+begin_src emacs-lisp
+(setq mu4e-alert-interesting-mail-query "flag:unread AND NOT flag:trashed AND NOT maildir:/mit/Deleted")
 #+end_src
 ** Outbox
 *** Composing

@@ -65,6 +65,7 @@ in ''
 
 
   IMAPAccount gmail
+  PipelineDepth 50
   AuthMechs LOGIN
   CertificateFile /etc/ssl/certs/ca-certificates.crt
   Host imap.gmail.com
