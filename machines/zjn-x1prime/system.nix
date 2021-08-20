@@ -8,7 +8,7 @@
   system.stateVersion = "20.09";
 
   # For DisplayLink stuff: must be >5.10
-  boot.kernelPackages = pkgs.linuxPackages_5_11;
+  boot.kernelPackages = pkgs.linuxPackages_5_10;
 
   environment.systemPackages = with pkgs; [ sof-firmware ];
   hardware.pulseaudio.extraConfig = ''
@@ -31,10 +31,9 @@
 
   networking.wireguard.interfaces.wg0 = {
     ips = [ "10.100.0.2/24" ];
-    peers = [{ # zjn-workstation
-      publicKey = "RCRTXUu4hPEoxzIvry0bnBtjnnK/2KuhwHEUPWSKZjI=";
+    peers = [{ # zjn-work
+      publicKey = "BEbArNy/1PXq7ajme3ENJiAUGdZrr93IhnCwLTNBSE0=";
       allowedIPs = [ "10.100.0.0/24" ];
-      endpoint = "zjn-workstation.csail.mit.edu:51820";
+      endpoint = "zjn-work.csail.mit.edu:51820";
     }];
-  };
 }

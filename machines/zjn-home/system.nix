@@ -11,10 +11,10 @@
 
   networking.wireguard.interfaces.wg0 = {
     ips = [ "10.100.0.3/24" ];
-    peers = [{ # zjn-workstation
-      publicKey = "RCRTXUu4hPEoxzIvry0bnBtjnnK/2KuhwHEUPWSKZjI=";
+    peers = [{ # zjn-work
+      publicKey = "BEbArNy/1PXq7ajme3ENJiAUGdZrr93IhnCwLTNBSE0=";
       allowedIPs = [ "10.100.0.0/24" ];
-      endpoint = "zjn-workstation.csail.mit.edu:51820";
+      endpoint = "zjn-work.csail.mit.edu:51820";
     }];
   };
 }
