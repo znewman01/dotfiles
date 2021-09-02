@@ -995,6 +995,13 @@ Now that that's all out of the way, we can get to actual work.
 (remove-hook 'doom-first-buffer-hook #'smartparens-global-mode)
 (setq display-line-numbers-type nil)
 #+end_src
+
+Make sure shells stay live:
+
+#+begin_src emacs-lisp
+(after! shell
+  (set-popup-rule! "^\\*shell\\*" :quit nil))
+#+end_src
 *** Working remote
 #+begin_src emacs-lisp
 (setq tramp-inline-compress-start-size 1000000)
