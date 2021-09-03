@@ -113,7 +113,10 @@ in {
 
   krb5 = {
     enable = true;
-    libdefaults = { forwardable = true; };
+    libdefaults = {
+      forwardable = true;
+      default_realm = "CSAIL.MIT.EDU";
+    };
   };
 
   systemd.services.initdirs = {

@@ -35,6 +35,10 @@
         '';
       };
     };
+    "security-seminar" = {
+      url = "git@g.csail.mit.edu:security-seminar.git"; # must "kinit" first
+      exclude.enable = true;
+    };
     "authdict-paper" = {
       url = "git@github.com:alinush/authdict-paper.git";
       shell = ./authdict-paper.nix;
