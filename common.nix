@@ -119,6 +119,13 @@ in {
     };
   };
 
+  security.pam.loginLimits = [{
+    domain = "*";
+    type = "soft";
+    item = "nofile";
+    value = "2048"; # the default of 1024 makes some software (e.g., Rust) choke
+  }];
+
   systemd.services.initdirs = {
     description = "Set up directories if they don't exist.";
     wantedBy = [ "multi-user.target" ];
