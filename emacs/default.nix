@@ -67,7 +67,7 @@ in {
 
   home.file.".emacs.d.template/emacs.d" = let
     # git ls-remote https://github.com/hlissner/doom-emacs/ develop
-    rev = "2c4328ccf06e6bb3060facb4cd24a4f37edd461d";
+    rev = "cdb59b0a3d3e20f37df6fdb5a68c7c8090c9c25d";
   in {
     source = pkgs.fetchFromGitHub {
       owner = "hlissner";
@@ -75,7 +75,7 @@ in {
       rev = rev;
       # just rerun with the all-0 SHA, it'll tell you what to put
       # (but if it matches a previous SHA it won't update!)
-      sha256 = "0xj3l43r82zh3694jlqnr01g3w9c5sr6mm2q9jg71m82myjj9r1z";
+      sha256 = "15sickcl03yj4482idm27j4xdpjz4l3hqnw5k46pia9pcxf09m0s";
     };
     onChange = ''
       DST="$HOME/.emacs.d"
@@ -106,10 +106,10 @@ in {
 
   programs.bash.sessionVariables."EMACSDIR" = "~/.emacs.d";
 
-  # Use a link rather than home.files because we probably want to be able to
-  # hack on this pretty sloppily
   systemd.user.tmpfiles.rules = [
     "L %h/notes - - - - %h/Sync/notes"
+    # Use a link rather than home.files because we probably want to be able to
+    # hack on this pretty sloppily
     "L %h/.doom.d - - - - %h/git/dotfiles/emacs/doom.d"
   ];
 }
