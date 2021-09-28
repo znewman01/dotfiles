@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 
 {
-  imports = [ ./hardware-configuration.nix ./../../services/bors.nix ];
+  imports = [ ./hardware-configuration.nix ./../../services/bors.nix ./../../services/files.nix ];
 
   # ZFS broken in 5.12
   boot.kernelPackages = pkgs.linuxPackages_5_10;
