@@ -50,7 +50,9 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
 (package! org-ref)
+(package! citeproc)
 (package! csv-mode)
+(package! gnuplot-mode)
 
 (package! evil-escape :disable t)  ; let me type "jk"!
 

@@ -78,6 +78,8 @@ Send URLs to [[https://www.instapaper.com/][Instapaper]] for offline reading.
 (map! :leader "a" (cmd! (org-agenda nil "n")))
 (after! org
   (add-hook 'auto-save-hook 'org-save-all-org-buffers)
+  (require 'oc)
+  (setq org-cite-global-bibliography "~/notes/lit/default.bib")
   (defun org-file (f)
     (concat org-directory "/" f))
   (setq org-agenda-files
