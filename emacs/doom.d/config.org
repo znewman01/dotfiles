@@ -439,17 +439,19 @@ Send URLs to [[https://www.instapaper.com/][Instapaper]] for offline reading.
 Easier NixOS and org-babel integration:
 #+begin_src emacs-lisp
 (require 's)
-(defun zjn/with-pkgs (&rest pkgs)
+(defun zjn/with-pkgs (interpreter &rest pkgs)
   (s-concat
     "#!/usr/bin/env nix-shell\n"
-     "#!nix-shell -p " (s-join " " pkgs) " -i bash"))
+     "#!nix-shell -p " (s-join " " pkgs) " -i " interpreter))
+(defun zjn/with-pkgs-bash (&rest pkgs)
+  (apply #'zjn/with-pkgs (cons "bash" pkgs)))
 #+end_src
 
 Use like so:
 
 #+begin_example
-#+begin_src bash
-hello:shebang (zjn/with-pkgs "hello") :results verbatim
+#+begin_src bash :shebang (zjn/with-pkgs-bash "hello") :results verbatim
+hello
 #+end_src
 
 #+RESULTS:
