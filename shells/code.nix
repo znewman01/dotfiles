@@ -98,5 +98,8 @@
       };
     };
     "dotfiles" = { url = "git@github.com:znewman01/dotfiles.git"; };
+    "scalingsnapshots" = {
+      url = "git@github.com:znewman01/scalingsnapshots.git";
+    };
   };
 }
