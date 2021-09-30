@@ -4,23 +4,25 @@ let colors = (import ./../desktop/colors) { lib = lib; };
 in {
   programs.firefox = {
     enable = true;
+    package =
+      pkgs.firefox.override { cfg = { enableTridactylNative = true; }; };
     profiles.zjn = {
       name = "Zachary Newman";
-      settings = {
-        "browser.aboutConfig.showWarning" = false;
-        "general.warnOnAboutConfig" = false;
-        # "browser.startup.homepage" = "about:blank";
-        "browser.newtabpage.enabled" = false;
-        "browser.tabs.closeWindowWithLastTab" = true;
-        "ui.key.menuAccessKeyFocuses" = false;
-        "browser.link.open_newwindow" = 3;
-        "extensions.screenshots.disabled" = true;
-        # For Tridactyl support in more places
-        "privacy.resistFingerprinting.block_mozAddonManager" = true;
-        "extensions.webextensions.restrictedDomains" = "";
-        "tridactyl.unfixedamo2" = true;
-        "systemUsesDarkTheme" = if colors.mode == "dark" then 1 else 0;
-      };
+      # settings = {
+      #   "browser.aboutConfig.showWarning" = false;
+      #   "general.warnOnAboutConfig" = false;
+      #   # "browser.startup.homepage" = "about:blank";
+      #   "browser.newtabpage.enabled" = false;
+      #   "browser.tabs.closeWindowWithLastTab" = true;
+      #   "ui.key.menuAccessKeyFocuses" = false;
+      #   "browser.link.open_newwindow" = 3;
+      #   "extensions.screenshots.disabled" = true;
+      #   # For Tridactyl support in more places
+      #   "privacy.resistFingerprinting.block_mozAddonManager" = true;
+      #   "extensions.webextensions.restrictedDomains" = "";
+      #   "tridactyl.unfixedamo2" = true;
+      #   "systemUsesDarkTheme" = if colors.mode == "dark" then 1 else 0;
+      # };
     };
   };
 
@@ -174,5 +176,5 @@ in {
   '';
   xdg.configFile."tridactyl/tridactylrc".source = ./tridactylrc;
 
-  home.packages = [ pkgs.google-chrome ];
+  home.packages = [ pkgs.google-chrome pkgs.tridactyl-native ];
 }
