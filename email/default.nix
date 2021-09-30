@@ -2,10 +2,19 @@
 
 with lib;
 
-let passCmd = entry: "${pkgs.pass}/bin/pass ${entry} 2> /dev/null";
+let
+  passCmd = entry: "${pkgs.pass}/bin/pass ${entry} 2> /dev/null";
+  unstable = import (builtins.fetchGit {
+    # Descriptive name to make the store path easier to identify
+    name = "nixos-unstable-2021-09-30";
+    url = "https://github.com/nixos/nixpkgs/";
+    # git ls-remote https://github.com/nixos/nixpkgs nixos-unstable
+    ref = "refs/heads/nixos-unstable";
+    rev = "c21ba4f7bb4a3d621eb1d187e6b5e816bb85380c";
+  }) { };
 in {
 
-  home.packages = with pkgs; [ mu isync ];
+  home.packages = [ unstable.mu pkgs.isync ];
 
   # concatStringsSep trick is a half-hearted attempt to prevent email harvesting.
   accounts.email = {
