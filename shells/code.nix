@@ -101,7 +101,13 @@
     "scalingsnapshots" = {
       url = "git@github.com:znewman01/scalingsnapshots.git";
       exclude.enable = true;
-      extraFiles = { "analysis/.projectile".text = ""; };
+      extraFiles = {
+        "analysis/.projectile".text = "";
+        ".envrc".text = ''
+          use_nix
+          export GOOGLE_APPLICATION_CREDENTIALS="$HOME/Sync/keys/gcp-scalingsnapshots.json"
+        '';
+      };
     };
   };
 }
