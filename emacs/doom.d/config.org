@@ -79,7 +79,7 @@ Send URLs to [[https://www.instapaper.com/][Instapaper]] for offline reading.
 (after! org
   (add-hook 'auto-save-hook 'org-save-all-org-buffers)
   (require 'oc)
-  (setq org-cite-global-bibliography "~/notes/lit/default.bib")
+  (setq org-cite-global-bibliography '("~/notes/lit/default.bib"))
   (defun org-file (f)
     (concat org-directory "/" f))
   (setq org-agenda-files
@@ -586,6 +586,7 @@ Eventually will sort through this.
     (ivy-set-actions 'ivy-bibtex ivy-actions)))
 
 
+; TODO: handle author names in "Last, First" format.
 (defun zjn--default-key-name ()
   (bibtex-beginning-of-entry)
   (let* ((entry (bibtex-parse-entry))
