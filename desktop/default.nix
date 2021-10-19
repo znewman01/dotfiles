@@ -16,6 +16,7 @@ in {
     zathura
     zoom-us
     slack # TODO: change color in $XDG_CONFIG/Slack/storage/root-state.json
+    element-desktop
     skype
     signal-desktop
     keybase-gui # TODO: change color in $XDG_CONFIG/keybase/gui_config.json

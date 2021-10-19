@@ -24,6 +24,7 @@ in {
       ".config/keybase"
       ".config/Signal"
       ".config/syncthing"
+      ".config/Element"
     ];
     allowOther = true;
   };
