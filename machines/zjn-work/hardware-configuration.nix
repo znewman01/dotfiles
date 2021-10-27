@@ -22,11 +22,13 @@
 
   fileSystems."/cache" = {
     device = "tank/local/cache";
+    neededForBoot = true;
     fsType = "zfs";
   };
 
   fileSystems."/persist" = {
     device = "tank/safe/persist";
+    neededForBoot = true;
     fsType = "zfs";
   };
 

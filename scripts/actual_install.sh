@@ -69,4 +69,7 @@ nixos-install
 # - permissions on /persist/zjn, /cache/zjn
 mkdir -p /cache/zjn
 mkdir -p /persist/ssh
+mkdir -p /persist/nm-system-connections
+mkdir -p /persist/bors
+mkdir -p /persist/wireguard
 chown -R zjn:users /cache/zjn /persist/zjn
