@@ -85,6 +85,7 @@ Send URLs to [[https://www.instapaper.com/][Instapaper]] for offline reading.
   (setq org-agenda-files
         (list (org-file "personal.org")
               (org-file "gtd.org")
+              (org-file "projects.org")
               (org-file "inbox.org")  ; Beorg
               (org-file "research/default.org")
                                         ; (org-file "research/hnp.org")
@@ -875,7 +876,6 @@ Don't send prematurely by accident (this allows a neat trick of leaving the subj
           ("http://paperpools.blogspot.com/feeds/posts/default")
           ("http://lambda-the-ultimate.org/rss.xml")
           ("http://feeds.feedburner.com/Fsharpforfunandprofit?format=xml")
-          ("http://feeds.feedburner.com/crajobs?format=xml")
           ("https://islandsofnewyork.blog?feed=atom")
           ("https://blog.acolyer.org/feed/")
           ("https://www.iacr.org/news/rss")
@@ -897,7 +897,7 @@ Don't send prematurely by accident (this allows a neat trick of leaving the subj
           ("https://www.tweag.io/rss.xml")
           ("https://algorithmsoup.wordpress.com/feed.xml")
           ("https://stefan.vanburen.xyz/blog/index.xml")
-          ("https://www.scottaaronson.com/blog/?feed=rss2")))
+          ("https://www.scottaaronson.blog/?feed=rss2")))
 
   (defun elfeed-show-browse-url ()
     (interactive)
