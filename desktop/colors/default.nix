@@ -87,7 +87,7 @@ in rec {
       mode = "light";
     };
     "" = { # default
-      scheme = import ./one-light.nix;
+      scheme = import ./solarized.nix;
       mode = "light";
     };
   };
