@@ -10,8 +10,4 @@
       locations = { "/" = { root = "/persist/zjn/Sync/public/"; }; };
     };
   };
-  security.acme = {
-    acceptTerms = true;
-    certs."files.znewman.net".email = "letsencrypt@z.znewman.net";
-  };
 }

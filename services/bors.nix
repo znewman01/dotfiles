@@ -49,8 +49,4 @@
       locations = { "/" = { proxyPass = "http://localhost:4000"; }; };
     };
   };
-  security.acme = {
-    acceptTerms = true;
-    certs."bors.znewman.net".email = "bors@z.znewman.net";
-  };
 }

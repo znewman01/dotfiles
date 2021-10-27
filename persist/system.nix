@@ -28,4 +28,7 @@ in {
   systemd.tmpfiles.rules = [
     "L /etc/NetworkManager/system-connections - - - - /persist/nm-system-connections"
   ];
+  environment.persistence."/persist/root" = {
+    directories = [ "/var/lib/acme" ];
+  };
 }
