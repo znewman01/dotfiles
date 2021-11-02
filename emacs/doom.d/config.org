@@ -72,6 +72,35 @@ Send URLs to [[https://www.instapaper.com/][Instapaper]] for offline reading.
               (lambda (&key error-thrown &allow-other-keys)
                 (warn "Issue adding to Instapaper! %S" error-thrown))))))
 #+end_src
+** Searching
+I like to search using DDG always:
+#+begin_src emacs-lisp
+(require 's)
+
+(defun zjn--search-in-firefox-inner (default-text force-edit-text &optional prefix)
+  (let* ((edit-text (or (s-blank? default-text) force-edit-text))
+         (initial-position (if (s-blank? prefix) (length default-text) (length prefix)))
+         (default-text (s-concat prefix default-text))
+         (search-string (if edit-text (read-string "search string: " (cons default-text initial-position)) default-text))
+         (url (s-concat "https://duckduckgo.com/?t=ffab&q=" (url-encode-url search-string))))
+    (call-process "xdg-open" nil nil nil url)))
+
+(defun zjn--current-region ()
+  (if (doom-region-active-p) (buffer-substring (mark) (point)) ""))
+
+(defun zjn--search-in-firefox (edit-text)
+  (interactive "P")
+  (zjn--search-in-firefox-inner (zjn--current-region) edit-text))
+
+(defun zjn--search-in-firefox-bang (edit-text)
+  (interactive "P")
+  (zjn--search-in-firefox-inner (zjn--current-region) edit-text "! "))
+
+(map! :leader
+      (:prefix ("s" . "search")
+       :desc "Search in DDG" "o" #'zjn--search-in-firefox
+       :desc "Search in DDG (!)" "O" #'zjn--search-in-firefox-bang))
+#+end_src
 * org
 #+begin_src emacs-lisp
 (setq org-directory "~/notes/")
