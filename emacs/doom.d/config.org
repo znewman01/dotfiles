@@ -303,6 +303,7 @@ I like to search using DDG always:
   (require 'url)
   (require 'f)
   (require 's)
+  (require 'bibtex-completion)
   (defun zjn--import-iacr (id)
     (interactive "sIACR ePrint ID? ")
     (let* ((article (zjn--fetch-iacr-info id))
