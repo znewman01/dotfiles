@@ -34,6 +34,7 @@ in {
     tex-env
     imagemagick
   ];
+  home.keyboard.options = [ "caps:swapescape" "compose:ralt" ];
 
   services.keybase.enable = true;
   services.kbfs.enable = true;
