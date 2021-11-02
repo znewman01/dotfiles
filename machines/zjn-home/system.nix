@@ -3,8 +3,7 @@
 {
   imports = [ ./hardware-configuration.nix ];
 
-  # ZFS broken in 5.12
-  boot.kernelPackages = pkgs.linuxPackages_5_10;
+  boot.kernelPackages = pkgs.linuxPackages_5_14;
 
   networking.hostName = "zjn-home";
   system.stateVersion = "20.09";
