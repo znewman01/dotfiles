@@ -13,7 +13,6 @@ in {
     # Config
     ./desktop
     ./emacs
-    ./email
     ./web
     ./persist/home.nix
   ];

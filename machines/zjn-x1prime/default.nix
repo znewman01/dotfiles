@@ -1,5 +1,5 @@
 { config, pkgs, ... }:
 
 {
-  imports = [ ./autorandr.nix ];
+  imports = [ ./autorandr.nix ./../../email ./../../desktop/chat ];
 }
