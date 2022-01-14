@@ -623,38 +623,35 @@ I use [[https://www.djcbsoftware.nl/code/mu/][mu]] for mail, and "~mu~ for Emacs
 #+end_src
 
 Tell Emacs I want to use ~mu4e~ for sending mail:
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (setq mail-user-agent 'mu4e-user-agent)
 (setq message-send-mail-function 'smtpmail-send-it)
 #+end_src
 
 Tell ~mu4e~ how to find my mail:
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (setq mu4e-root-maildir "~/Maildir")
 (setq mu4e-get-mail-command "mbsync -a")
 #+end_src
 
 Make it a little faster (must run ~mu index~ every once in a while to reindex):
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (setq mu4e-index-cleanup t      ;; don't do a full cleanup check
       mu4e-index-lazy-check nil)
 #+end_src
 
 I forget why this is here:
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (setq mu4e-completing-read-function 'completing-read)
 #+end_src
 
 Quit, dang it!
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (setq mu4e-confirm-quit nil)
 #+end_src
 ** Accounts
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 ; After mu 1.4, will need to remove this:
-; https://emacs.stackexchange.com/questions/47206/mu4e-adds-sender-with-reply-all
-; https://www.djcbsoftware.nl/code/mu/mu4e/Writing-messages.html
-(setq mu4e-user-mail-address-list (quote ("z@znewman.net" "znewman01@gmail.com" "zjn@mit.edu" "zjn@csail.mit.edu")))
 (setq mu4e-context-policy 'pick-first)
 (defmacro zjn--make-match (folder)
   `(lambda (msg)
@@ -718,12 +715,9 @@ Quit, dang it!
                   (smtpmail-smtp-service . 587)))))
 #+end_src
 
-#+RESULTS:
-| #s(mu4e-context Fastmail nil nil (lambda (msg) (when msg (string-prefix-p /fastmail (mu4e-message-field msg :maildir)))) ((mu4e-trash-folder . /fastmail/Trash) (mu4e-sent-folder . /fastmail/Sent) (mu4e-drafts-folder . /fastmail/Drafts) (mu4e-refile-folder . /fastmail/Archive) (user-mail-address . z@znewman.net) (user-full-name . Zachary Newman) (smtpmail-local-domain . znewman.net) (smtpmail-smtp-server . smtp.fastmail.com) (smtpmail-stream-type . ssl) (smtpmail-smtp-service . 465))) | #s(mu4e-context MIT nil nil (lambda (msg) (when msg (string-prefix-p /mit (mu4e-message-field msg :maildir)))) ((mu4e-trash-folder . /mit/Deleted) (mu4e-sent-folder . /mit/Sent) (mu4e-drafts-folder . /mit/Drafts) (mu4e-refile-folder . /mit/Archive) (user-mail-address . zjn@mit.edu) (user-full-name . Zachary Newman) (smtpmail-local-domain . mit.edu) (smtpmail-smtp-server . outgoing.mit.edu) (smtpmail-stream-type . ssl) (smtpmail-smtp-service . 465))) | #s(mu4e-context CSAIL nil nil (lambda (msg) (when msg (string-prefix-p /csail (mu4e-message-field msg :maildir)))) ((mu4e-trash-folder . /csail/Trash) (mu4e-sent-folder . /csail/Sent) (mu4e-drafts-folder . /csail/Drafts) (mu4e-refile-folder . /csail/Archive) (user-mail-address . zjn@csail.mit.edu) (user-full-name . Zachary Newman) (smtpmail-local-domain . csail.mit.edu) (smtpmail-smtp-server . outgoing.csail.mit.edu) (smtpmail-stream-type . starttls) (smtpmail-smtp-service . 587))) | #s(mu4e-context Gmail nil nil (lambda (msg) (when msg (string-prefix-p /gmail (mu4e-message-field msg :maildir)))) ((mu4e-trash-folder . /gmail/[Gmail]/Trash) (mu4e-sent-folder . /gmail/[Gmail]/SentMail) (mu4e-drafts-folder . /gmail/[Gmail]/Drafts) (mu4e-refile-folder . /gmail/[Gmail]/AllMail) (user-mail-address . znewman01@gmail.com) (user-full-name . Zachary Newman) (smtpmail-local-domain . gmail.com) (smtpmail-smtp-server . smtp.gmail.com) (smtpmail-stream-type . starttls) (smtpmail-smtp-service . 587))) |
-
 ** Inbox: reading and managing
 Common views (combined inbox, unread, all recent):
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (require 's)
 (require 'dash)
 (defun zjn--get-mu4e-vars (var)
@@ -755,7 +749,7 @@ Common views (combined inbox, unread, all recent):
 #+end_src
 
 Misc:
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (setq mu4e-attachment-dir "/home/zjn/Downloads")
 (mkdir mu4e-attachment-dir t)
 (setq mu4e-view-show-addresses t)
@@ -763,7 +757,7 @@ Misc:
 #+end_src
 
 Move to trash, don't just delete ([[http://cachestocaches.com/2017/3/complete-guide-email-emacs-using-mu-and-/][source]]):
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (require 'mu4e-mark)
 (setf
   (alist-get 'trash mu4e-marks)
@@ -774,17 +768,17 @@ Move to trash, don't just delete ([[http://cachestocaches.com/2017/3/complete-gu
 #+end_src
 
 Don't count deleted emails in "unread" for modeline:
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (setq mu4e-alert-interesting-mail-query "flag:unread AND NOT flag:trashed AND NOT maildir:/mit/Deleted")
 #+end_src
 ** Outbox
 *** Composing
 [[org]] everywhere!
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (require 'org-mu4e)
 #+end_src
 Don't send prematurely by accident (this allows a neat trick of leaving the subject empty while writing mail, and filling it in only when ready):
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (defun zjn--confirm-empty-subject ()
   "Allow user to quit when current message subject is empty."
   (or (message-field-value "Subject")
@@ -793,7 +787,7 @@ Don't send prematurely by accident (this allows a neat trick of leaving the subj
 (add-hook 'message-send-hook #'zjn--confirm-empty-subject)
 #+end_src
 *** Sending
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (setq send-mail-function 'smtpmail-send-it)
 #+end_src
 * RSS
