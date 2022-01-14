@@ -880,6 +880,7 @@ Don't send prematurely by accident (this allows a neat trick of leaving the subj
         :n "o" #'elfeed-search-browse-url
         :n "i" #'add-elfeed-entry-to-instapaper
         :n "u" #'elfeed-update
+        :n "s" #'elfeed-db-save
 
         :mode 'elfeed-show-mode
         :n "I" #'add-elfeed-shown-to-paper-queue-iacr
