@@ -2,7 +2,7 @@
 { lib }:
 with lib;
 let
-  themeName = builtins.getEnv "NIXOS_THEME";
+  themeName = "solarized";
   pow = let
     pow' = base: exponent: value:
       # FIXME: It will silently overflow on values > 2**62 :(
@@ -78,6 +78,10 @@ in rec {
       scheme = import ./one-light.nix;
       mode = "light";
     };
+    "solarized" = {
+      scheme = import ./solarized.nix;
+      mode = "light";
+    };
     "dark" = { # default dark theme
       scheme = import ./espresso.nix;
       mode = "dark";
@@ -87,8 +91,8 @@ in rec {
       mode = "light";
     };
     "" = { # default
-      scheme = import ./solarized.nix;
-      mode = "light";
+      scheme = import ./espresso.nix;
+      mode = "dark";
     };
   };
 

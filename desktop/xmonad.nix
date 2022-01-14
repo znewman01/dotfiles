@@ -135,7 +135,7 @@ in {
           , manageHook =  myManageHook
           , startupHook = composeAll
               [ Bars.dynStatusBarStartup barCreator barDestroyer
-              , spawn "hsetroot -solid '#${colors.base00}'"
+              , spawn "hsetroot -solid '#${colors.base02}'"
               , spawnOnce "alacritty --title htop --command nix-shell -p htop --command htop"
               ]
           , logHook = composeAll
@@ -148,8 +148,8 @@ in {
               , Docks.docksEventHook
               , DProp.dynamicPropertyChange "WM_NAME" myDynPropHook
               ]
-          , normalBorderColor = "#${colors.base02}"
-          , focusedBorderColor = "#${colors.base02}"  -- can be the same with window fade
+          , normalBorderColor = "#${colors.base04}"
+          , focusedBorderColor = "#${colors.base04}"  -- can be the same with window fade
           , workspaces = myWorkspaces
           } `additionalKeysP`
             [ ("M-p", spawn "rofi -show run")
@@ -195,8 +195,8 @@ in {
        , bgColor =      "#${colors.base01}"
        , fgColor =      "#${colors.base05}"
        , border = BottomB
-       , borderColor = "#${colors.base03}"
-       , borderWidth = 2
+       , borderColor = "#${colors.base04}"
+       , borderWidth = 3
        , position =     Top
        , template = " %StdinReader% }{  %KBOS% | %default:Master% |  %wlp3s0wi% |  %battery% |  %date% "
        , allDesktops = True    -- show on all desktops
