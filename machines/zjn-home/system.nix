@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 
 {
-  imports = [ ./hardware-configuration.nix ];
+  imports = [ ./hardware-configuration.nix ./../../desktop/work.nix ];
 
   boot.kernelPackages = pkgs.linuxPackages_5_10;
 
