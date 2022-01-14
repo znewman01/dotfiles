@@ -127,43 +127,6 @@ I like to search using DDG always:
   (setq org-agenda-dim-blocked-tasks nil
         org-agenda-inhibit-startup t
         org-agenda-ignore-properties '(effort appt stat category))
-  (defun noop (&rest args) nil)
-  (advice-add #'org-font-lock-add-priority-faces :override #'noop)
-
-  (require 'org-starless)
-  (require 'org-padding)
-  (setq org-padding-block-begin-line-padding '(nil . nil))
-  (setq org-padding-block-end-line-padding '(nil . nil))
-  (setq org-padding-heading-padding-alist
-        '((2.0 . 0.5) (2.0 . 0.5) (2.0 . 0.5) (2.0 . 0.5) (2.0 . 0.5) (2.0 . 0.5) (2.0 . 0.5) (2.0 . 0.5)))
-
-  (require 'org-superstar)
-  (remove-hook! org-mode org-superstar-mode)
-  (setq org-superstar-item-bullet-alist
-        '((?* . ?•)
-          (?+ . ?⁘)
-          (?- . ?•)))
-
-  (define-minor-mode zjn--org-pretty-mode
-    "make org pretty"
-    :lighter "pretty"
-    (if zjn--org-pretty-mode
-        (progn
-          (org-starless-mode 1)
-          (org-padding-mode 1)
-          (org-superstar-mode 1)
-          (setq left-margin-width 8
-                right-margin-width 8)
-          (set-window-buffer (selected-window) (current-buffer))
-          (mixed-pitch-mode 1))
-      (mixed-pitch-mode -1)
-      (org-starless-mode -1)
-      (org-padding-mode -1)
-      (org-superstar-mode -1)
-      (setq left-margin-width (default-value 'left-margin-width)
-            right-margin-width (default-value 'right-margin-width))
-      (set-window-buffer (selected-window) (current-buffer))))
-
   (setq org-archive-location "archive/%s::")
   (setq org-default-notes-file (org-file "gtd.org"))
   (setq org-log-done t)
@@ -233,8 +196,7 @@ I like to search using DDG always:
   (setq org-agenda-todo-ignore-deadlines 'near)
   (setq org-agenda-tags-todo-honor-ignore-options t)
   (setq org-agenda-custom-commands
-        `(
-          ("n" "Default View"  ; a little faster
+        `(("n" "Default View"  ; a little faster
            ((agenda "" ((org-agenda-span 'day) (org-agenda-start-day "+0d")))
             (stuck "")
             (tags-todo "-personal-SOMEDAY-yak-@errand/NEXT-BUY"
@@ -245,27 +207,9 @@ I like to search using DDG always:
                         (org-agenda-overriding-header "Other tasks (excluding errands):")))
             (tags-todo "-SOMEDAY+@errand+TODO=\"NEXT\""
                        ((org-agenda-skip-function 'zjn-org-skip-subtree-if-bad-time)
-                        (org-agenda-overriding-header "Errands:")))
-            ))
-          ("f" "Full View"  ; more complete
-           ((agenda "" ((org-agenda-span 'day) (org-agenda-start-day "+0d")))
-            (stuck "")
-            (tags-todo "-personal-SOMEDAY-yak-@errand/NEXT-BUY"
-                       ((org-agenda-skip-function 'zjn-org-skip-subtree-if-bad-time)
-                        (org-agenda-overriding-header "Work:")))
-            (tags-todo "personal-SOMEDAY-yak-@errand/NEXT-BUY"
-                       ((org-agenda-skip-function 'zjn-org-skip-subtree-if-bad-time)
-                        (org-agenda-overriding-header "Other tasks (excluding errands):")))
-            (tags-todo "-SOMEDAY+@errand+TODO=\"NEXT\""
-                       ((org-agenda-skip-function 'zjn-org-skip-subtree-if-bad-time)
-                        (org-agenda-overriding-header "Errands:")))
-            (tags-todo "-SOMEDAY/PROJ|BLOCKEDPROJ"
-                       ((org-agenda-overriding-header "All current projects:")))
-            (tags-todo "yak-SOMEDAY/NEXT|BUY"
-                       ((org-agenda-overriding-header "Yak shaving:")))))
-          ))
+                        (org-agenda-overriding-header "Errands:")))))))
 
-                                        ; https://lists.gnu.org/archive/html/emacs-orgmode/2015-06/msg00266.html
+  ; https://lists.gnu.org/archive/html/emacs-orgmode/2015-06/msg00266.html
   (defun org-agenda-delete-empty-blocks ()
     "Remove empty agenda blocks.
   A block is identified as empty if there are fewer than 2
@@ -413,29 +357,14 @@ I like to search using DDG always:
                 (org-attach-attach pdf-link nil 'url))))))))
     "")
 
-
-  (push '("a" "arXiv" entry (file+headline "~/notes/research/default.org" "Paper queue")
-          "* %?%(zjn--format-arxiv-org \"%i\")\n")
-        org-capture-templates)
-
   (push '("l" "Link to current file" entry
           (file+headline "~/notes/gtd.org" "Inbox")
           "** NEXT %?\n%a\n%i\n")
         org-capture-templates)
 
-  (push '("r" "Capture current region" entry
-          (file+headline "~/notes/gtd.org" "Inbox")
-          "** NEXT %?\n%i\n")
-        org-capture-templates)
-
   (push '("t" "Normal TODO" entry
           (file+headline "~/notes/gtd.org" "Inbox")
           "** NEXT %?\n")
-        org-capture-templates)
-
-  (push '("p" "Paper" entry
-          (file+headline "~/notes/research/default.org" "Paper queue")
-          "** %i\nURL:\nAuthor(s):\n\n#+BEGIN_SRC bibtex\n#+END_SRC")
         org-capture-templates)
 
   (setq org-preview-latex-default-process 'imagemagick)
@@ -444,16 +373,6 @@ I like to search using DDG always:
   (require 'org-fragtog)
   (add-hook 'org-mode-hook 'org-fragtog-mode))
 
-
-
-(after! deft
-  (setq deft-directory "~/Sync/notes/roam"
-        deft-recursive t))
-; (use-package! org-roam-bibtex
-;   :after org-roam
-;   :hook (org-roam-mode . org-roam-bibtex-mode)
-;   :config
-;   (require 'org-ref))
 (after! org-ref
   (setq org-ref-default-bibliography '("~/Sync/notes/lit/default.bib")
         org-ref-pdf-directory "~/Sync/notes/lit/"))
@@ -841,16 +760,6 @@ Misc:
 (mkdir mu4e-attachment-dir t)
 (setq mu4e-view-show-addresses t)
 (setq mu4e-change-filenames-when-moving t)
-#+end_src
-
-Some keybindings:
-#+begin_src emacs-lisp
-(require 'mu4e-mark)
-; Don't ask for confirmation when executing (TODO: does this work?)
-; (define-key mu4e-headers-mode-map (kbd "x") (lambda() (interactive) (mu4e-mark-execute-all t)
-;                                               (switch-to-buffer "*mu4e-headers*")))
-; (define-key mu4e-headers-mode-map (kbd "C-c c") 'org-mu4e-store-and-capture)
-; (define-key mu4e-view-mode-map    (kbd "C-c c") 'org-mu4e-store-and-capture)
 #+end_src
 
 Move to trash, don't just delete ([[http://cachestocaches.com/2017/3/complete-guide-email-emacs-using-mu-and-/][source]]):
