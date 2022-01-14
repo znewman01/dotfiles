@@ -67,14 +67,13 @@ in {
 
   home.file.".emacs.d.template/emacs.d" = let
     # git ls-remote https://github.com/hlissner/doom-emacs/ develop
-    rev = "db51c6be884ade8c637162a3e52a22e2dc45c384";
+    rev = "bc47e72984f9e6eb89a19e9560185188575b10c1";
   in {
     source = pkgs.fetchFromGitHub {
       owner = "hlissner";
       repo = "doom-emacs";
       rev = rev;
-      # sha256 = lib.fakeSha256;
-      sha256 = "05nn4l01d9j18ka8ks8kyqkism0qxb1vpr3zgzhanw8hcwkwnrmq";
+      sha256 = "0qhm5qrr2753xbrhvnb29rww36ln51z4skycrd5l4pqn3x3va7y1";
     };
     onChange = ''
       DST="$HOME/.emacs.d"

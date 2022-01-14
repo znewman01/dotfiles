@@ -3,8 +3,8 @@
 let
   home-manager = builtins.fetchGit {
     url = "https://github.com/nix-community/home-manager.git";
-    rev = "bcf03fa16a1f06b8a0abb27bf49afa8d6fffe8f1";
-    ref = "release-21.05";
+    rev = "697cc8c68ed6a606296efbbe9614c32537078756";
+    ref = "release-21.11";
   };
 in {
   imports = [ # needs to be absolute since we symlink this file in
@@ -14,6 +14,8 @@ in {
   ];
 
   nix.trustedUsers = [ "@wheel" ];
+  nix.package = pkgs.nixFlakes;
+  nix.extraOptions = "experimental-features = nix-command flakes";
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -46,6 +48,7 @@ in {
 
   nixpkgs.config.allowUnfree = true;
 
+  programs.dconf.enable = true;
   services.dbus.packages = with pkgs; [ gnome3.dconf ];
 
   console = {
@@ -95,6 +98,7 @@ in {
   users.users.zjn = {
     isNormalUser = true;
     createHome = true;
+    group = "zjn";
     extraGroups = [
       "networkmanager"
       "wheel"
@@ -109,6 +113,7 @@ in {
     hashedPassword =
       "$6$O1ia1YA5iKh9m$SVD17ySqqyicSpo2tzqTw4xRHm8C50.vMuoQPaLxTA9hsfJ7HQ/neioEYhOjZvPT..HNclbjd4JX4ydBcMvC7.";
   };
+  users.groups.zjn = { };
   home-manager.verbose = true;
 
   krb5 = {
