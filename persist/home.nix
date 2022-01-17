@@ -39,6 +39,8 @@ in {
       ".emacs.d"
       ".emacs.d.template"
       ".mozilla"
+      ".local/share/Anki"
+      ".local/share/Anki2"
       ".local/share/direnv"
       ".local/share/keyrings"
       ".local/share/tridactyl"
