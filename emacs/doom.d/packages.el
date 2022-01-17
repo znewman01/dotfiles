@@ -70,6 +70,8 @@
 (package! org-re-reveal-ref :pin nil)
 (package! org-mime)
 (package! org-msg :disable t)
+(package! org-ql)
+(package! org-super-agenda)
 
 ; ~~aesthetics~~
 (package! mixed-pitch)
