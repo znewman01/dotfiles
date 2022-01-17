@@ -100,6 +100,42 @@ in ''
   Patterns "[Gmail]/Drafts" "[Gmail]/Spam" "[Gmail]/Trash"
 
 
+  IMAPAccount chainguard
+  PipelineDepth 50
+  AuthMechs LOGIN
+  CertificateFile /etc/ssl/certs/ca-certificates.crt
+  Host imap.gmail.com
+  PassCmd "${passBin} show chainguard-imap 2> /dev/null"
+  Port 993
+  SSLType IMAPS
+  User zjn@chainguard.dev
+
+  IMAPStore chainguard-remote
+  Account chainguard
+
+  MaildirStore chainguard-local
+  Inbox /home/zjn/Maildir/chainguard/Inbox
+  Path /home/zjn/Maildir/chainguard/
+  SubFolders Verbatim
+
+  Channel chainguard-inbox
+  Far ":chainguard-remote:INBOX"
+  Near ":chainguard-local:Inbox"
+
+  Channel chainguard-sent
+  Far ":chainguard-remote:[Gmail]/Sent Mail"
+  Near ":chainguard-local:[Gmail]/SentMail"
+
+  Channel chainguard-all
+  Far ":chainguard-remote:[Gmail]/All Mail"
+  Near ":chainguard-local:[Gmail]/AllMail"
+
+  Channel chainguard-rest
+  Far :chainguard-remote:
+  Near :chainguard-local:
+  Patterns "[Gmail]/Drafts" "[Gmail]/Spam" "[Gmail]/Trash"
+
+
   IMAPAccount mit
   AuthMechs PLAIN
   CertificateFile /etc/ssl/certs/ca-certificates.crt
@@ -146,6 +182,12 @@ in ''
   Channel gmail-rest
   Channel gmail-sent
   Channel gmail-all
+
+  Group chainguard
+  Channel chainguard-inbox
+  Channel chainguard-rest
+  Channel chainguard-sent
+  Channel chainguard-all
 
   Group mit
   Channel mit-inbox

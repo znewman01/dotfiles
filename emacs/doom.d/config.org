@@ -115,6 +115,7 @@ I like to search using DDG always:
         (list (org-file "personal.org")
               (org-file "gtd.org")
               (org-file "projects.org")
+              (org-file "chainguard.org")
               (org-file "inbox.org")  ; Beorg
               (org-file "research/default.org")
                                         ; (org-file "research/hnp.org")
@@ -651,7 +652,6 @@ Quit, dang it!
 #+end_src
 ** Accounts
 #+begin_src emacs-lisp :tangle no
-; After mu 1.4, will need to remove this:
 (setq mu4e-context-policy 'pick-first)
 (defmacro zjn--make-match (folder)
   `(lambda (msg)
@@ -712,6 +712,19 @@ Quit, dang it!
                   (smtpmail-local-domain . "gmail.com")
                   (smtpmail-smtp-server . "smtp.gmail.com")
                   (smtpmail-stream-type . starttls)
+                  (smtpmail-smtp-service . 587)))
+        ,(make-mu4e-context
+          :name "Chainguard"
+          :match-func (zjn--make-match "chainguard")
+          :vars '((mu4e-trash-folder . "/chainguard/[Gmail]/Trash")
+                  (mu4e-sent-folder . "/chainguard/[Gmail]/SentMail")
+                  (mu4e-drafts-folder . "/chainguard/[Gmail]/Drafts")
+                  (mu4e-refile-folder . "/chainguard/[Gmail]/AllMail")
+                  (user-mail-address . "zjn@chainguard.dev")
+                  (user-full-name . "Zachary Newman")
+                  (smtpmail-local-domain . "gmail.com")
+                  (smtpmail-smtp-server . "smtp.gmail.com")
+                  (smtpmail-stream-type . starttls)
                   (smtpmail-smtp-service . 587)))))
 #+end_src
 
@@ -733,11 +746,11 @@ Common views (combined inbox, unread, all recent):
                   (cons query
                         (mapcar (apply-partially #'concat "NOT maildir:") maildirs)))))
        (skip-trash-and-sent
-         (lambda (query) (funcall query-skipping query (-concat trash-folders sent-folders '("/mit/Junk" "/gmail/[Gmail]/Spam"))))))
+         (lambda (query) (funcall query-skipping query (-concat trash-folders sent-folders '("/mit/Junk" "/gmail/[Gmail]/Spam" "/chainguard/[Gmail]/Spam"))))))
     (setq mu4e-bookmarks
         (mapcar (apply-partially #'apply #'make-mu4e-bookmark)
                 `((:name "All Inboxes"
-                    :query "maildir:/gmail/Inbox OR maildir:/mit/INBOX OR maildir:/fastmail/INBOX OR maildir:/csail/INBOX"
+                    :query "maildir:/gmail/Inbox OR maildir:/mit/INBOX OR maildir:/fastmail/INBOX OR maildir:/csail/INBOX OR maildir:/chainguard/Inbox"
                     :key ?i)
                     (:name "Unread messages"
                     :query ,(funcall skip-trash-and-sent "flag:unread AND NOT flag:trashed")
@@ -800,6 +813,7 @@ Don't send prematurely by accident (this allows a neat trick of leaving the subj
           ("https://www.schneier.com/blog/atom.xml")
           ("https://www.mattblaze.org/blog/rss20.xml")
           ("https://alinush.github.io/feed.xml")
+          ("https://blog.chainguard.dev/rss/")
           ("https://jvns.ca/atom.xml")
           ("https://blog.cryptographyengineering.com/feed/")
           ("https://blog.techorganic.com/atom.xml")

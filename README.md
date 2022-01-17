@@ -24,7 +24,7 @@
   - Pass (might need to run repeatedly)
   - Firefox
   - [MIT certs](https://ist.mit.edu/certificates)
-  - email (`mkdir ~/Maildir/{gmail,csail,mit,fastmail} && mbsync -a` then `mu init --my-address=... --my-address=...`)
+  - email (`mkdir ~/Maildir/{gmail,csail,mit,fastmail,chainguard} && mbsync -a` then `mu init --my-address=... --my-address=...`)
   - GitHub (MIT and public) SSH keys
   - CSAIL WiFi
 

@@ -177,6 +177,24 @@ in {
         #   };
         # };
       };
+
+      chainguard = {
+        realName = "Zachary Newman";
+        address = concatStringsSep "@" [ "zjn" "chainguard.dev" ];
+        userName = concatStringsSep "@" [ "zjn" "chainguard.dev" ];
+        maildir.path = "chainguard";
+        flavor = "gmail.com";
+        passwordCommand = passCmd "chainguard-imap";
+
+        folders = {
+          inbox = "Inbox";
+          drafts = "[Gmail]/Drafts";
+          sent = "[Gmail]/SentMail";
+          trash = "[Gmail]/Trash";
+        };
+
+        imap.port = 993;
+      };
     };
 
   };

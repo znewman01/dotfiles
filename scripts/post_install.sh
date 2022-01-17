@@ -46,7 +46,7 @@ fi
 read -p "Initialize email (might take a while, multiple attempts)? [y/N] " EMAIL
 
 if [ "$EMAIL" = "y" ]; then
-    for store in fastmail mit gmail csail; do
+    for store in fastmail mit gmail csail chainguard; do
         mkdir -p $HOME/Maildir/$store
         mbsync $store
     done
