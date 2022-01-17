@@ -14,7 +14,26 @@ let
   }) { };
 in {
 
-  home.packages = [ unstable.mu pkgs.isync ];
+  home.packages = [ unstable.mu ];
+
+  home.file."bin/mbsync" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env nix-shell
+      #!nix-shell -i bash -p isync
+      set -euo pipefail
+      GOAL=earlyemail
+      BEE="https://www.beeminder.com/api/v1"
+      BEE_AUTH="auth_token=$(pass show beeminder-auth-token)"
+      if [ $(date '+%H%M') -lt 1000 ]; then
+        echo "uh oh! too early in the day :'("
+        curl -s -X POST \
+          --data "''${BEE_AUTH}&value=''${LI_GAMES}" \
+          "''${BEE}/users/znewman01/goals/''${GOAL}/datapoints.json"
+      fi
+      mbsync $@
+    '';
+  };
 
   # concatStringsSep trick is a half-hearted attempt to prevent email harvesting.
   accounts.email = {
