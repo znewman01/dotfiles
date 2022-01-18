@@ -140,7 +140,9 @@ My agenda:
                             (or (and (todo "PROJ")
                                      (not (descendants (todo "NEXT"))))
                                 (and (todo "BLOCKEDPROJ")
-                                     (not (scheduled t)))))
+                                     (not (scheduled t)))
+                                (and (todo "TODO")
+                                     (not (ancestors (todo "PROJ" "BLOCKEDPROJ"))))))
                           ((org-ql-block-header "Stuck projects")))))
         ("na" "All"
          ((agenda ""
@@ -154,7 +156,9 @@ My agenda:
                          (or (and (todo "PROJ")
                                   (not (descendants (todo "NEXT"))))
                              (and (todo "BLOCKEDPROJ")
-                                  (not (scheduled t)))))
+                                  (not (scheduled t)))
+                             (and (todo "TODO")
+                                     (not (ancestors (todo "PROJ" "BLOCKEDPROJ"))))))
                          ((org-ql-block-header "Stuck projects:")))
           (org-ql-block '(or (and (todo "NEXT") (not (tags "SOMEDAY")))
                              (and (deadline auto) (not (done)))
@@ -163,7 +167,7 @@ My agenda:
                                                       (:name "Overdue:"
                                                              :deadline past)
                                                       (:name "Upcoming:"
-                                                             :deadline auto)
+                                                             :deadline future)
                                                       (:name "Habits"
                                                              :todo "HABIT")
                                                       (:name "Scheduled:"
@@ -179,7 +183,7 @@ My agenda:
                            (org-ql-block-header "All tasks:"))))))))
 #+end_src
 
-fo
+Rest of org:
 
 #+begin_src emacs-lisp
 (setq org-directory "~/notes/")
@@ -757,7 +761,7 @@ Quit, dang it!
                   (smtpmail-stream-type . ssl)
                   (smtpmail-smtp-service . 465)))
         ,(make-mu4e-context
-          :name "CSAIL"
+          :name "oCSAIL"
           :match-func (zjn--make-match "csail")
           :vars '((mu4e-trash-folder . "/csail/Trash")
                   (mu4e-sent-folder . "/csail/Sent")
@@ -851,7 +855,7 @@ Move to trash, don't just delete ([[http://cachestocaches.com/2017/3/complete-gu
 
 Don't count deleted emails in "unread" for modeline:
 #+begin_src emacs-lisp :tangle no
-(setq mu4e-alert-interesting-mail-query "flag:unread AND NOT flag:trashed AND NOT maildir:/mit/Deleted")
+(setq mu4e-alert-interesting-mail-query "flag:unread AND NOT flag:trashed AND (maildir:/gmail/Inbox OR maildir:/mit/INBOX OR maildir:/fastmail/INBOX OR maildir:/csail/INBOX OR maildir:/chainguard/Inbox)")
 #+end_src
 ** Outbox
 *** Composing
@@ -883,6 +887,7 @@ Don't send prematurely by accident (this allows a neat trick of leaving the subj
           ("https://www.mattblaze.org/blog/rss20.xml")
           ("https://alinush.github.io/feed.xml")
           ("https://blog.chainguard.dev/rss/")
+          ("https://dlorenc.medium.com/feed")
           ("https://jvns.ca/atom.xml")
           ("https://blog.cryptographyengineering.com/feed/")
           ("https://blog.techorganic.com/atom.xml")
