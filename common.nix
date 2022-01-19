@@ -127,7 +127,7 @@ in {
     after = [ "persist.mount" "cache.mount" ];
     before = [ "home-manager-zjn.service" "sshd.service" ];
     path = [ "/run/current-system/sw/" ];
-    script = with pkgs; ''
+    script = ''
       set -eux
       mkdir -p /cache/zjn /persist/zjn /persist/ssh
       chown zjn:users /cache/zjn /persist/zjn
