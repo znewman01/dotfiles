@@ -28,23 +28,9 @@ in {
   networking.firewall.allowedUDPPorts = [
     22000 # syncthing
     21027 # syncthing
-    51820 # wireguard
+    41641 # tailscale
   ];
-  networking.firewall.trustedInterfaces = [ "wg0" ];
-
-  networking.extraHosts = ''
-    10.100.0.1 zjn-work
-    10.100.0.2 zjn-x1prime
-    10.100.0.3 zjn-home
-  '';
-
-  networking.wireguard.enable = true;
-  networking.wireguard.interfaces = {
-    wg0 = {
-      listenPort = 51820;
-      privateKeyFile = "/persist/wireguard/private";
-    };
-  };
+  services.tailscale.enable = true;
 
   nixpkgs.config.allowUnfree = true;
 
@@ -61,7 +47,7 @@ in {
 
   time.timeZone = "America/New_York";
 
-  environment.systemPackages = with pkgs; [ git vim wget manpages ];
+  environment.systemPackages = with pkgs; [ git vim wget manpages tailscale ];
 
   documentation.dev.enable = true;
 
@@ -141,24 +127,6 @@ in {
       set -eux
       mkdir -p /cache/zjn /persist/zjn /persist/ssh
       chown zjn:users /cache/zjn /persist/zjn
-    '';
-    serviceConfig = { Type = "oneshot"; };
-  };
-
-  systemd.services.wgkeys = {
-    description = "Set up wireguard keys if they don't exist.";
-    wantedBy = [ "multi-user.target" ];
-    after = [ "persist.mount" ];
-    before = [ "wireguard-wg0.service" ];
-    path = [ "/run/current-system/sw/" ];
-    script = with pkgs; ''
-      set -eux
-      mkdir -p /persist/wireguard
-      if [ ! -f /persist/wireguard/private ]; then
-        umask 077
-        wg genkey > /persist/wireguard/private
-        wg pubkey < /persist/wireguard/private > /persist/wireguard/public
-      fi
     '';
     serviceConfig = { Type = "oneshot"; };
   };

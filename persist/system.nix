@@ -29,6 +29,6 @@ in {
     "L /etc/NetworkManager/system-connections - - - - /persist/nm-system-connections"
   ];
   environment.persistence."/persist/root" = {
-    directories = [ "/var/lib/acme" ];
+    directories = [ "/var/lib/acme" "/var/lib/tailscale" ];
   };
 }
