@@ -158,7 +158,7 @@ in {
           name = "${x}";
           value = {
             host = "zjn@${x}";
-            dataset = "tank/backups";
+            dataset = "tank/backups/${config.networking.hostName}";
           };
         }) hosts);
       };
