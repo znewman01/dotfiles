@@ -77,7 +77,10 @@ in {
     SystemGroup lp
   '';
 
-  virtualisation.docker.enable = true;
+  virtualisation.docker = {
+    enable = true;
+    storageDriver = "zfs";
+  };
   virtualisation.libvirtd.enable = true;
   users.extraGroups.vboxusers.members = [ "zjn" ];
 
