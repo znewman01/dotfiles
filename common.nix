@@ -6,6 +6,7 @@ let
     rev = "697cc8c68ed6a606296efbbe9614c32537078756";
     ref = "release-21.11";
   };
+  hosts = [ "zjn-x1prime" "zjn-home" ];
 in {
   imports = [ # needs to be absolute since we symlink this file in
     (import "${home-manager}/nixos")
@@ -132,5 +133,36 @@ in {
       chown zjn:users /cache/zjn /persist/zjn
     '';
     serviceConfig = { Type = "oneshot"; };
+  };
+
+  users.extraGroups.zfs.members = [ "zjn" ];
+  systemd.services.zfsPerms = {
+    description = "Set up ZFS permissions.";
+    wantedBy = [ "multi-user.target" ];
+    before = [ "znapzend.service" ];
+    path = [ "/run/current-system/sw/" ];
+    script = ''
+      zfs allow -g zfs create,destroy,mount,receive,userprop tank
+    '';
+    serviceConfig = { Type = "oneshot"; };
+  };
+  services.znapzend = {
+    enable = true;
+    autoCreation = true;
+    pure = true;
+    zetup = {
+      "tank/safe" = {
+        plan = "1h=>10min,1d=>1h,1m=>1d,1y=>1m";
+        recursive = true;
+        destinations = builtins.listToAttrs (builtins.map (x: {
+          name = "${x}";
+          value = {
+            host = "zjn@${x}";
+            dataset = "tank/backups";
+          };
+        }) hosts);
+      };
+    };
+
   };
 }
