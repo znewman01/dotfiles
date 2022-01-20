@@ -46,6 +46,7 @@ in {
       ".local/share/tridactyl"
       ".config/skypeforlinux"
       ".config/Slack"
+      ".config/VSCodium"
       ".vagrant.d"
       ".terraform.d"
       ".packer.d"

@@ -68,6 +68,16 @@ in {
     nix-direnv.enable = true;
   };
 
+  programs.vscode = {
+    enable = true;
+    package = pkgs.vscodium;
+    extensions = with pkgs.vscode-extensions; [
+      vscodevim.vim
+      golang.go
+      eamodio.gitlens
+    ];
+  };
+
   programs.gpg.enable = true;
   services.gpg-agent = {
     enable = true;
