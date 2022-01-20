@@ -115,8 +115,7 @@ My agenda:
                    ((org-agenda-span 'day)
                     (org-agenda-start-day "+0d")
                     (org-super-agenda-groups '((:name "Agenda:"
-                                                      :and (:tag "chainguard"
-                                                            :time-grid t))
+                                                      :time-grid t)
                                                (:discard (:anything t))))))
             (org-ql-block '(and
                             (tags "chainguard")
@@ -125,8 +124,7 @@ My agenda:
                                 (and (todo "NEXT")
                                      (not (tags "SOMEDAY"))
                                      (not (scheduled :to today)))))
-                          ((org-super-agenda-groups '((:discard (:not (:tag "chainguard")))
-                                                      (:discard (:time-grid t))
+                          ((org-super-agenda-groups '((:discard (:time-grid t))
                                                       (:name "Overdue:"
                                                              :deadline past)
                                                       (:name "Upcoming:"
@@ -135,7 +133,6 @@ My agenda:
                                                              :scheduled t)))
                            (org-ql-block-header "Chainguard tasks:")))
             (org-ql-block '(and
-                            (tags "chainguard")
                             (not (tags "SOMEDAY"))
                             (or (and (todo "PROJ")
                                      (not (descendants (todo "NEXT"))))
@@ -143,7 +140,8 @@ My agenda:
                                      (not (scheduled t)))
                                 (and (todo "TODO")
                                      (not (ancestors (todo "PROJ" "BLOCKEDPROJ"))))))
-                          ((org-ql-block-header "Stuck projects")))))
+                          ((org-ql-block-header "Stuck projects"))))
+           ((org-agenda-tag-filter-preset '("+chainguard"))))
         ("na" "All"
          ((agenda ""
                    ((org-agenda-span 'day)
