@@ -250,13 +250,6 @@ Rest of org:
                                    (todo . "")
                                    (tags . "")
                                    (search . "g%-8:e")))
-  (defun zjn-any (@list) (eval `(or ,@ @list)))
-  (defun zjn-all (@list) (eval `(and ,@ @list)))
-
-  (defun zjn-collect-matching (pred list)
-    (apply 'append (mapcar (lambda (elem) (if (funcall pred elem) (list elem) '()))
-                           list)))
-
   (defun zjn-current-time-invalid-for-tag (tag)
     (let* ((range (mapcar 'string-to-number (split-string tag "_")))
            (curr (string-to-number (format-time-string "%H%M"))))
@@ -274,9 +267,9 @@ Rest of org:
            (time-tags (seq-filter (lambda (tag) (string-match-p "[0-9]\\{4\\}_[0-9]\\{4\\}$" tag)) tags))
            (day-tags (seq-intersection zjn-days-of-week tags)))
       (if (or (and time-tags
-                   (zjn-all (mapcar 'zjn-current-time-invalid-for-tag time-tags)))
+                   (-all? #'zjn-current-time-invalid-for-tag time-tags))
               (and day-tags
-                   (zjn-all (mapcar 'zjn-current-day-invalid-for-tag day-tags))))
+                   (-all? #'zjn-current-day-invalid-for-tag day-tags))))
           subtree-end
         nil)))
 
