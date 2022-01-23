@@ -159,6 +159,8 @@ I like to search using DDG always:
                 "research/tor.org"
                 "school.org")))
 (setq org-archive-location "archive/%s::")
+(setq org-attach-directory (org-file ".attach"))
+(setq org-attach-id-dir (org-file ".attach"))
 (setq org-default-notes-file (org-file "gtd.org"))
 #+end_src
 
@@ -419,8 +421,7 @@ From a [[https://zzamboni.org/post/beautifying-org-mode-in-emacs/][blog]]:
                     "\nAuthor(s): "
                     authors)
             (sit-for 0.1)
-            (let ((org-attach-directory "~/notes/data"))
-              (org-attach-attach pdf-link nil 'url))))))))
+            (org-attach-attach pdf-link nil 'url)))))))
   "")
 #+end_src
 ** Anki
