@@ -188,6 +188,8 @@ I like to search using DDG always:
                                      (not (descendants (todo "NEXT"))))
                                 (and (todo "BLOCKEDPROJ")
                                      (not (scheduled t)))
+                                (and (todo "WAITING")
+                                     (not (or (scheduled t) (deadline t))))
                                 (and (todo "SOMEDAY")
                                      (not (tags "SOMEDAY")))
                                 (and (todo "TODO")
