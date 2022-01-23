@@ -6,7 +6,7 @@ let
     rev = "697cc8c68ed6a606296efbbe9614c32537078756";
     ref = "release-21.11";
   };
-  hosts = [ "zjn-x1prime" "zjn-home" ];
+  hosts = [ "zjn-x1prime" "zjn-home" "zjn-work" ];
 in {
   imports = [ # needs to be absolute since we symlink this file in
     (import "${home-manager}/nixos")
