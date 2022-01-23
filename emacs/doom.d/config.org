@@ -34,6 +34,16 @@ Live dangerously (I like to put as much config as possible locally):
 #+begin_src emacs-lisp
 (setq enable-local-variables t)
 #+end_src
+
+Nice imports:
+
+#+begin_src emacs-lisp
+(require 'url)
+(require 'f)
+(require 's)
+(require 'dash)
+(require 'json)
+#+end_src
 * Utilities
 A smart person once told me: if you have to call a unit of code "util" or "lib", you haven't thought very hard about how to structure your program.
 ** IACR ePrints
@@ -75,8 +85,6 @@ Send URLs to [[https://www.instapaper.com/][Instapaper]] for offline reading.
 ** Searching
 I like to search using DDG always:
 #+begin_src emacs-lisp
-(require 's)
-
 (defun zjn--search-in-firefox-inner (default-text force-edit-text &optional prefix)
   (let* ((edit-text (or (s-blank? default-text) force-edit-text))
          (initial-position (if (s-blank? prefix) (length default-text) (length prefix)))
@@ -102,13 +110,69 @@ I like to search using DDG always:
        :desc "Search in DDG (!)" "O" #'zjn--search-in-firefox-bang))
 #+end_src
 * org
-My agenda:
+:PROPERTIES:
+:header-args: :noweb-ref org
+:END:
+#+begin_src emacs-lisp :noweb-ref nil
+(after! org
+  (require 'org-ql)
+  (require 'org-super-agenda)
+  (require 'org-attach)
+  (require 'org-capture)
+  <<org>>)
+#+end_src
+** Tagging and task mgmt
+#+begin_src emacs-lisp :tangle no
+(setq org-log-done t)
+(setq org-log-state-notes-into-drawer t)
+(setq org-todo-keywords
+      '((sequence "NEXT(n)" "BUY" "TODO(t)" "|" "DONE(d!)")
+        (sequence "HABIT(h)" "|" "HABITDONE(H)")
+        (sequence "PROJ(p)" "BLOCKEDPROJ(b)" "|" "PROJDONE(P)")
+        (sequence "WAITING(w)" "SOMEDAY(s)" "|" "CANCELLED(c)")))
+(setq org-enforce-todo-dependencies nil)
+(setq org-tag-persistent-alist '((:startgroup . nil)
+                                 ("@errand" . ?e)
+                                 ("@home" . ?h)
+                                 ("@campus" . ?c)
+                                 (:endgroup . nil)
+                                 ("internet" . ?i)
+                                 ("code" . nil)
+                                 ("gradschool" . ?g)
+                                 ("personal" . ?p)
+                                 ("katie" . ?k)))
+#+end_src
+*** Org files+general config
+#+begin_src emacs-lisp :tangle no
+(setq org-directory "~/notes/")
+(defun org-file (f)
+  (concat org-directory "/" f))
+(setq org-agenda-files
+      (mapcar #'org-file
+              '("personal.org"
+                "gtd.org"
+                "projects.org"
+                "chainguard.org"
+                "research/default.org"
+                "research/broadcast.org"
+                "research/accumulators.org"
+                "research/tor.org"
+                "school.org")))
+(setq org-archive-location "archive/%s::")
+(setq org-default-notes-file (org-file "gtd.org"))
+#+end_src
 
-#+begin_src emacs-lisp
+*** Agenda
+#+begin_src emacs-lisp :noweb-ref nil
 (after! org-super-agenda
   (require 'evil-org-agenda)
   (org-super-agenda-mode)
   (setq org-super-agenda-header-map evil-org-agenda-mode-map) ; https://github.com/alphapapa/org-super-agenda/issues/50
+  (setq org-agenda-prefix-format '((agenda . " %?-12t% s")
+                                   (timeline . "  % s")
+                                   (todo . "")
+                                   (tags . "")
+                                   (search . "g%-8:e")))
   (setq org-agenda-custom-commands
       `(("nw" "Work"
            ((agenda ""
@@ -184,101 +248,7 @@ My agenda:
                                                       (:name "Other tasks:"
                                                              :anything t)))
                            (org-ql-block-header "All tasks:"))))))))
-#+end_src
 
-Rest of org:
-
-#+begin_src emacs-lisp
-(setq org-directory "~/notes/")
-(map! :leader "a" (cmd! (org-agenda nil "nw")))
-(after! org
-  (require 'org-ql)
-  (require 'org-super-agenda)
-  (add-hook 'auto-save-hook 'org-save-all-org-buffers)
-  (require 'anki-editor)
-  (anki-editor-mode)
-  (require 'oc)
-  (setq org-cite-global-bibliography '("~/notes/lit/default.bib"))
-  (defun org-file (f)
-    (concat org-directory "/" f))
-  (setq org-agenda-files
-        (list (org-file "personal.org")
-              (org-file "gtd.org")
-              (org-file "projects.org")
-              (org-file "chainguard.org")
-              (org-file "inbox.org")  ; Beorg
-              (org-file "research/default.org")
-                                        ; (org-file "research/hnp.org")
-                                        ; (org-file "research/radio.org")
-              (org-file "research/broadcast.org")
-              (org-file "research/accumulators.org")
-              (org-file "research/tor.org")
-              (org-file "school.org")))
-                                        ; performance
-  (setq org-agenda-dim-blocked-tasks nil
-        org-agenda-inhibit-startup t
-        org-agenda-ignore-properties '(effort appt stat category))
-  (setq org-archive-location "archive/%s::")
-  (setq org-default-notes-file (org-file "gtd.org"))
-  (setq org-log-done t)
-  (setq org-log-state-notes-into-drawer t)
-  (setq org-adapt-indentation nil)
-  (setq org-ctrl-k-protect-subtree t)
-  (setq org-catch-invisible-edits 'show-and-error)
-                                        ; when modifying TODO keywords, update Beorg
-  (setq org-todo-keywords
-        '((sequence "NEXT(n)" "BUY" "TODO(t)" "|" "DONE(d!)")
-          (sequence "HABIT(h)" "|" "HABITDONE(H)")
-          (sequence "PROJ(p)" "BLOCKEDPROJ(b)" "|" "PROJDONE(P)")
-          (sequence "WAITING(w)" "SOMEDAY(s)" "|" "CANCELLED(c)")))
-  (setq org-enforce-todo-dependencies nil)
-  (setq org-tag-persistent-alist '((:startgroup . nil)
-                                   ("@errand" . ?e)
-                                   ("@home" . ?h)
-                                   ("@campus" . ?c)
-                                   (:endgroup . nil)
-                                   ("internet" . ?i)
-                                   ("code" . nil)
-                                   ("gradschool" . ?g)
-                                   ("personal" . ?p)
-                                   ("katie" . ?k)
-                                   ))
-  (setq org-agenda-skip-scheduled-if-done t)
-  (setq org-agenda-skip-deadline-if-done t)
-  (setq org-agenda-prefix-format '((agenda . " %?-12t% s")
-                                   (timeline . "  % s")
-                                   (todo . "")
-                                   (tags . "")
-                                   (search . "g%-8:e")))
-  (defun zjn-current-time-invalid-for-tag (tag)
-    (let* ((range (mapcar 'string-to-number (split-string tag "_")))
-           (curr (string-to-number (format-time-string "%H%M"))))
-      (or (< curr (car range)) (> curr (cadr range)))))
-
-  (setq zjn-days-of-week '("sun" "mon" "tue" "wed" "thu" "fri" "sat"))
-
-  (defun zjn-current-day-invalid-for-tag (tag)
-    (not (string= tag (downcase (format-time-string "%a")))))
-
-  (defun zjn-org-skip-subtree-if-bad-time ()
-    "Skip entries with invalid time tags or day of week tags."
-    (let* ((subtree-end (save-excursion (org-end-of-subtree t)))
-           (tags (org-get-tags))
-           (time-tags (seq-filter (lambda (tag) (string-match-p "[0-9]\\{4\\}_[0-9]\\{4\\}$" tag)) tags))
-           (day-tags (seq-intersection zjn-days-of-week tags)))
-      (if (or (and time-tags
-                   (-all? #'zjn-current-time-invalid-for-tag time-tags))
-              (and day-tags
-                   (-all? #'zjn-current-day-invalid-for-tag day-tags))))
-          subtree-end
-        nil)))
-
-  (setq org-startup-indented nil)
-  (setq org-startup-with-latex-preview t)
-  (setq org-stuck-projects '("-SOMEDAY/PROJ" ("NEXT" "BUY") nil ""))
-  (setq org-agenda-todo-ignore-scheduled 'past)
-  (setq org-agenda-todo-ignore-deadlines 'near)
-  (setq org-agenda-tags-todo-honor-ignore-options t)
   ; https://lists.gnu.org/archive/html/emacs-orgmode/2015-06/msg00266.html
   (defun org-agenda-delete-empty-blocks ()
     "Remove empty agenda blocks.
@@ -312,155 +282,183 @@ Rest of org:
         (when (looking-at-p block-re)
           (delete-region (point) (1+ (point-at-eol))))))
     (setq buffer-read-only t))
-  (add-hook 'org-agenda-finalize-hook #'org-agenda-delete-empty-blocks)
+  ; (add-hook 'org-agenda-finalize-hook #'org-agenda-delete-empty-blocks)
+#+end_src
+*** Capture
+#+begin_src emacs-lisp :tangle no
+(setq org-capture-templates nil)
+(push '("l" "Link to current file" entry
+        (file+headline "~/notes/gtd.org" "Inbox")
+        "** NEXT %?\n%a\n%i\n")
+      org-capture-templates)
 
-  (require 'url)
-  (require 'f)
-  (require 's)
-  (require 'bibtex-completion)
-  (defun zjn--import-iacr (id)
-    (interactive "sIACR ePrint ID? ")
-    (let* ((article (zjn--fetch-iacr-info id))
-           (download-fname (format "iacr:%s.pdf" (s-replace "/" ":" (alist-get 'id article))))
-           (download-path (f-join bibtex-completion-library-path download-fname))
-           (fixed-bibtex (s-replace "cryptoeprint" "iacr" (alist-get 'bibtex article))))
-      (message "Found %s." (alist-get 'id article))
-      (write-region fixed-bibtex nil bibtex-completion-bibliography 'append)
-      (url-copy-file (alist-get 'pdf_link article) download-path t)
-      (bibtex-completion-clear-cache)))
-  (org-link-set-parameters "cite" :display 'org-link)
+(push '("t" "Normal TODO" entry
+        (file+headline "~/notes/gtd.org" "Inbox")
+        "** NEXT %?\n")
+      org-capture-templates)
+#+end_src
+** Global org settings
+#+begin_src emacs-lisp :tangle no
+(add-hook 'auto-save-hook 'org-save-all-org-buffers)
+(setq org-adapt-indentation nil)
+(setq org-ctrl-k-protect-subtree t)
+(setq org-catch-invisible-edits 'show-and-error)
+(setq org-startup-indented nil)
+(setq org-startup-folded 'fold)
+(setq org-show-context-detail
+    (quote
+        ((agenda . ancestors)
+        (bookmark-jump . ancestors)
+        (isearch . ancestors)
+        (default . ancestors))))
+(advice-add 'org-id-new :filter-return #'upcase)
+#+END_SRC
+*** Performance
+#+begin_src emacs-lisp :tangle no
+(setq org-agenda-dim-blocked-tasks nil
+    org-agenda-inhibit-startup t
+    org-agenda-ignore-properties '(effort appt stat category))
+#+end_src
+*** Aesthetics
 
-                                        ; https://zzamboni.org/post/beautifying-org-mode-in-emacs/
-  (setq org-hide-emphasis-markers t)
+From a [[https://zzamboni.org/post/beautifying-org-mode-in-emacs/][blog]]:
+#+begin_src :tangle no
+(setq org-hide-emphasis-markers t)
+#+end_src
+*** Math
+#+begin_src emacs-lisp :tangle no
+(setq org-startup-with-latex-preview nil)
+(require 'org-fragtog)
+(add-hook 'org-mode-hook 'org-fragtog-mode)
+#+end_src
 
-
-  (map! :mode org-capture-mode :localleader "s r" #'org-capture-refile)
-  (map! :mode org-mode :n "t" #'org-todo)
-  (map! :map org-agenda-mode-map :localleader "." #'counsel-org-goto-all
-        :localleader "/" #'counsel-org-goto-all)
-  (map! :leader "s /" #'counsel-org-goto-all)
-
-  (setq org-startup-folded 'fold)
-  (setq org-show-context-detail
-        (quote
-         ((agenda . ancestors)
-          (bookmark-jump . ancestors)
-          (isearch . ancestors)
-          (default . ancestors))))
-  (advice-add 'org-id-new :filter-return #'upcase)
-
-  (require 'json)
-  (require 'org-attach)
-  (defun zjn--format-iacr-org (region)
-    (let* ((id (if (string-empty-p region)
-                   (read-string "IACR ePrint ID (ex. 2019/001)? ")
-                 region))
-           (json-string (zjn--fetch-iacr-info id))
-           (json-object-type 'hash-table)
-           (json-array-type 'list)
-           (json-key-type 'string)
-           (article (json-read-from-string json-string)))
-      (save-excursion
-        (org-back-to-heading t)
-        (end-of-line)
-                                        ; Use insert rather than the format string so we don't clobber the article
-                                        ; attachment
-        (insert (gethash "title" article)
-                "\nhttps://eprint.iacr.org/"
-                (gethash "id" article)
-                "\nAuthor(s): "
-                (mapconcat 'identity (gethash "authors" article) ", ")
-                "\n#+BEGIN_SRC bibtex\n"
-                (gethash "bibtex" article)
-                "#+END_SRC"))
-      (let ((org-attach-directory "~/notes/data"))
-        (org-attach-attach (gethash "pdf_link" article) nil 'url)))
-    "")  ; needs to return string to satisfy org-capture
-
-  (setq org-capture-templates nil)
-  (push '("i" "IACR" entry (file+headline "~/notes/research/default.org" "Paper queue")
-          "* %(zjn--format-iacr-org \"%i\")\n")
-        org-capture-templates)
-
-                                        ; arXiv capture!
-                                        ; Doesn't handle authors with non-ASCII names....
-  (defun zjn--format-arxiv-org (region)
-    (let* ((id (if (string-empty-p region)
-                   (read-string "arXiv ID (ex. 1905.11379)? ")
-                 region))
-           (api-url (format "http://export.arxiv.org/api/query?id_list=%s" id)))
-      (request
-       api-url
-       :parser (lambda () (libxml-parse-xml-region (point) (point-max)))
-       :success
-       (cl-function
-        (lambda (&key data &allow-other-keys)
-          (let* ((entry (first (xml-get-children data 'entry)))
-                 (title (replace-regexp-in-string " *\n *" " " (caddar (xml-get-children entry 'title))))
-                 (authors (mapconcat (lambda (x) (caddr (caddr x)))
-                                     (xml-get-children entry 'author) ", "))
-                 (pdf-link
-                  (concat (cdr
-                           (assoc 'href
-                                  (cadar
-                                   (cl-remove-if-not
-                                    (lambda (x)
-                                      (string= (cdr (assoc 'title (cadr x))) "pdf"))
-                                    (xml-get-children entry 'link)))))
-                          ".pdf"))
-                 (article-link
-                  (cdr (assoc 'href (cadar
-                                     (cl-remove-if-not
-                                      (lambda (x)
-                                        (string= (cdr (assoc 'rel (cadr x))) "alternate"))
-                                      (xml-get-children entry 'link)))))))
-            (save-excursion
-              (org-back-to-heading t)
-              (end-of-line)
-              (insert title
-                      "\n"
-                      article-link
-                      "\nAuthor(s): "
-                      authors)
-              (sit-for 0.1)
-              (let ((org-attach-directory "~/notes/data"))
-                (org-attach-attach pdf-link nil 'url))))))))
-    "")
-
-  (push '("l" "Link to current file" entry
-          (file+headline "~/notes/gtd.org" "Inbox")
-          "** NEXT %?\n%a\n%i\n")
-        org-capture-templates)
-
-  (push '("t" "Normal TODO" entry
-          (file+headline "~/notes/gtd.org" "Inbox")
-          "** NEXT %?\n")
-        org-capture-templates)
-
-  (setq org-preview-latex-default-process 'imagemagick)
-                                        ; (plist-put org-format-latex-options :background "Transparent")
-  (setq org-latex-pdf-process '("tectonic %f"))
-  (require 'org-fragtog)
-  (add-hook 'org-mode-hook 'org-fragtog-mode))
-
+** Reference management
+#+begin_src emacs-lisp :tangle no
+(require 'oc)
+(require 'org-ref)
+#+end_src
+*** Org-cite
+#+begin_src emacs-lisp :noweb-ref nil
+(after! oc
+    (setq org-cite-global-bibliography '("~/notes/lit/default.bib"))
+    (org-link-set-parameters "cite" :display 'org-link))
+#+end_src
+*** org-ref
+#+begin_src emacs-lisp :noweb-ref nil
 (after! org-ref
   (setq org-ref-default-bibliography '("~/Sync/notes/lit/default.bib")
         org-ref-pdf-directory "~/Sync/notes/lit/"))
-(after! org-roam
-  (setq org-roam-directory "~/Sync/notes/roam"
-        org-roam-completion-everywhere nil
-        +org-roam-open-buffer-on-find-file nil))
-;
-; TODO: replace with org-roam-capture-templates
-;  (setq orb-templates
-;        '(("r" "ref" plain #'org-roam-capture--get-point "" :file-name "bib/${citekey}" :head "#+TITLE: ${title}\n#+ROAM_KEY: ${ref}\n" :unnarrowed t :immediate-finish t)))
-;   (org-roam-mode)
-;  (map! :mode org-mode :leader "n r n" #'orb-note-actions))
+#+end_src
+*** Bibtex completion
+#+begin_src emacs-lisp :tangle no
+(require 'bibtex-completion)
+#+end_src
+*** IACR
+#+begin_src emacs-lisp :tangle no
+(defun zjn--import-iacr (id)
+  (interactive "sIACR ePrint ID? ")
+  (let* ((article (zjn--fetch-iacr-info id))
+         (download-fname (format "iacr:%s.pdf" (s-replace "/" ":" (alist-get 'id article))))
+         (download-path (f-join bibtex-completion-library-path download-fname))
+         (fixed-bibtex (s-replace "cryptoeprint" "iacr" (alist-get 'bibtex article))))
+    (message "Found %s." (alist-get 'id article))
+    (write-region fixed-bibtex nil bibtex-completion-bibliography 'append)
+    (url-copy-file (alist-get 'pdf_link article) download-path t)
+    (bibtex-completion-clear-cache)))
+
+(defun zjn--format-iacr-org (region)
+  (let* ((id (if (string-empty-p region)
+                 (read-string "IACR ePrint ID (ex. 2019/001)? ")
+               region))
+         (json-string (zjn--fetch-iacr-info id))
+         (json-object-type 'hash-table)
+         (json-array-type 'list)
+         (json-key-type 'string)
+         (article (json-read-from-string json-string)))
+    (save-excursion
+      (org-back-to-heading t)
+      (end-of-line)
+                                      ; Use insert rather than the format string so we don't clobber the article
+                                      ; attachment
+      (insert (gethash "title" article)
+              "\nhttps://eprint.iacr.org/"
+              (gethash "id" article)
+              "\nAuthor(s): "
+              (mapconcat 'identity (gethash "authors" article) ", ")
+              "\n#+BEGIN_SRC bibtex\n"
+              (gethash "bibtex" article)
+              "#+END_SRC"))
+    (org-attach-attach (gethash "pdf_link" article) nil 'url))
+    "")  ; needs to return string to satisfy org-capture
+
+(push '("i" "IACR" entry (file+headline "~/notes/research/default.org" "Paper queue")
+        "* %(zjn--format-iacr-org \"%i\")\n")
+      org-capture-templates)
+#+end_src
+*** arXiv
+#+begin_src emacs-lisp :tangle no
+; Doesn't handle authors with non-ASCII names....
+(defun zjn--format-arxiv-org (region)
+  (let* ((id (if (string-empty-p region)
+                 (read-string "arXiv ID (ex. 1905.11379)? ")
+               region))
+         (api-url (format "http://export.arxiv.org/api/query?id_list=%s" id)))
+    (request
+     api-url
+     :parser (lambda () (libxml-parse-xml-region (point) (point-max)))
+     :success
+     (cl-function
+      (lambda (&key data &allow-other-keys)
+        (let* ((entry (first (xml-get-children data 'entry)))
+               (title (replace-regexp-in-string " *\n *" " " (caddar (xml-get-children entry 'title))))
+               (authors (mapconcat (lambda (x) (caddr (caddr x)))
+                                   (xml-get-children entry 'author) ", "))
+               (pdf-link
+                (concat (cdr
+                         (assoc 'href
+                                (cadar
+                                 (cl-remove-if-not
+                                  (lambda (x)
+                                    (string= (cdr (assoc 'title (cadr x))) "pdf"))
+                                  (xml-get-children entry 'link)))))
+                        ".pdf"))
+               (article-link
+                (cdr (assoc 'href (cadar
+                                   (cl-remove-if-not
+                                    (lambda (x)
+                                      (string= (cdr (assoc 'rel (cadr x))) "alternate"))
+                                    (xml-get-children entry 'link)))))))
+          (save-excursion
+            (org-back-to-heading t)
+            (end-of-line)
+            (insert title
+                    "\n"
+                    article-link
+                    "\nAuthor(s): "
+                    authors)
+            (sit-for 0.1)
+            (let ((org-attach-directory "~/notes/data"))
+              (org-attach-attach pdf-link nil 'url))))))))
+  "")
+#+end_src
+** Anki
+#+begin_src emacs-lisp :tangle no
+(require 'anki-editor)
+(anki-editor-mode)
+#+end_src
+** Keybindings
+Need to be global, not ~(after! org)~.
+#+begin_src emacs-lisp :noweb-ref nil
+(map! :leader "a" (cmd! (org-agenda nil "nw")))
+(map! :mode org-capture-mode :localleader "s r" #'org-capture-refile)
+(map! :mode org-mode :n "t" #'org-todo)
+(map! :map org-agenda-mode-map :localleader "." #'counsel-org-goto-all
+    :localleader "/" #'counsel-org-goto-all)
+(map! :leader "s /" #'counsel-org-goto-all)
 #+end_src
 ** org-babel
 Easier NixOS and org-babel integration:
-#+begin_src emacs-lisp
-(require 's)
+#+begin_src emacs-lisp :noweb-ref nil
 (defun zjn/with-pkgs (interpreter &rest pkgs)
   (s-concat
     "#!/usr/bin/env nix-shell\n"
@@ -479,7 +477,25 @@ hello
 #+RESULTS:
 : Hello, world!
 #+end_example
-
+** Export
+#+begin_src
+(setq org-preview-latex-default-process 'imagemagick)
+                                      ; (plist-put org-format-latex-options :background "Transparent")
+(setq org-latex-pdf-process '("tectonic %f"))
+#+end_src
+** org-roam
+#+begin_src emacs-lisp :noweb-ref nil
+(after! org-roam
+  (setq org-roam-directory "~/Sync/notes/roam"
+        org-roam-completion-everywhere nil
+        +org-roam-open-buffer-on-find-file nil))
+;
+; TODO: replace with org-roam-capture-templates
+;  (setq orb-templates
+;        '(("r" "ref" plain #'org-roam-capture--get-point "" :file-name "bib/${citekey}" :head "#+TITLE: ${title}\n#+ROAM_KEY: ${ref}\n" :unnarrowed t :immediate-finish t)))
+;   (org-roam-mode)
+;  (map! :mode org-mode :leader "n r n" #'orb-note-actions))
+#+end_src
 * Bibliography
 Eventually will sort through this.
 #+begin_src emacs-lisp
@@ -800,8 +816,6 @@ Quit, dang it!
 ** Inbox: reading and managing
 Common views (combined inbox, unread, all recent):
 #+begin_src emacs-lisp :tangle no
-(require 's)
-(require 'dash)
 (defun zjn--get-mu4e-vars (var)
   "Get mu4e vars /in current mu4e context/"
   (mapcar (lambda (context)
@@ -970,7 +984,6 @@ Don't send prematurely by accident (this allows a neat trick of leaving the subj
 * Theme
 Use base16 theme; this is nice because it's easy to match with the rest of my desktop.
 #+begin_src emacs-lisp
-(require 'f)
 (add-to-list 'custom-theme-load-path "~/.doom-themes")
 (setq doom-theme nil)
 (load-theme 'base16-zjn t)
