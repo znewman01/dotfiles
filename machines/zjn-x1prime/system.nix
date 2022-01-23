@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 
 {
-  imports = [ ./hardware-configuration.nix ];
+  imports = [ ../../common.nix ./hardware-configuration.nix ];
 
   networking.hostName = "zjn-x1prime";
   networking.hostId = "e2102671";

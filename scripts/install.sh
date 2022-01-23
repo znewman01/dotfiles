@@ -1,29 +1,30 @@
 #!/bin/sh
 set -e
 
-if [ ! gpg --list-keys | grep "($HOSTNAME)"; then
-    tmpdir=$(mktemp -d)
-    chmod 0700 $HOME/.gnupg
-    cat > $tmpdir/keydetails <<EOF
-        %echo Generating a basic OpenPGP key
-        Key-Type: RSA
-        Key-Length: 3072
-        Subkey-Type: RSA
-        Subkey-Length: 2048
-        Name-Real: Zachary Newman
-        Name-Comment: $HOSTNAME
-        Name-Email: z@znewman.net
-        Expire-Date: 0
-        %no-ask-passphrase
-        %no-protection
-        %pubring $HOME/.gnupg/pubring.kbx
-        %secring $HOME/.gnupg/trustdb.gpg
-        %commit
-        %echo done
-    EOF
-    gpg2 --verbose --batch --gen-key keydetails
-    echo -e "5\ny\n" |  gpg2 --command-fd 0 --expert --edit-key z@znewman.net trust;
-    # TODO: gpg --edit-key $KEYID # then type "passwd<RET>"
+# Do not delete before copying to README.md
+if ! gpg --list-keys | grep "($HOSTNAME)"; then
+	tmpdir=$(mktemp -d)
+	chmod 0700 $HOME/.gnupg
+	cat > $tmpdir/keydetails <<-EOF
+	%echo Generating a basic OpenPGP key
+	Key-Type: RSA
+	Key-Length: 3072
+	Subkey-Type: RSA
+	Subkey-Length: 2048
+	Name-Real: Zachary Newman
+	Name-Comment: $HOSTNAME
+	Name-Email: z@znewman.net
+	Expire-Date: 0
+	%no-ask-passphrase
+	%no-protection
+	%pubring $HOME/.gnupg/pubring.kbx
+	%secring $HOME/.gnupg/trustdb.gpg
+	%commit
+	%echo done
+	EOF
+	gpg2 --verbose --batch --gen-key $tmpdir/keydetails
+	echo -e "5\ny\n" |  gpg2 --command-fd 0 --expert --edit-key z@znewman.net trust;
+	# TODO: gpg --edit-key $KEYID # then type "passwd<RET>"
 fi
 
 if [ ! -f "$HOME/.ssh/id_ed25519" ]; then

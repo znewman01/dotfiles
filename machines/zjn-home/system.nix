@@ -1,7 +1,12 @@
 { config, pkgs, lib, ... }:
 
 {
-  imports = [ ./hardware-configuration.nix ./../../desktop/work.nix ./../../desktop/rotate-webcam.nix ];
+  imports = [
+    ../../common.nix
+    ./hardware-configuration.nix
+    ./../../desktop/work.nix
+    ./../../desktop/rotate-webcam.nix
+  ];
 
   boot.kernelPackages = pkgs.linuxPackages_5_10;
 
