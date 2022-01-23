@@ -36,6 +36,7 @@ in {
   };
 
   # concatStringsSep trick is a half-hearted attempt to prevent email harvesting.
+  # remember to mu init --my-address=zjn@chainguard.dev --my-address=z@znewman.net --my-address=zjn@csail.mit.edu --my-address=znewman01@gmail.com --my-address=zjn@mit.edu --my-address='/.*@z.znewman.net/'
   accounts.email = {
     maildirBasePath = "${config.home.homeDirectory}/Maildir";
 
