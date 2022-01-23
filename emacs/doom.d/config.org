@@ -173,81 +173,61 @@ I like to search using DDG always:
                                    (todo . "")
                                    (tags . "")
                                    (search . "g%-8:e")))
+
   (setq org-agenda-custom-commands
-      `(("nw" "Work"
-           ((agenda ""
-                   ((org-agenda-span 'day)
-                    (org-agenda-start-day "+0d")
-                    (org-super-agenda-groups '((:name "Agenda:"
-                                                      :time-grid t)
-                                               (:discard (:anything t))))))
-            (org-ql-block '(and
-                            (tags "chainguard")
-                            (or (deadline auto)
-                                (scheduled :to today :with-time nil)
-                                (and (todo "NEXT")
-                                     (not (tags "SOMEDAY"))
-                                     (not (scheduled :to today)))))
-                          ((org-super-agenda-groups '((:discard (:time-grid t))
-                                                      (:name "Overdue:"
-                                                             :deadline past)
-                                                      (:name "Upcoming:"
-                                                             :deadline t)
-                                                      (:name "Scheduled:"
-                                                             :scheduled t)))
-                           (org-ql-block-header "Chainguard tasks:")))
-            (org-ql-block '(and
+    (let ((agenda-common
+           '(agenda ""
+                    ((org-agenda-span 'day)
+                     (org-agenda-start-day "+0d")
+                     (org-super-agenda-groups '((:discard (:not (:time-grid t)))
+                                                (:name "Agenda:" :time-grid t))))))
+          (stuck-common
+           '(org-ql-block '(and
                             (not (tags "SOMEDAY"))
                             (or (and (todo "PROJ")
                                      (not (descendants (todo "NEXT"))))
                                 (and (todo "BLOCKEDPROJ")
                                      (not (scheduled t)))
+                                (and (todo "SOMEDAY")
+                                     (not (tags "SOMEDAY")))
                                 (and (todo "TODO")
                                      (not (ancestors (todo "PROJ" "BLOCKEDPROJ"))))))
-                          ((org-ql-block-header "Stuck projects"))))
-           ((org-agenda-tag-filter-preset '("+chainguard"))))
+                          ((org-ql-block-header "Stuck projects:"))))
+          (tasks-common
+           (lambda (desc)
+             `(org-ql-block '(and
+                             (or (and (todo "NEXT") (not (tags "SOMEDAY")))
+                                 (deadline auto)
+                                 (scheduled :to today))
+                             (not (done))
+                             (not (scheduled :on today :with-time t)))
+                              ((org-super-agenda-groups '((:discard (:time-grid t))
+                                                          (:name "Overdue:"
+                                                                 :deadline past)
+                                                          (:name "Upcoming:"
+                                                                 :deadline future)
+                                                          (:name "Habits"
+                                                                 :todo "HABIT")
+                                                          (:name "Scheduled:"
+                                                                 :scheduled past
+                                                                 :scheduled today)
+                                                          (:name "Work:"
+                                                                 :tag "chainguard")
+                                                          (:name "Errands:" :order 1
+                                                                 :tag "@errand")
+                                                          (:discard (:tag "yak"))
+                                                          (:name "Other tasks:"
+                                                                 :anything t)))
+                               (org-ql-block-header ,(concat desc " tasks:")))))))
+      `(("nw" "Work"
+         (,agenda-common
+          ,stuck-common
+          ,(funcall tasks-common "Chainguard"))
+         ((org-agenda-tag-filter-preset '("+chainguard"))))
         ("na" "All"
-         ((agenda ""
-                   ((org-agenda-span 'day)
-                    (org-agenda-start-day "+0d")
-                    (org-super-agenda-groups '((:name "Agenda:"
-                                                      :time-grid t)
-                                               (:discard (:anything t))))))
-         (org-ql-block '(and
-                         (not (tags "SOMEDAY"))
-                         (or (and (todo "PROJ")
-                                  (not (descendants (todo "NEXT"))))
-                             (and (todo "BLOCKEDPROJ")
-                                  (not (scheduled t)))
-                             (and (todo "SOMEDAY")
-                                  (not (tags "SOMEDAY")))
-                             (and (todo "TODO")
-                                     (not (ancestors (todo "PROJ" "BLOCKEDPROJ"))))))
-                         ((org-ql-block-header "Stuck projects:")))
-         (org-ql-block '(and
-                         (or (and (todo "NEXT") (not (tags "SOMEDAY")))
-                             (deadline auto)
-                             (scheduled :to today))
-                         (not (done))
-                         (not (scheduled :on today :with-time t)))
-                          ((org-super-agenda-groups '((:discard (:time-grid t))
-                                                      (:name "Overdue:"
-                                                             :deadline past)
-                                                      (:name "Upcoming:"
-                                                             :deadline future)
-                                                      (:name "Habits"
-                                                             :todo "HABIT")
-                                                      (:name "Scheduled:"
-                                                             :scheduled past
-                                                             :scheduled today)
-                                                      (:name "Work:"
-                                                             :tag "chainguard")
-                                                      (:name "Errands:" :order 1
-                                                             :tag "@errand")
-                                                      (:discard (:tag "yak"))
-                                                      (:name "Other tasks:"
-                                                             :anything t)))
-                           (org-ql-block-header "All tasks:"))))))))
+         (,agenda-common
+          ,stuck-common
+          ,(funcall tasks-common "All"))))))
 
   ; https://lists.gnu.org/archive/html/emacs-orgmode/2015-06/msg00266.html
   (defun org-agenda-delete-empty-blocks ()
@@ -282,7 +262,7 @@ I like to search using DDG always:
         (when (looking-at-p block-re)
           (delete-region (point) (1+ (point-at-eol))))))
     (setq buffer-read-only t))
-  ; (add-hook 'org-agenda-finalize-hook #'org-agenda-delete-empty-blocks)
+  (add-hook 'org-agenda-finalize-hook #'org-agenda-delete-empty-blocks))
 #+end_src
 *** Capture
 #+begin_src emacs-lisp :tangle no
