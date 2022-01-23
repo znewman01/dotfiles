@@ -55,6 +55,7 @@ in {
   services.openssh = {
     enable = true;
     forwardX11 = true;
+    passwordAuthentication = false;
   };
   # TODO: move to home.nix when rycee/home-manager#1087 resolved
   # https://github.com/rycee/home-manager/issues/1087
@@ -142,7 +143,7 @@ in {
     before = [ "znapzend.service" ];
     path = [ "/run/current-system/sw/" ];
     script = ''
-      zfs allow -g zfs create,destroy,mount,receive,userprop tank
+      zfs allow -g zfs create,destroy,mount,receive,userprop tank/backups
     '';
     serviceConfig = { Type = "oneshot"; };
   };

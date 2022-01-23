@@ -31,6 +31,7 @@ in {
       zfs create -p -o mountpoint=none tank/safe
       zfs create -p -o mountpoint=legacy tank/safe/persist
       zfs create -p -o mountpoint=none tank/local
+      zfs create -p -o mountpoint=none tank/backups
       zfs create -p -o mountpoint=legacy tank/local/root
       zfs create -p -o mountpoint=legacy tank/local/cache
       zfs create -p -o mountpoint=legacy tank/local/nix
