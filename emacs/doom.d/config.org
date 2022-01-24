@@ -181,6 +181,9 @@ I like to search using DDG always:
            '(agenda ""
                     ((org-agenda-span 'day)
                      (org-agenda-start-day "+0d")
+                     (org-agenda-skip-timestamp-if-done t)
+                     (org-agenda-skip-scheduled-if-done t)
+                     (org-agenda-skip-deadline-if-done t)
                      (org-super-agenda-groups '((:discard (:not (:time-grid t)))
                                                 (:name "Agenda:" :time-grid t))))))
           (stuck-common
