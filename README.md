@@ -71,6 +71,13 @@ until things work. Such is life.
      ```
   5. once `pass show firefox` works log in to Firefox
   6. email (if applicable)
-
+     - `mkdir ~/Maildir/{gmail,csail,mit,fastmail,chainguard} && mbsync -a`
+     - `mu init --my-address=... --my-address=...`
+  7. GitHub SSH keys, pull this repo
+  8. update yourself
+     - reenable `code.nix`
+     - make sure you have a `hardware-configuration.nix`
+       - `nixos-generate-config --show-hardware-config`
+       - compare with existing
 
 
