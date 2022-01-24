@@ -3,7 +3,7 @@
 {
   imports = [
     ../../common.nix
-    # ./hardware-configuration.nix
+    ./hardware-configuration.nix
     ../../desktop/work.nix
   ];
 
