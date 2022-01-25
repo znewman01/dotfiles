@@ -178,9 +178,9 @@ in
         # TODO: should probably make sure remotes etc. are correct
       in ''
         if [ ! -d "${dirname}" ]; then
-          $DRY_RUN_CMD ${pkgs.git}/bin/git clone ${repo.url} "${dirname}"
+          ${pkgs.git}/bin/git clone ${repo.url} "${dirname}"
           if [ "${manageExcludes}" -eq 1 ]; then
-            $DRY_RUN_CMD rm "${dirname}/.git/info/exclude"
+            rm "${dirname}/.git/info/exclude"
           fi
         fi
       ''
@@ -194,7 +194,7 @@ in
           "${dirname}/shell.nix".source = repo.shell;
           "${dirname}/.envrc" = {
             text = "use_nix";
-            onChange = "$DRY_RUN_CMD ${pkgs.direnv}/bin/direnv allow ${dirname}";
+            onChange = "${pkgs.direnv}/bin/direnv allow ${dirname}";
           };
         };
         ourFiles = concatMapStringsSep "\n"
