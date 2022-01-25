@@ -12,69 +12,60 @@ let
       # All characters that are considered safe. Note "-" is not
       # included to avoid "-" followed by digit being interpreted as a
       # version.
-      safeChars =
-        [ "+" "." "_" "?" "=" ]
-        ++ lowerChars
-        ++ upperChars
+      safeChars = [ "+" "." "_" "?" "=" ] ++ lowerChars ++ upperChars
         ++ stringToCharacters "0123456789";
 
       empties = l: genList (x: "") (length l);
 
-      unsafeInName = stringToCharacters (
-        replaceStrings safeChars (empties safeChars) path
-      );
+      unsafeInName =
+        stringToCharacters (replaceStrings safeChars (empties safeChars) path);
 
       safeName = replaceStrings unsafeInName (empties unsafeInName) path;
-    in
-      "hm_" + safeName;
+    in "hm_" + safeName;
 
   # TODO: use home-manager/modules/lib/file-type.nix directly
-  fileType = types.submodule (
-    { name, config, ... }: {
-      options = {
-        target = mkOption {
-          type = types.str;
-          description = "Path to target file relative to repo root.";
-        };
-
-        text = mkOption {
-          type = types.lines;
-          description = "Text of the file.";
-        };
-
-        executable = mkOption {
-          type = types.nullOr types.bool;
-          default = null;
-          description = ''
-            Set the execute bit. If <literal>null</literal>, defaults to the mode
-            of the <varname>source</varname> file or to <literal>false</literal>
-            for files created through the <varname>text</varname> option.
-          '';
-        };
-
-        source = mkOption {
-          type = types.path;
-          description = ''
-            Path of the source file. The file name must not start
-            with a period since Nix will not allow such names in
-            the Nix store.
-            </para><para>
-            This may refer to a directory.
-          '';
-        };
+  fileType = types.submodule ({ name, config, ... }: {
+    options = {
+      target = mkOption {
+        type = types.str;
+        description = "Path to target file relative to repo root.";
       };
 
-      config = {
-        target = mkDefault name;
-        source = mkIf (config.text != null) (
-          mkDefault (pkgs.writeTextFile {
-            inherit (config) executable text;
-            name = storeFileName name;
-          })
-        );
+      text = mkOption {
+        type = types.lines;
+        description = "Text of the file.";
       };
-    }
-  );
+
+      executable = mkOption {
+        type = types.nullOr types.bool;
+        default = null;
+        description = ''
+          Set the execute bit. If <literal>null</literal>, defaults to the mode
+          of the <varname>source</varname> file or to <literal>false</literal>
+          for files created through the <varname>text</varname> option.
+        '';
+      };
+
+      source = mkOption {
+        type = types.path;
+        description = ''
+          Path of the source file. The file name must not start
+          with a period since Nix will not allow such names in
+          the Nix store.
+          </para><para>
+          This may refer to a directory.
+        '';
+      };
+    };
+
+    config = {
+      target = mkDefault name;
+      source = mkIf (config.text != null) (mkDefault (pkgs.writeTextFile {
+        inherit (config) executable text;
+        name = storeFileName name;
+      }));
+    };
+  });
 
   excludeSubmodule = types.submodule {
     options = {
@@ -129,7 +120,7 @@ let
 
       extraFiles = mkOption {
         type = types.loaOf fileType;
-        default = {};
+        default = { };
         description = "TODO";
       };
 
@@ -137,9 +128,7 @@ let
     };
   };
 
-in
-
-{
+in {
 
   options = {
     code = {
@@ -154,14 +143,10 @@ in
         '';
       };
 
-
       repos = mkOption {
         type = with types; attrsOf repoSubmodule;
-        example = {
-          "tensorflow" = {
-          };
-        };
-        default = {};
+        example = { "tensorflow" = { }; };
+        default = { };
         description = "Repos to clone.";
       };
     };
@@ -171,8 +156,8 @@ in
 
     getDirname = name: repo: "${cfg.baseDir}/${name}";
 
-    cloneRepoSh = name: repo: (
-      let
+    cloneRepoSh = name: repo:
+      (let
         dirname = getDirname name repo;
         manageExcludes = if repo.exclude.enable then "1" else "0";
         # TODO: should probably make sure remotes etc. are correct
@@ -183,11 +168,10 @@ in
             rm "${dirname}/.git/info/exclude"
           fi
         fi
-      ''
-    );
+      '');
 
-    additionalFiles = name: repo: (
-      let
+    additionalFiles = name: repo:
+      (let
         dirname = getDirname name repo;
         shell = repo.shell;
         shellNixFiles = optionalAttrs (repo.shell != null) {
@@ -197,34 +181,27 @@ in
             onChange = "${pkgs.direnv}/bin/direnv allow ${dirname}";
           };
         };
-        ourFiles = concatMapStringsSep "\n"
-          (removePrefix "${dirname}/")
-          ((attrNames repo.extraFiles) ++ (attrNames shellNixFiles) ++ [".direnv"]);
+        ourFiles = concatMapStringsSep "\n" (removePrefix "${dirname}/")
+          ((attrNames repo.extraFiles) ++ (attrNames shellNixFiles)
+            ++ [ ".direnv" ]);
         excludeFiles = optionalAttrs (repo.exclude.enable) {
-          "${dirname}/.git/info/exclude".text = concatStringsSep "\n\n" [
-            ourFiles
-            repo.exclude.text
-          ];
+          "${dirname}/.git/info/exclude".text =
+            concatStringsSep "\n\n" [ ourFiles repo.exclude.text ];
         };
         moveToRepoDir = (name: value:
-          nameValuePair
-            "${dirname}/${name}"
-            (value // { "target" = "${dirname}/${name}"; })
-        );
+          nameValuePair "${dirname}/${name}"
+          (value // { "target" = "${dirname}/${name}"; }));
         extraFiles = mapAttrs' moveToRepoDir repo.extraFiles;
-      in mkMerge [ shellNixFiles excludeFiles extraFiles ]
-    );
+      in mkMerge [ shellNixFiles excludeFiles extraFiles ]);
 
-  in
+  in mkIf (cfg.baseDir != null) {
+    home.activation.cloneRepos =
+      dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] ''
+        mkdir -p ${cfg.baseDir}
+        ${concatStringsSep "\n" (mapAttrsToList cloneRepoSh cfg.repos)}
+      '';
 
-    mkIf (cfg.baseDir != null) {
-      home.activation.cloneRepos =
-        dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] ''
-          mkdir -p ${cfg.baseDir}
-          ${concatStringsSep "\n" (mapAttrsToList cloneRepoSh cfg.repos)}
-        '';
-
-      home.file = mkMerge (mapAttrsToList additionalFiles cfg.repos);
-    };
+    home.file = mkMerge (mapAttrsToList additionalFiles cfg.repos);
+  };
 
 }
