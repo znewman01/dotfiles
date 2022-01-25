@@ -429,8 +429,8 @@ From a [[https://zzamboni.org/post/beautifying-org-mode-in-emacs/][blog]]:
 #+end_src
 ** Anki
 #+begin_src emacs-lisp :tangle no
-(require 'anki-editor)
-(anki-editor-mode)
+(require 'org-anki)
+(setq org-anki-default-deck "Default")
 #+end_src
 ** Keybindings
 Need to be global, not ~(after! org)~.

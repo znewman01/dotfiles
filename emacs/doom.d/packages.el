@@ -84,4 +84,4 @@
 ; https://news.ycombinator.com/item?id=26359043
 (package! sql-indent)
 
-(package! anki-editor)
+(package! org-anki)
