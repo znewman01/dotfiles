@@ -723,6 +723,7 @@ Quit, dang it!
 #+end_src
 ** Accounts
 #+begin_src emacs-lisp :tangle no
+(setq auth-source-save-behavior nil)
 (setq mu4e-context-policy 'pick-first)
 (defmacro zjn--make-match (folder)
   `(lambda (msg)
@@ -779,6 +780,7 @@ Quit, dang it!
                   (mu4e-drafts-folder . "/gmail/[Gmail]/Drafts")
                   (mu4e-refile-folder . "/gmail/[Gmail]/AllMail")
                   (user-mail-address . "znewman01@gmail.com")
+                  (smtpmail-smtp-user "znewman01@gmail.com")
                   (user-full-name . "Zachary Newman")
                   (smtpmail-local-domain . "gmail.com")
                   (smtpmail-smtp-server . "smtp.gmail.com")
@@ -794,6 +796,7 @@ Quit, dang it!
                   (user-mail-address . "zjn@chainguard.dev")
                   (user-full-name . "Zachary Newman")
                   (smtpmail-local-domain . "gmail.com")
+                  (smtpmail-smtp-user "zjn@chainguard.dev")
                   (smtpmail-smtp-server . "smtp.gmail.com")
                   (smtpmail-stream-type . starttls)
                   (smtpmail-smtp-service . 587)))))
@@ -867,6 +870,10 @@ Don't send prematurely by accident (this allows a neat trick of leaving the subj
       (yes-or-no-p "Really send without Subject? ")
       (keyboard-quit)))
 (add-hook 'message-send-hook #'zjn--confirm-empty-subject)
+#+end_src
+And let me pick my context every time:
+#+begin_src emacs-lisp :tangle no
+(setq mu4e-compose-context-policy 'ask)
 #+end_src
 *** Sending
 #+begin_src emacs-lisp :tangle no
