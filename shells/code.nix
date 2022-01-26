@@ -40,5 +40,10 @@
         '';
       };
     };
+    "fulcio" = { url = "git@github.com:sigstore/fulcio.git"; };
+    "rekor" = { url = "git@github.com:sigstore/rekor.git"; };
+    "sigstore" = { url = "git@github.com:sigstore/sigstore.git"; };
+    "cosign" = { url = "git@github.com:sigstore/cosign.git"; };
+    "go-tuf" = { url = "git@github.com:theupdateframework/go-tuf.git"; };
   } // (import ./work.nix);
 }
