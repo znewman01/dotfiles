@@ -32,13 +32,6 @@ in {
     keybase
     tex-env
     imagemagick
-    go
-    gopls
-    go-symbols
-    gopkgs
-    go-outline
-    gotests
-    goimports
   ];
   home.keyboard.options = [ "caps:swapescape" "compose:ralt" ];
 
