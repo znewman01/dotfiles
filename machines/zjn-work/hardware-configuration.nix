@@ -38,16 +38,6 @@
       fsType = "vfat";
     };
 
-  fileSystems."/tank" =
-    { device = "tank";
-      fsType = "zfs";
-    };
-
-  fileSystems."/tank/local/lastroot" =
-    { device = "tank/local/lastroot";
-      fsType = "zfs";
-    };
-
   swapDevices = [ ];
 
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
