@@ -7,7 +7,6 @@ in {
   imports = [ ./xmonad.nix ./fonts.nix ./alacritty.nix ];
 
   home.packages = with pkgs; [
-    anki
     i3lock
     pavucontrol
     xautolock
