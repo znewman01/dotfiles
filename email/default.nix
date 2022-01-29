@@ -28,7 +28,7 @@ in {
       if [ $(date '+%H%M') -lt 1000 ]; then
         echo "uh oh! too early in the day :'("
         curl -s -X POST \
-          --data "''${BEE_AUTH}&value=''${LI_GAMES}" \
+          --data "''${BEE_AUTH}&value=1" \
           "''${BEE}/users/znewman01/goals/''${GOAL}/datapoints.json"
       fi
       mbsync $@
