@@ -144,7 +144,7 @@ I like to search using DDG always:
 #+end_src
 *** Org files+general config
 #+begin_src emacs-lisp :tangle no
-(setq org-directory "~/notes/")
+(setq org-directory "~/notes")
 (defun org-file (f)
   (concat org-directory "/" f))
 (setq org-agenda-files
@@ -162,6 +162,7 @@ I like to search using DDG always:
 (setq org-attach-directory (org-file ".attach"))
 (setq org-attach-id-dir (org-file ".attach"))
 (setq org-default-notes-file (org-file "gtd.org"))
+(setq org-id-locations-file (org-file ".org-id-locations"))
 #+end_src
 
 *** Agenda
