@@ -21,10 +21,7 @@
 
   zjn-cloud = { config, pkgs, lib, ... }: {
     imports = [ ../machines/zjn-cloud/system.nix ];
-    deployment = {
-      targetUser = "root";
-      targetHost = "34.83.62.121";
-    };
+    deployment = { targetUser = "root"; };
   };
 
 }
