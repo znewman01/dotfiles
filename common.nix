@@ -21,7 +21,14 @@
 
   i18n.defaultLocale = "en_US.UTF-8";
 
-  environment.systemPackages = with pkgs; [ git vim wget manpages tailscale ];
+  environment.systemPackages = with pkgs; [
+    git
+    vim
+    wget
+    manpages
+    tailscale
+    zfs
+  ];
 
   documentation.dev.enable = true;
 
@@ -32,4 +39,8 @@
   users.users.root.openssh.authorizedKeys.keyFiles = (import ./net/keys.nix);
 
   virtualisation.docker.enable = true;
+
+  services.zfs.autoSnapshot.enable = true;
+  services.zfs.autoScrub.enable = true;
+  boot.zfs.enableUnstable = true;
 }

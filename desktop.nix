@@ -6,7 +6,7 @@ let
     rev = "697cc8c68ed6a606296efbbe9614c32537078756";
     ref = "release-21.11";
   };
-  hosts = [ "zjn-x1prime" "zjn-home" "zjn-work" ];
+  hosts = [ "zjn@zjn-x1prime" "zjn@zjn-home" "zjn@zjn-work" "zjn-cloud" ];
 in {
   imports = [
     (import "${home-manager}/nixos")
@@ -81,14 +81,15 @@ in {
     enable = true;
     autoCreation = true;
     pure = true;
+    features = { recvu = true; };
     zetup = {
       "tank/safe" = {
         plan = "1h=>10min,1d=>1h,1m=>1d,1y=>1m";
         recursive = true;
-        destinations = builtins.listToAttrs (builtins.map (x: {
-          name = "${x}";
+        destinations = builtins.listToAttrs (builtins.map (host: {
+          name = pkgs.lib.lists.last (builtins.split "@" host);
           value = {
-            host = "zjn@${x}";
+            host = host;
             dataset = "tank/backups/${config.networking.hostName}";
           };
         }) hosts);

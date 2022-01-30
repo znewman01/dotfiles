@@ -18,7 +18,6 @@ in {
     zfs set mountpoint=/tank/local/lastroot tank/local/lastroot
     zfs create -p -o mountpoint=legacy tank/local/root
   '';
-  services.zfs.autoSnapshot.enable = true;
   services.openssh = {
     hostKeys = [{
       path = "/persist/ssh/ssh_host_ed25519_key";

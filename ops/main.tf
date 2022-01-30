@@ -9,6 +9,14 @@ provider "google" {
   region  = "us-west1"
 }
 
+resource "google_compute_region_disk" "backups" {
+  name          = "zjn-cloud-backups"
+  type          = "pd-ssd"
+  size          = 30
+  replica_zones = ["us-west1-a", "us-west1-c"]
+}
+
+
 resource "google_compute_instance" "default" {
   name         = "zjn-cloud"
   machine_type = "e2-micro"
@@ -34,6 +42,14 @@ resource "google_compute_instance" "default" {
       curl https://raw.githubusercontent.com/elitak/nixos-infect/36e19e3b306abf70df6f4a6580b226b6a11a85f9/nixos-infect | NIX_CHANNEL=nixos-21.11 bash -x
     EOT
   }
+
+  lifecycle { ignore_changes = [attached_disk] }
+}
+
+resource "google_compute_attached_disk" "backups" {
+  disk        = google_compute_region_disk.backups.id
+  instance    = google_compute_instance.default.id
+  device_name = "backups"
 }
 
 output "ip" { value = google_compute_instance.default.network_interface[0].access_config[0].nat_ip }
