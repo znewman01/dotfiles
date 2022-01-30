@@ -6,12 +6,7 @@
 
   boot.cleanTmpDir = true;
 
-  networking.firewall.allowedTCPPorts = [
-    22000 # syncthing
-  ];
   networking.firewall.allowedUDPPorts = [
-    22000 # syncthing
-    21027 # syncthing
     41641 # tailscale
   ];
   services.tailscale.enable = true;

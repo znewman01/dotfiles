@@ -1,7 +1,11 @@
 { config, pkgs, lib, ... }:
 
 {
-  imports = [ ../../common.nix ./hardware-configuration.nix ];
+  imports = [
+    ../../common.nix
+    ./hardware-configuration.nix
+    ../../services/syncthing.nix
+  ];
 
   networking.hostName = "zjn-cloud";
   system.stateVersion = "21.11";
@@ -19,6 +23,7 @@
       else
         zpool create -f -O compression=lz4 -O com.sun:auto-snapshot=true tank $DISK
         zfs create -p -o mountpoint=none tank/backups
+        zfs create -p -o mountpoint=legacy tank/syncthing
       fi
     '';
     serviceConfig = { Type = "oneshot"; };
