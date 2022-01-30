@@ -1,9 +1,9 @@
 #!/usr/bin/env nix-shell
-#! nix-shell -p morph -i bash
+#! nix-shell -p colmena -i bash
 
 
 function deploy() {
-    morph deploy ./network.nix --keep-result switch --passwd --on="$1"
+    colmena apply -f hive.nix --on="$1"
 }
 
 function main() {

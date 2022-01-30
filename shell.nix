@@ -1,3 +1,5 @@
 with import <nixpkgs> { };
 
-pkgs.mkShell rec { buildInputs = with pkgs; [ stdenv nixfmt git-crypt ]; }
+pkgs.mkShell rec {
+  buildInputs = with pkgs; [ stdenv nixfmt git-crypt colmena ];
+}
