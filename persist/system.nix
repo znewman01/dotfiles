@@ -34,4 +34,18 @@ in {
   environment.persistence."/persist/root" = {
     directories = [ "/var/lib/acme" "/var/lib/tailscale" ];
   };
+
+  systemd.services.initdirs = {
+    description = "Set up directories if they don't exist.";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "persist.mount" "cache.mount" ];
+    before = [ "home-manager-zjn.service" "sshd.service" ];
+    path = [ "/run/current-system/sw/" ];
+    script = ''
+      set -eux
+      mkdir -p /cache/zjn /persist/zjn /persist/ssh
+      chown zjn:users /cache/zjn /persist/zjn
+    '';
+    serviceConfig = { Type = "oneshot"; };
+  };
 }
