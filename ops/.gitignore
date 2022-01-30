@@ -1,1 +1,3 @@
 assimilate.nix
+.terraform.lock.hcl
+.terraform/
