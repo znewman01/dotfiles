@@ -5,6 +5,8 @@
     ../../common.nix
     ./hardware-configuration.nix
     ../../services/syncthing.nix
+    ../../services/acme.nix
+    ../../services/files.nix
   ];
 
   networking.hostName = "zjn-cloud";

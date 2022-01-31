@@ -7,7 +7,9 @@
     virtualHosts."files.znewman.net" = {
       enableACME = true;
       forceSSL = true;
-      locations = { "/" = { root = "/persist/zjn/Sync/public/"; }; };
+      locations = { "/" = { root = "/var/lib/syncthing/default/public/"; }; };
     };
   };
+  systemd.tmpfiles.rules = [ "z /var/lib/syncthing 755 syncthing syncthing -" ];
+
 }
