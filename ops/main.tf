@@ -2,11 +2,23 @@ terraform {
   backend "gcs" {
     bucket = "zjn-sandbox-tf-state"
   }
+
+  required_providers {
+    namecheap = {
+      source  = "namecheap/namecheap"
+      version = ">= 2.0.0"
+    }
+  }
 }
 
 provider "google" {
   project = "zjn-sandbox"
   region  = "us-west1"
+}
+
+provider "namecheap" {
+  user_name = "znewman01"
+  api_user  = "znewman01"
 }
 
 resource "google_compute_region_disk" "backups" {
@@ -50,6 +62,16 @@ resource "google_compute_attached_disk" "backups" {
   disk        = google_compute_region_disk.backups.id
   instance    = google_compute_instance.default.id
   device_name = "backups"
+}
+
+resource "namecheap_domain_records" "znewman-net" {
+  domain = "znewman.net"
+
+  record {
+    hostname = "files"
+    type     = "A"
+    address  = google_compute_instance.default.network_interface[0].access_config[0].nat_ip
+  }
 }
 
 output "ip" { value = google_compute_instance.default.network_interface[0].access_config[0].nat_ip }
