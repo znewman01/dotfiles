@@ -42,7 +42,7 @@ resource "google_compute_firewall" "default" {
 
 resource "google_compute_instance" "default" {
   name         = "zjn-cloud"
-  machine_type = "e2-micro"
+  machine_type = "e2-small"
   zone         = "us-west1-a"
 
   boot_disk {
