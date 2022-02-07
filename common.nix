@@ -38,4 +38,10 @@
   services.zfs.autoSnapshot.enable = true;
   services.zfs.autoScrub.enable = true;
   boot.zfs.enableUnstable = true;
+
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 30d";
+  };
 }
