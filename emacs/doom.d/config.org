@@ -1066,6 +1066,13 @@ Make sure shells stay live:
   (push "[/\\\\]\\venv$" lsp-file-watch-ignored)
   (push "[/\\\\]\\.venv$" lsp-file-watch-ignored))
 #+end_src
+*** Golang
+#+begin_src emacs-lisp
+(after! go
+  (require 'inheritenv)
+  (inheritenv-add-advice 'call-process-region)
+  (inheritenv-add-advice 'gofmt-before-save))
+#+end_src
 ** Authoring
 #+begin_src emacs-lisp
 (after! latex
