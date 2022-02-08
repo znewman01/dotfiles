@@ -11,7 +11,10 @@ in {
     extraPackages = epkgs: [ epkgs.use-package ];
     enable = true;
   };
-  services.emacs.enable = true;
+  services.emacs = {
+    enable = true;
+    socketActivation.enable = true;
+  };
 
   home.file.".doom-themes/base16-zjn-theme.el".text = ''
      (require 'base16-theme)
