@@ -77,6 +77,7 @@ in {
     serviceConfig = { Type = "oneshot"; };
   };
 
+  # TODO: skip yourself!
   services.znapzend = {
     enable = true;
     autoCreation = true;
