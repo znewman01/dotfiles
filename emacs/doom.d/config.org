@@ -193,7 +193,8 @@ I like to search using DDG always:
                             (or (and (todo "PROJ")
                                      (not (descendants (todo "NEXT"))))
                                 (and (todo "BLOCKEDPROJ")
-                                     (not (scheduled t)))
+                                     (not (scheduled t))
+                                     (not (deadline t)))
                                 (and (todo "WAITING")
                                      (not (or (scheduled t) (deadline t))))
                                 (and (todo "SOMEDAY")
@@ -213,7 +214,8 @@ I like to search using DDG always:
                                                           (:name "Overdue:"
                                                                  :deadline past)
                                                           (:name "Upcoming:"
-                                                                 :deadline future)
+                                                                 :deadline future
+                                                                 :deadline today)
                                                           (:name "Habits"
                                                                  :todo "HABIT")
                                                           (:name "Scheduled:"
