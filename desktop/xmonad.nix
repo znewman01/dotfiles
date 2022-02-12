@@ -91,6 +91,7 @@ in {
               [ [ manageHook defaultConfig ]
               , [ Docks.manageDocks ]
               , [ title =? "emacsfloat"  --> (customFloating $ W.RationalRect (1/4) (1/8) (1/2) (3/4)) ]
+              , [ title =? "doom-capture"  --> (customFloating $ W.RationalRect (1/4) (1/8) (1/2) (3/4)) ]
               , [ title =? "htop"  --> doShift "1" ]
               , [ namedScratchpadManageHook scratchpads ]
               , [ classMatch app --> doShift "8" | app <- messageApps ]
@@ -176,6 +177,7 @@ in {
             , ("<XF86MonBrightnessUp>", spawn "light -A 10")
             , ("<XF86MonBrightnessDown>", spawn "light -U 10")
             , ("<XF86ScreenSaver>", spawn "i3lock -c ${colors.base00}")
+            , ("S-M-x", spawn "em-capture")
             ]
 
     '';
@@ -185,6 +187,14 @@ in {
     text = ''
       #!/bin/sh
       emacsclient --frame-parameters='(quote (name . "emacsfloat"))' -c $@
+    '';
+    executable = true;
+  };
+
+  home.file."bin/em-capture" = {
+    text = ''
+      #!/bin/sh
+      emacsclient --eval '(+org-capture/open-frame)'
     '';
     executable = true;
   };
