@@ -2,19 +2,10 @@
 
 with lib;
 
-let
-  passCmd = entry: "${pkgs.pass}/bin/pass ${entry} 2> /dev/null";
-  unstable = import (builtins.fetchGit {
-    # Descriptive name to make the store path easier to identify
-    name = "nixos-unstable-2021-09-30";
-    url = "https://github.com/nixos/nixpkgs/";
-    # git ls-remote https://github.com/nixos/nixpkgs nixos-unstable
-    ref = "refs/heads/nixos-unstable";
-    rev = "c21ba4f7bb4a3d621eb1d187e6b5e816bb85380c";
-  }) { };
+let passCmd = entry: "${pkgs.pass}/bin/pass ${entry} 2> /dev/null";
 in {
 
-  home.packages = [ unstable.mu ];
+  home.packages = [ pkgs.mu ];
 
   home.file."bin/mbsync" = {
     executable = true;
