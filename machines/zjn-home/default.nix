@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, inputs, ... }:
 
 {
   imports = [
@@ -8,7 +8,7 @@
     ./../../desktop/work.nix
     ./../../desktop/rotate-webcam.nix
   ];
-  home-manager.users.zjn.imports = [ ./home.nix ];
+  home-manager.users.zjn.imports = [ ./home.nix inputs.doom-emacs.hmModule ];
 
   boot.kernelPackages = pkgs.linuxPackages_5_10;
 

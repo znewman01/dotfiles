@@ -1,8 +1,8 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, inputs, ... }:
 
 {
   imports = [ ../../common.nix ./hardware-configuration.nix ../../desktop.nix ];
-  home-manager.users.zjn.imports = [ ./home.nix ];
+  home-manager.users.zjn.imports = [ ./home.nix inputs.doom-emacs.hmModule ];
 
   networking.hostName = "zjn-x1prime";
   networking.hostId = "e2102671";

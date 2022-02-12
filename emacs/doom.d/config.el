@@ -1,54 +1,23 @@
-#+TITLE: Doom Emacs Config
-#+PROPERTY: header-args:emacs-lisp :noweb yes :results none :tangle config.el
-
-* Preliminaries
-Use [[https://www.emacswiki.org/emacs/LexicalBinding][lexical binding]]:
-#+begin_src emacs-lisp
 ;;; -*- lexical-binding: t; -*-
-#+end_src
 
-Make the ~doom~ CLI tool work (hack due to Nix chicanery):
-#+begin_src emacs-lisp
 (setenv "EMACSDIR" "~/.emacs.d")
-#+end_src
 
-And some PII to put in my [[github:znewman01/dotfiles][dotfiles]]:
-#+begin_src emacs-lisp
 (setq user-full-name "Zachary Newman"
       user-mail-address "z@znewman.net")
-#+end_src
 
-Take a hint from Vim on to extra key commands (use ~,~).
-#+begin_src emacs-lisp
 (setq doom-localleader-key ",")
-#+end_src
 
-And make an insert-mode leader that doesn't conflict with XMonad:
-#+begin_src emacs-lisp
 (setq doom-leader-alt-key "s-SPC")
 (setq doom-localleader-alt-key "s-SPC m")
-#+end_src
 
-Live dangerously (I like to put as much config as possible locally):
-
-#+begin_src emacs-lisp
 (setq enable-local-variables t)
-#+end_src
 
-Nice imports:
-
-#+begin_src emacs-lisp
 (require 'url)
 (require 'f)
 (require 's)
 (require 'dash)
 (require 'json)
-#+end_src
-* Utilities
-A smart person once told me: if you have to call a unit of code "util" or "lib", you haven't thought very hard about how to structure your program.
-** IACR ePrints
-I read a lot of papers from the [[https://eprint.iacr.org/][IACR ePrint Archive]] and wrote a [[github:znewman01/iacr-dl][Python tool]] for interacting with it programatically. We use it in a couple of places ([[org]], [[Bibliography]]) so it needs to be somewhere common.
-#+begin_src emacs-lisp
+
 (defun zjn--fetch-iacr-info (id)
   (require 'json)
   (let* ((default-directory "~/git/iacr-dl")
@@ -57,18 +26,12 @@ I read a lot of papers from the [[https://eprint.iacr.org/][IACR ePrint Archive]
          (json-array-type 'list)
          (json-key-type nil))
     (json-read-from-string blob)))
-#+end_src
-** Passwords
-I use the [[https://www.passwordstore.org/][standard Unix password store]], which is quite nice for authorizing CLI/editor tools.
-#+begin_src emacs-lisp
+
 (defun zjn--password (name)
 
   ; sh is to work around "gpg: selecting card failed" issue
   (car (process-lines "sh" "-c" "pass show instapaper 2>/dev/null")))
-#+end_src
-** Instapaper
-Send URLs to [[https://www.instapaper.com/][Instapaper]] for offline reading.
-#+begin_src emacs-lisp
+
 (defun zjn--add-to-instapaper (url success-callback)
   (require 'request)
   (let* ((username "znewman01@gmail.com")
@@ -81,10 +44,7 @@ Send URLs to [[https://www.instapaper.com/][Instapaper]] for offline reading.
       :error (cl-function
               (lambda (&key error-thrown &allow-other-keys)
                 (warn "Issue adding to Instapaper! %S" error-thrown))))))
-#+end_src
-** Searching
-I like to search using DDG always:
-#+begin_src emacs-lisp
+
 (defun zjn--search-in-firefox-inner (default-text force-edit-text &optional prefix)
   (let* ((edit-text (or (s-blank? default-text) force-edit-text))
          (initial-position (if (s-blank? prefix) (length default-text) (length prefix)))
@@ -108,65 +68,165 @@ I like to search using DDG always:
       (:prefix ("s" . "search")
        :desc "Search in DDG" "o" #'zjn--search-in-firefox
        :desc "Search in DDG (!)" "O" #'zjn--search-in-firefox-bang))
-#+end_src
-* org
-:PROPERTIES:
-:header-args: :noweb-ref org
-:END:
-#+begin_src emacs-lisp :noweb-ref nil
+
 (after! org
   (require 'org-ql)
   (require 'org-super-agenda)
   (require 'org-attach)
   (require 'org-capture)
-  <<org>>)
-#+end_src
-** Tagging and task mgmt
-#+begin_src emacs-lisp :tangle no
-(setq org-log-done t)
-(setq org-log-state-notes-into-drawer t)
-(setq org-todo-keywords
-      '((sequence "NEXT(n)" "BUY" "TODO(t)" "|" "DONE(d!)")
-        (sequence "HABIT(h)" "|" "HABITDONE(H)")
-        (sequence "PROJ(p)" "BLOCKEDPROJ(b)" "|" "PROJDONE(P)")
-        (sequence "WAITING(w)" "SOMEDAY(s)" "|" "CANCELLED(c)")))
-(setq org-enforce-todo-dependencies nil)
-(setq org-tag-persistent-alist '((:startgroup . nil)
-                                 ("@errand" . ?e)
-                                 ("@home" . ?h)
-                                 ("@campus" . ?c)
-                                 (:endgroup . nil)
-                                 ("internet" . ?i)
-                                 ("code" . nil)
-                                 ("gradschool" . ?g)
-                                 ("personal" . ?p)
-                                 ("katie" . ?k)))
-#+end_src
-*** Org files+general config
-#+begin_src emacs-lisp :tangle no
-(setq org-directory "~/notes")
-(defun org-file (f)
-  (concat org-directory "/" f))
-(setq org-agenda-files
-      (mapcar #'org-file
-              '("personal.org"
-                "gtd.org"
-                "projects.org"
-                "chainguard.org"
-                "research/default.org"
-                "research/broadcast.org"
-                "research/accumulators.org"
-                "research/tor.org"
-                "school.org")))
-(setq org-archive-location "archive/%s::")
-(setq org-attach-directory (org-file ".attach"))
-(setq org-attach-id-dir (org-file ".attach"))
-(setq org-default-notes-file (org-file "gtd.org"))
-(setq org-id-locations-file (org-file ".org-id-locations"))
-#+end_src
+  (setq org-log-done t)
+  (setq org-log-state-notes-into-drawer t)
+  (setq org-todo-keywords
+        '((sequence "NEXT(n)" "BUY" "TODO(t)" "|" "DONE(d!)")
+          (sequence "HABIT(h)" "|" "HABITDONE(H)")
+          (sequence "PROJ(p)" "BLOCKEDPROJ(b)" "|" "PROJDONE(P)")
+          (sequence "WAITING(w)" "SOMEDAY(s)" "|" "CANCELLED(c)")))
+  (setq org-enforce-todo-dependencies nil)
+  (setq org-tag-persistent-alist '((:startgroup . nil)
+                                   ("@errand" . ?e)
+                                   ("@home" . ?h)
+                                   ("@campus" . ?c)
+                                   (:endgroup . nil)
+                                   ("internet" . ?i)
+                                   ("code" . nil)
+                                   ("gradschool" . ?g)
+                                   ("personal" . ?p)
+                                   ("katie" . ?k)))
+  (setq org-directory "~/notes")
+  (defun org-file (f)
+    (concat org-directory "/" f))
+  (setq org-agenda-files
+        (mapcar #'org-file
+                '("personal.org"
+                  "gtd.org"
+                  "projects.org"
+                  "chainguard.org"
+                  "research/default.org"
+                  "research/broadcast.org"
+                  "research/accumulators.org"
+                  "research/tor.org"
+                  "school.org")))
+  (setq org-archive-location "archive/%s::")
+  (setq org-attach-directory (org-file ".attach"))
+  (setq org-attach-id-dir (org-file ".attach"))
+  (setq org-default-notes-file (org-file "gtd.org"))
+  (setq org-id-locations-file (org-file ".org-id-locations"))
+  (setq org-capture-templates nil)
+  (push '("l" "Link to current file" entry
+          (file+headline "~/notes/gtd.org" "Inbox")
+          "** NEXT %?\n%a\n%i\n")
+        org-capture-templates)
+  
+  (push '("t" "Normal TODO" entry
+          (file+headline "~/notes/gtd.org" "Inbox")
+          "** NEXT %?\n")
+        org-capture-templates)
+  (add-hook 'auto-save-hook 'org-save-all-org-buffers)
+  (setq org-adapt-indentation nil)
+  (setq org-ctrl-k-protect-subtree t)
+  (setq org-catch-invisible-edits 'show-and-error)
+  (setq org-startup-indented nil)
+  (setq org-startup-folded 'fold)
+  (setq org-show-context-detail
+      (quote
+          ((agenda . ancestors)
+          (bookmark-jump . ancestors)
+          (isearch . ancestors)
+          (default . ancestors))))
+  (advice-add 'org-id-new :filter-return #'upcase)
+  (setq org-agenda-dim-blocked-tasks nil
+      org-agenda-inhibit-startup t
+      org-agenda-ignore-properties '(effort appt stat category))
+  (setq org-hide-emphasis-markers t)
+  (setq org-startup-with-latex-preview nil)
+  (require 'org-fragtog)
+  (add-hook 'org-mode-hook 'org-fragtog-mode)
+  (require 'org-ref)
+  (require 'bibtex-completion)
+  (defun zjn--import-iacr (id)
+    (interactive "sIACR ePrint ID? ")
+    (let* ((article (zjn--fetch-iacr-info id))
+           (download-fname (format "iacr:%s.pdf" (s-replace "/" ":" (alist-get 'id article))))
+           (download-path (f-join bibtex-completion-library-path download-fname))
+           (fixed-bibtex (s-replace "cryptoeprint" "iacr" (alist-get 'bibtex article))))
+      (message "Found %s." (alist-get 'id article))
+      (write-region fixed-bibtex nil bibtex-completion-bibliography 'append)
+      (url-copy-file (alist-get 'pdf_link article) download-path t)
+      (bibtex-completion-clear-cache)))
+  
+  (defun zjn--format-iacr-org (region)
+    (let* ((id (if (string-empty-p region)
+                   (read-string "IACR ePrint ID (ex. 2019/001)? ")
+                 region))
+           (json-string (zjn--fetch-iacr-info id))
+           (json-object-type 'hash-table)
+           (json-array-type 'list)
+           (json-key-type 'string)
+           (article (json-read-from-string json-string)))
+      (save-excursion
+        (org-back-to-heading t)
+        (end-of-line)
+                                        ; Use insert rather than the format string so we don't clobber the article
+                                        ; attachment
+        (insert (gethash "title" article)
+                "\nhttps://eprint.iacr.org/"
+                (gethash "id" article)
+                "\nAuthor(s): "
+                (mapconcat 'identity (gethash "authors" article) ", ")
+                "\n#+BEGIN_SRC bibtex\n"
+                (gethash "bibtex" article)
+                "#+END_SRC"))
+      (org-attach-attach (gethash "pdf_link" article) nil 'url))
+      "")  ; needs to return string to satisfy org-capture
+  
+  (push '("i" "IACR" entry (file+headline "~/notes/research/default.org" "Paper queue")
+          "* %(zjn--format-iacr-org \"%i\")\n")
+        org-capture-templates)
+  ; Doesn't handle authors with non-ASCII names....
+  (defun zjn--format-arxiv-org (region)
+    (let* ((id (if (string-empty-p region)
+                   (read-string "arXiv ID (ex. 1905.11379)? ")
+                 region))
+           (api-url (format "http://export.arxiv.org/api/query?id_list=%s" id)))
+      (request
+       api-url
+       :parser (lambda () (libxml-parse-xml-region (point) (point-max)))
+       :success
+       (cl-function
+        (lambda (&key data &allow-other-keys)
+          (let* ((entry (car (xml-get-children data 'entry)))
+                 (title (replace-regexp-in-string " *\n *" " " (caddar (xml-get-children entry 'title))))
+                 (authors (mapconcat (lambda (x) (caddr (caddr x)))
+                                     (xml-get-children entry 'author) ", "))
+                 (pdf-link
+                  (concat (cdr
+                           (assoc 'href
+                                  (cadar
+                                   (cl-remove-if-not
+                                    (lambda (x)
+                                      (string= (cdr (assoc 'title (cadr x))) "pdf"))
+                                    (xml-get-children entry 'link)))))
+                          ".pdf"))
+                 (article-link
+                  (cdr (assoc 'href (cadar
+                                     (cl-remove-if-not
+                                      (lambda (x)
+                                        (string= (cdr (assoc 'rel (cadr x))) "alternate"))
+                                      (xml-get-children entry 'link)))))))
+            (save-excursion
+              (org-back-to-heading t)
+              (end-of-line)
+              (insert title
+                      "\n"
+                      article-link
+                      "\nAuthor(s): "
+                      authors)
+              (sit-for 0.1)
+              (org-attach-attach pdf-link nil 'url)))))))
+    "")
+  (require 'org-anki)
+  (setq org-anki-default-deck "Default"))
 
-*** Agenda
-#+begin_src emacs-lisp :noweb-ref nil
 (after! org-super-agenda
   (require 'evil-org-agenda)
   (org-super-agenda-mode)
@@ -273,206 +333,29 @@ I like to search using DDG always:
           (delete-region (point) (1+ (point-at-eol))))))
     (setq buffer-read-only t))
   (add-hook 'org-agenda-finalize-hook #'org-agenda-delete-empty-blocks))
-#+end_src
-*** Capture
-#+begin_src emacs-lisp :tangle no
-(setq org-capture-templates nil)
-(push '("l" "Link to current file" entry
-        (file+headline "~/notes/gtd.org" "Inbox")
-        "** NEXT %?\n%a\n%i\n")
-      org-capture-templates)
 
-(push '("t" "Normal TODO" entry
-        (file+headline "~/notes/gtd.org" "Inbox")
-        "** NEXT %?\n")
-      org-capture-templates)
-#+end_src
-** Global org settings
-#+begin_src emacs-lisp :tangle no
-(add-hook 'auto-save-hook 'org-save-all-org-buffers)
-(setq org-adapt-indentation nil)
-(setq org-ctrl-k-protect-subtree t)
-(setq org-catch-invisible-edits 'show-and-error)
-(setq org-startup-indented nil)
-(setq org-startup-folded 'fold)
-(setq org-show-context-detail
-    (quote
-        ((agenda . ancestors)
-        (bookmark-jump . ancestors)
-        (isearch . ancestors)
-        (default . ancestors))))
-(advice-add 'org-id-new :filter-return #'upcase)
-#+END_SRC
-*** Performance
-#+begin_src emacs-lisp :tangle no
-(setq org-agenda-dim-blocked-tasks nil
-    org-agenda-inhibit-startup t
-    org-agenda-ignore-properties '(effort appt stat category))
-#+end_src
-*** Aesthetics
-
-From a [[https://zzamboni.org/post/beautifying-org-mode-in-emacs/][blog]]:
-#+begin_src :tangle no
-(setq org-hide-emphasis-markers t)
-#+end_src
-*** Math
-#+begin_src emacs-lisp :tangle no
-(setq org-startup-with-latex-preview nil)
-(require 'org-fragtog)
-(add-hook 'org-mode-hook 'org-fragtog-mode)
-#+end_src
-
-** Reference management
-#+begin_src emacs-lisp :tangle no
-(require 'org-ref)
-#+end_src
-*** Org-cite
-#+begin_src emacs-lisp :noweb-ref nil
 (after! oc
     (setq org-cite-global-bibliography '("~/notes/lit/default.bib"))
     (org-link-set-parameters "cite" :display 'org-link))
-#+end_src
-*** org-ref
-#+begin_src emacs-lisp :noweb-ref nil
+
 (after! org-ref
   (setq org-ref-default-bibliography '("~/Sync/notes/lit/default.bib")
         org-ref-pdf-directory "~/Sync/notes/lit/"))
-#+end_src
-*** Bibtex completion
-#+begin_src emacs-lisp :tangle no
-(require 'bibtex-completion)
-#+end_src
-*** IACR
-#+begin_src emacs-lisp :tangle no
-(defun zjn--import-iacr (id)
-  (interactive "sIACR ePrint ID? ")
-  (let* ((article (zjn--fetch-iacr-info id))
-         (download-fname (format "iacr:%s.pdf" (s-replace "/" ":" (alist-get 'id article))))
-         (download-path (f-join bibtex-completion-library-path download-fname))
-         (fixed-bibtex (s-replace "cryptoeprint" "iacr" (alist-get 'bibtex article))))
-    (message "Found %s." (alist-get 'id article))
-    (write-region fixed-bibtex nil bibtex-completion-bibliography 'append)
-    (url-copy-file (alist-get 'pdf_link article) download-path t)
-    (bibtex-completion-clear-cache)))
 
-(defun zjn--format-iacr-org (region)
-  (let* ((id (if (string-empty-p region)
-                 (read-string "IACR ePrint ID (ex. 2019/001)? ")
-               region))
-         (json-string (zjn--fetch-iacr-info id))
-         (json-object-type 'hash-table)
-         (json-array-type 'list)
-         (json-key-type 'string)
-         (article (json-read-from-string json-string)))
-    (save-excursion
-      (org-back-to-heading t)
-      (end-of-line)
-                                      ; Use insert rather than the format string so we don't clobber the article
-                                      ; attachment
-      (insert (gethash "title" article)
-              "\nhttps://eprint.iacr.org/"
-              (gethash "id" article)
-              "\nAuthor(s): "
-              (mapconcat 'identity (gethash "authors" article) ", ")
-              "\n#+BEGIN_SRC bibtex\n"
-              (gethash "bibtex" article)
-              "#+END_SRC"))
-    (org-attach-attach (gethash "pdf_link" article) nil 'url))
-    "")  ; needs to return string to satisfy org-capture
-
-(push '("i" "IACR" entry (file+headline "~/notes/research/default.org" "Paper queue")
-        "* %(zjn--format-iacr-org \"%i\")\n")
-      org-capture-templates)
-#+end_src
-*** arXiv
-#+begin_src emacs-lisp :tangle no
-; Doesn't handle authors with non-ASCII names....
-(defun zjn--format-arxiv-org (region)
-  (let* ((id (if (string-empty-p region)
-                 (read-string "arXiv ID (ex. 1905.11379)? ")
-               region))
-         (api-url (format "http://export.arxiv.org/api/query?id_list=%s" id)))
-    (request
-     api-url
-     :parser (lambda () (libxml-parse-xml-region (point) (point-max)))
-     :success
-     (cl-function
-      (lambda (&key data &allow-other-keys)
-        (let* ((entry (car (xml-get-children data 'entry)))
-               (title (replace-regexp-in-string " *\n *" " " (caddar (xml-get-children entry 'title))))
-               (authors (mapconcat (lambda (x) (caddr (caddr x)))
-                                   (xml-get-children entry 'author) ", "))
-               (pdf-link
-                (concat (cdr
-                         (assoc 'href
-                                (cadar
-                                 (cl-remove-if-not
-                                  (lambda (x)
-                                    (string= (cdr (assoc 'title (cadr x))) "pdf"))
-                                  (xml-get-children entry 'link)))))
-                        ".pdf"))
-               (article-link
-                (cdr (assoc 'href (cadar
-                                   (cl-remove-if-not
-                                    (lambda (x)
-                                      (string= (cdr (assoc 'rel (cadr x))) "alternate"))
-                                    (xml-get-children entry 'link)))))))
-          (save-excursion
-            (org-back-to-heading t)
-            (end-of-line)
-            (insert title
-                    "\n"
-                    article-link
-                    "\nAuthor(s): "
-                    authors)
-            (sit-for 0.1)
-            (org-attach-attach pdf-link nil 'url)))))))
-  "")
-#+end_src
-** Anki
-#+begin_src emacs-lisp :tangle no
-(require 'org-anki)
-(setq org-anki-default-deck "Default")
-#+end_src
-** Keybindings
-Need to be global, not ~(after! org)~.
-#+begin_src emacs-lisp :noweb-ref nil
 (map! :leader "a" (cmd! (org-agenda nil "nw")))
 (map! :mode org-capture-mode :localleader "s r" #'org-capture-refile)
 (map! :mode org-mode :n "t" #'org-todo)
 (map! :map org-agenda-mode-map :localleader "." #'counsel-org-goto-all
     :localleader "/" #'counsel-org-goto-all)
 (map! :leader "s /" #'counsel-org-goto-all)
-#+end_src
-** org-babel
-Easier NixOS and org-babel integration:
-#+begin_src emacs-lisp :noweb-ref nil
+
 (defun zjn/with-pkgs (interpreter &rest pkgs)
   (s-concat
     "#!/usr/bin/env nix-shell\n"
      "#!nix-shell -p " (s-join " " pkgs) " -i " interpreter))
 (defun zjn/with-pkgs-bash (&rest pkgs)
   (apply #'zjn/with-pkgs (cons "bash" pkgs)))
-#+end_src
 
-Use like so:
-
-#+begin_example
-#+begin_src bash :shebang (zjn/with-pkgs-bash "hello") :results verbatim
-hello
-#+end_src
-
-#+RESULTS:
-: Hello, world!
-#+end_example
-** Export
-#+begin_src
-(setq org-preview-latex-default-process 'imagemagick)
-                                      ; (plist-put org-format-latex-options :background "Transparent")
-(setq org-latex-pdf-process '("tectonic %f"))
-#+end_src
-** org-roam
-#+begin_src emacs-lisp :noweb-ref nil
 (after! org-roam
   (setq org-roam-directory "~/Sync/notes/roam"
         org-roam-completion-everywhere nil
@@ -483,10 +366,7 @@ hello
 ;        '(("r" "ref" plain #'org-roam-capture--get-point "" :file-name "bib/${citekey}" :head "#+TITLE: ${title}\n#+ROAM_KEY: ${ref}\n" :unnarrowed t :immediate-finish t)))
 ;   (org-roam-mode)
 ;  (map! :mode org-mode :leader "n r n" #'orb-note-actions))
-#+end_src
-* Bibliography
-Eventually will sort through this.
-#+begin_src emacs-lisp
+
 (setq bibtex-completion-bibliography "~/Sync/notes/lit/default.bib"
       bibtex-completion-library-path "~/Sync/notes/lit/"
       bibtex-completion-notes-path "~/Sync/notes/roam/bib/")
@@ -685,204 +565,141 @@ Eventually will sort through this.
   (setq bibtex-autokey-titlewords 2)
   (map! :mode biblio-selection-mode
         "RET" #'zjn/bib-add))
-#+end_src
-* Mail
-:PROPERTIES:
-:header-args: :noweb-ref mu4e
-:END:
-I use [[https://www.djcbsoftware.nl/code/mu/][mu]] for mail, and "~mu~ for Emacs" (~mu4e~) for mail for Emacs:
-#+begin_src emacs-lisp :noweb-ref nil
+
 (after! mu4e
-  <<mu4e>>)
-#+end_src
+  (setq mail-user-agent 'mu4e-user-agent)
+  (setq message-send-mail-function 'smtpmail-send-it)
+  (setq mu4e-root-maildir "~/Maildir")
+  (setq mu4e-get-mail-command "mbsync -a")
+  (setq mu4e-index-cleanup t      ;; don't do a full cleanup check
+        mu4e-index-lazy-check nil)
+  (setq mu4e-completing-read-function 'completing-read)
+  (setq mu4e-confirm-quit nil)
+  (setq auth-source-save-behavior nil)
+  (setq mu4e-context-policy 'pick-first)
+  (defmacro zjn--make-match (folder)
+    `(lambda (msg)
+        (when msg
+            (string-prefix-p ,(concat "/" folder)
+                          (mu4e-message-field msg :maildir)))))
+  (require 'mu4e-context)
+  (setq mu4e-contexts
+        `(
+          ,(make-mu4e-context
+            :name "Fastmail"
+            :match-func (zjn--make-match "fastmail")
+            :vars '((mu4e-trash-folder . "/fastmail/Trash")
+                    (mu4e-sent-folder . "/fastmail/Sent")
+                    (mu4e-drafts-folder . "/fastmail/Drafts")
+                    (mu4e-refile-folder . "/fastmail/Archive")
+                    (user-mail-address . "z@znewman.net")
+                    (user-full-name . "Zachary Newman")
+                    (smtpmail-local-domain . "znewman.net")
+                    (smtpmail-smtp-server . "smtp.fastmail.com")
+                    (smtpmail-stream-type . ssl)
+                    (smtpmail-smtp-service . 465)))
+          ,(make-mu4e-context
+            :name "MIT"
+            :match-func (zjn--make-match "mit")
+            :vars '((mu4e-trash-folder . "/mit/Deleted")
+                    (mu4e-sent-folder . "/mit/Sent")
+                    (mu4e-drafts-folder . "/mit/Drafts")
+                    (mu4e-refile-folder . "/mit/Archive")
+                    (user-mail-address . "zjn@mit.edu")
+                    (user-full-name . "Zachary Newman")
+                    (smtpmail-local-domain . "mit.edu")
+                    (smtpmail-smtp-server . "outgoing.mit.edu")
+                    (smtpmail-stream-type . ssl)
+                    (smtpmail-smtp-service . 465)))
+          ,(make-mu4e-context
+            :name "oCSAIL"
+            :match-func (zjn--make-match "csail")
+            :vars '((mu4e-trash-folder . "/csail/Trash")
+                    (mu4e-sent-folder . "/csail/Sent")
+                    (mu4e-drafts-folder . "/csail/Drafts")
+                    (mu4e-refile-folder . "/csail/Archive")
+                    (user-mail-address . "zjn@csail.mit.edu")
+                    (user-full-name . "Zachary Newman")
+                    (smtpmail-local-domain . "csail.mit.edu")
+                    (smtpmail-smtp-server . "outgoing.csail.mit.edu")
+                    (smtpmail-stream-type . starttls)
+                    (smtpmail-smtp-service . 587)))
+          ,(make-mu4e-context
+            :name "Gmail"
+            :match-func (zjn--make-match "gmail")
+            :vars '((mu4e-trash-folder . "/gmail/[Gmail]/Trash")
+                    (mu4e-sent-folder . "/gmail/[Gmail]/SentMail")
+                    (mu4e-drafts-folder . "/gmail/[Gmail]/Drafts")
+                    (mu4e-refile-folder . "/gmail/[Gmail]/AllMail")
+                    (user-mail-address . "znewman01@gmail.com")
+                    (smtpmail-smtp-user "znewman01@gmail.com")
+                    (user-full-name . "Zachary Newman")
+                    (smtpmail-local-domain . "gmail.com")
+                    (smtpmail-smtp-server . "smtp.gmail.com")
+                    (smtpmail-stream-type . starttls)
+                    (smtpmail-smtp-service . 587)))
+          ,(make-mu4e-context
+            :name "Chainguard"
+            :match-func (zjn--make-match "chainguard")
+            :vars '((mu4e-trash-folder . "/chainguard/[Gmail]/Trash")
+                    (mu4e-sent-folder . "/chainguard/[Gmail]/SentMail")
+                    (mu4e-drafts-folder . "/chainguard/[Gmail]/Drafts")
+                    (mu4e-refile-folder . "/chainguard/[Gmail]/AllMail")
+                    (user-mail-address . "zjn@chainguard.dev")
+                    (user-full-name . "Zachary Newman")
+                    (smtpmail-local-domain . "gmail.com")
+                    (smtpmail-smtp-user "zjn@chainguard.dev")
+                    (smtpmail-smtp-server . "smtp.gmail.com")
+                    (smtpmail-stream-type . starttls)
+                    (smtpmail-smtp-service . 587)))))
+  (defun zjn--get-mu4e-vars (var)
+    "Get mu4e vars /in current mu4e context/"
+    (mapcar (lambda (context)
+              (alist-get var (mu4e-context-vars context)))
+            mu4e-contexts))
+  (let* ((trash-folders (zjn--get-mu4e-vars 'mu4e-trash-folder))
+         (sent-folders (zjn--get-mu4e-vars 'mu4e-sent-folder))
+         (query-skipping
+          (lambda (query maildirs)
+            (s-join " AND "
+                    (cons query
+                          (mapcar (apply-partially #'concat "NOT maildir:") maildirs)))))
+         (skip-trash-and-sent
+           (lambda (query) (funcall query-skipping query (-concat trash-folders sent-folders '("/mit/Junk" "/gmail/[Gmail]/Spam" "/chainguard/[Gmail]/Spam"))))))
+      (setq mu4e-bookmarks
+          (mapcar (apply-partially #'apply #'make-mu4e-bookmark)
+                  `((:name "All Inboxes"
+                      :query "maildir:/gmail/Inbox OR maildir:/mit/INBOX OR maildir:/fastmail/INBOX OR maildir:/csail/INBOX OR maildir:/chainguard/Inbox"
+                      :key ?i)
+                      (:name "Unread messages"
+                      :query ,(funcall skip-trash-and-sent "flag:unread AND NOT flag:trashed")
+                      :key ?u)
+                      (:name "Last 7 days"
+                      :query ,(funcall skip-trash-and-sent "date:7d..now")
+                      :key ?w)))))
+  (setq mu4e-headers-sort-field :date)
+  (setq mu4e-attachment-dir "/home/zjn/Downloads")
+  (mkdir mu4e-attachment-dir t)
+  (setq mu4e-view-show-addresses t)
+  (setq mu4e-change-filenames-when-moving t)
+  (require 'mu4e-mark)
+  (setf
+    (alist-get 'trash mu4e-marks)
+    (plist-put (cdr (assq 'trash mu4e-marks))
+               :action
+               (lambda (docid msg target)
+                 (mu4e~proc-move docid (mu4e~mark-check-target target) "-N"))))
+  (setq mu4e-alert-interesting-mail-query "flag:unread AND NOT flag:trashed AND (maildir:/gmail/Inbox OR maildir:/mit/INBOX OR maildir:/fastmail/INBOX OR maildir:/csail/INBOX OR maildir:/chainguard/Inbox)")
+  (require 'org-mu4e)
+  (defun zjn--confirm-empty-subject ()
+    "Allow user to quit when current message subject is empty."
+    (or (message-field-value "Subject")
+        (yes-or-no-p "Really send without Subject? ")
+        (keyboard-quit)))
+  (add-hook 'message-send-hook #'zjn--confirm-empty-subject)
+  (setq mu4e-compose-context-policy 'ask)
+  (setq send-mail-function 'smtpmail-send-it))
 
-Tell Emacs I want to use ~mu4e~ for sending mail:
-#+begin_src emacs-lisp :tangle no
-(setq mail-user-agent 'mu4e-user-agent)
-(setq message-send-mail-function 'smtpmail-send-it)
-#+end_src
-
-Tell ~mu4e~ how to find my mail:
-#+begin_src emacs-lisp :tangle no
-(setq mu4e-root-maildir "~/Maildir")
-(setq mu4e-get-mail-command "mbsync -a")
-#+end_src
-
-Make it a little faster (must run ~mu index~ every once in a while to reindex):
-#+begin_src emacs-lisp :tangle no
-(setq mu4e-index-cleanup t      ;; don't do a full cleanup check
-      mu4e-index-lazy-check nil)
-#+end_src
-
-I forget why this is here:
-#+begin_src emacs-lisp :tangle no
-(setq mu4e-completing-read-function 'completing-read)
-#+end_src
-
-Quit, dang it!
-#+begin_src emacs-lisp :tangle no
-(setq mu4e-confirm-quit nil)
-#+end_src
-** Accounts
-#+begin_src emacs-lisp :tangle no
-(setq auth-source-save-behavior nil)
-(setq mu4e-context-policy 'pick-first)
-(defmacro zjn--make-match (folder)
-  `(lambda (msg)
-      (when msg
-          (string-prefix-p ,(concat "/" folder)
-                        (mu4e-message-field msg :maildir)))))
-(require 'mu4e-context)
-(setq mu4e-contexts
-      `(
-        ,(make-mu4e-context
-          :name "Fastmail"
-          :match-func (zjn--make-match "fastmail")
-          :vars '((mu4e-trash-folder . "/fastmail/Trash")
-                  (mu4e-sent-folder . "/fastmail/Sent")
-                  (mu4e-drafts-folder . "/fastmail/Drafts")
-                  (mu4e-refile-folder . "/fastmail/Archive")
-                  (user-mail-address . "z@znewman.net")
-                  (user-full-name . "Zachary Newman")
-                  (smtpmail-local-domain . "znewman.net")
-                  (smtpmail-smtp-server . "smtp.fastmail.com")
-                  (smtpmail-stream-type . ssl)
-                  (smtpmail-smtp-service . 465)))
-        ,(make-mu4e-context
-          :name "MIT"
-          :match-func (zjn--make-match "mit")
-          :vars '((mu4e-trash-folder . "/mit/Deleted")
-                  (mu4e-sent-folder . "/mit/Sent")
-                  (mu4e-drafts-folder . "/mit/Drafts")
-                  (mu4e-refile-folder . "/mit/Archive")
-                  (user-mail-address . "zjn@mit.edu")
-                  (user-full-name . "Zachary Newman")
-                  (smtpmail-local-domain . "mit.edu")
-                  (smtpmail-smtp-server . "outgoing.mit.edu")
-                  (smtpmail-stream-type . ssl)
-                  (smtpmail-smtp-service . 465)))
-        ,(make-mu4e-context
-          :name "oCSAIL"
-          :match-func (zjn--make-match "csail")
-          :vars '((mu4e-trash-folder . "/csail/Trash")
-                  (mu4e-sent-folder . "/csail/Sent")
-                  (mu4e-drafts-folder . "/csail/Drafts")
-                  (mu4e-refile-folder . "/csail/Archive")
-                  (user-mail-address . "zjn@csail.mit.edu")
-                  (user-full-name . "Zachary Newman")
-                  (smtpmail-local-domain . "csail.mit.edu")
-                  (smtpmail-smtp-server . "outgoing.csail.mit.edu")
-                  (smtpmail-stream-type . starttls)
-                  (smtpmail-smtp-service . 587)))
-        ,(make-mu4e-context
-          :name "Gmail"
-          :match-func (zjn--make-match "gmail")
-          :vars '((mu4e-trash-folder . "/gmail/[Gmail]/Trash")
-                  (mu4e-sent-folder . "/gmail/[Gmail]/SentMail")
-                  (mu4e-drafts-folder . "/gmail/[Gmail]/Drafts")
-                  (mu4e-refile-folder . "/gmail/[Gmail]/AllMail")
-                  (user-mail-address . "znewman01@gmail.com")
-                  (smtpmail-smtp-user "znewman01@gmail.com")
-                  (user-full-name . "Zachary Newman")
-                  (smtpmail-local-domain . "gmail.com")
-                  (smtpmail-smtp-server . "smtp.gmail.com")
-                  (smtpmail-stream-type . starttls)
-                  (smtpmail-smtp-service . 587)))
-        ,(make-mu4e-context
-          :name "Chainguard"
-          :match-func (zjn--make-match "chainguard")
-          :vars '((mu4e-trash-folder . "/chainguard/[Gmail]/Trash")
-                  (mu4e-sent-folder . "/chainguard/[Gmail]/SentMail")
-                  (mu4e-drafts-folder . "/chainguard/[Gmail]/Drafts")
-                  (mu4e-refile-folder . "/chainguard/[Gmail]/AllMail")
-                  (user-mail-address . "zjn@chainguard.dev")
-                  (user-full-name . "Zachary Newman")
-                  (smtpmail-local-domain . "gmail.com")
-                  (smtpmail-smtp-user "zjn@chainguard.dev")
-                  (smtpmail-smtp-server . "smtp.gmail.com")
-                  (smtpmail-stream-type . starttls)
-                  (smtpmail-smtp-service . 587)))))
-#+end_src
-
-** Inbox: reading and managing
-Common views (combined inbox, unread, all recent):
-#+begin_src emacs-lisp :tangle no
-(defun zjn--get-mu4e-vars (var)
-  "Get mu4e vars /in current mu4e context/"
-  (mapcar (lambda (context)
-            (alist-get var (mu4e-context-vars context)))
-          mu4e-contexts))
-(let* ((trash-folders (zjn--get-mu4e-vars 'mu4e-trash-folder))
-       (sent-folders (zjn--get-mu4e-vars 'mu4e-sent-folder))
-       (query-skipping
-        (lambda (query maildirs)
-          (s-join " AND "
-                  (cons query
-                        (mapcar (apply-partially #'concat "NOT maildir:") maildirs)))))
-       (skip-trash-and-sent
-         (lambda (query) (funcall query-skipping query (-concat trash-folders sent-folders '("/mit/Junk" "/gmail/[Gmail]/Spam" "/chainguard/[Gmail]/Spam"))))))
-    (setq mu4e-bookmarks
-        (mapcar (apply-partially #'apply #'make-mu4e-bookmark)
-                `((:name "All Inboxes"
-                    :query "maildir:/gmail/Inbox OR maildir:/mit/INBOX OR maildir:/fastmail/INBOX OR maildir:/csail/INBOX OR maildir:/chainguard/Inbox"
-                    :key ?i)
-                    (:name "Unread messages"
-                    :query ,(funcall skip-trash-and-sent "flag:unread AND NOT flag:trashed")
-                    :key ?u)
-                    (:name "Last 7 days"
-                    :query ,(funcall skip-trash-and-sent "date:7d..now")
-                    :key ?w)))))
-(setq mu4e-headers-sort-field :date)
-#+end_src
-
-Misc:
-#+begin_src emacs-lisp :tangle no
-(setq mu4e-attachment-dir "/home/zjn/Downloads")
-(mkdir mu4e-attachment-dir t)
-(setq mu4e-view-show-addresses t)
-(setq mu4e-change-filenames-when-moving t)
-#+end_src
-
-Move to trash, don't just delete ([[http://cachestocaches.com/2017/3/complete-guide-email-emacs-using-mu-and-/][source]]):
-#+begin_src emacs-lisp :tangle no
-(require 'mu4e-mark)
-(setf
-  (alist-get 'trash mu4e-marks)
-  (plist-put (cdr (assq 'trash mu4e-marks))
-             :action
-             (lambda (docid msg target)
-               (mu4e~proc-move docid (mu4e~mark-check-target target) "-N"))))
-#+end_src
-
-Don't count deleted emails in "unread" for modeline:
-#+begin_src emacs-lisp :tangle no
-(setq mu4e-alert-interesting-mail-query "flag:unread AND NOT flag:trashed AND (maildir:/gmail/Inbox OR maildir:/mit/INBOX OR maildir:/fastmail/INBOX OR maildir:/csail/INBOX OR maildir:/chainguard/Inbox)")
-#+end_src
-** Outbox
-*** Composing
-[[org]] everywhere!
-#+begin_src emacs-lisp :tangle no
-(require 'org-mu4e)
-#+end_src
-Don't send prematurely by accident (this allows a neat trick of leaving the subject empty while writing mail, and filling it in only when ready):
-#+begin_src emacs-lisp :tangle no
-(defun zjn--confirm-empty-subject ()
-  "Allow user to quit when current message subject is empty."
-  (or (message-field-value "Subject")
-      (yes-or-no-p "Really send without Subject? ")
-      (keyboard-quit)))
-(add-hook 'message-send-hook #'zjn--confirm-empty-subject)
-#+end_src
-And let me pick my context every time:
-#+begin_src emacs-lisp :tangle no
-(setq mu4e-compose-context-policy 'ask)
-#+end_src
-*** Sending
-#+begin_src emacs-lisp :tangle no
-(setq send-mail-function 'smtpmail-send-it)
-#+end_src
-* RSS
-#+begin_src emacs-lisp
 (after! elfeed
   (setq elfeed-db-directory (expand-file-name "~/Sync/elfeed"))
   (setq elfeed-enclosure-default-dir (expand-file-name "~/Sync/elfeed/enclosures"))
@@ -975,40 +792,23 @@ And let me pick my context every time:
         :n "i" #'add-elfeed-shown-to-instapaper))
 (map! :leader (:prefix-map ("o" . "open")
                :desc "RSS" "e" #'=rss))
-#+end_src
-* Theme
-Use base16 theme; this is nice because it's easy to match with the rest of my desktop.
-#+begin_src emacs-lisp
+
 (add-to-list 'custom-theme-load-path "~/.doom-themes")
 (setq doom-theme nil)
 (load-theme 'base16-zjn t)
-#+end_src
 
-I want to be able to see which workspace is selected; the default highlighting is too weak.
-#+begin_src emacs-lisp
 (set-face-background '+workspace-tab-selected-face (plist-get base16-zjn-colors :base02))
 (set-face-foreground '+workspace-tab-selected-face (plist-get base16-zjn-colors :base0D))
-#+end_src
 
-Some reasonable fonts:
-#+begin_src emacs-lisp
 (setq zjn--mono "Roboto Mono")
 (setq zjn--sans "Bitstream Vera Sans")
 (setq zjn--serif "TeX Gyre Pagella")
 (setq doom-font (font-spec :family zjn--mono :height 80 :weight 'semi-light))
 (setq doom-variable-pitch-font (font-spec :family zjn--serif :height 60))
-#+end_src
 
-And some padding:
-#+begin_src emacs-lisp
 (setq-default left-margin-width 1
               right-margin-width 1)
-#+end_src
 
-* Do the Work
-Now that that's all out of the way, we can get to actual work.
-** Project Management
-#+begin_src emacs-lisp
 (after! projectile
   (setq projectile-project-search-path '("~/git"))
   (defun zjn-projectile-root-for-some-major-modes (_dir)
@@ -1018,28 +818,17 @@ Now that that's all out of the way, we can get to actual work.
                                         ; (push 'zjn-projectile-root-for-some-major-modes projectile-project-root-files-functions))
   (setq +workspaces-on-switch-project-behavior t)
   )
-#+end_src
-** Coding
-#+begin_src emacs-lisp
+
 (after! company
   (setq company-idle-delay 0.2))
 (remove-hook 'doom-first-buffer-hook #'smartparens-global-mode)
 (setq display-line-numbers-type nil)
-#+end_src
 
-Make sure shells stay live:
-
-#+begin_src emacs-lisp
 (after! shell
   (set-popup-rule! "^\\*shell\\*" :quit nil))
-#+end_src
-*** Working remote
-#+begin_src emacs-lisp
-(setq tramp-inline-compress-start-size 1000000)
-#+end_src
 
-*** Rust
-#+begin_src emacs-lisp
+(setq tramp-inline-compress-start-size 1000000)
+
 (after! rustic
   (setq rustic-lsp-server 'rust-analyzer)
 
@@ -1059,23 +848,17 @@ Make sure shells stay live:
         (:prefix ("t" . "cargo test")
          :desc "all"          "a" #'rustic-cargo-test
          :desc "current test" "t" #'rustic-cargo-current-test)))
-#+end_src
-*** Python
-#+begin_src emacs-lisp
+
 (after! lsp-mode
   (push "[/\\\\]\\.hypothesis" lsp-file-watch-ignored)
   (push "[/\\\\]\\venv$" lsp-file-watch-ignored)
   (push "[/\\\\]\\.venv$" lsp-file-watch-ignored))
-#+end_src
-*** Golang
-#+begin_src emacs-lisp
+
 (after! go
   (require 'inheritenv)
   (inheritenv-add-advice 'call-process-region)
   (inheritenv-add-advice 'gofmt-before-save))
-#+end_src
-** Authoring
-#+begin_src emacs-lisp
+
 (after! latex
   (add-to-list 'TeX-command-list '("Tectonic" "tectonic --synctex %t" TeX-run-compile nil (latex-mode) :help "Run Tectonic"))
   (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
@@ -1085,13 +868,9 @@ Make sure shells stay live:
   (add-hook! LaTeX-mode
     (setq TeX-command-default "Tectonic"
           TeX-output-extension "pdf")))
-#+end_src
-** Reading
-Good readers take notes; great readers don't exit their PDFs and lose all those notes.
-#+begin_src emacs-lisp
+
 (after! pdf-view
   (require 'inheritenv)
   (inheritenv-add-advice 'pdf-annot-print-annotation)
   (defun zjn/save-buffer-no-args () (save-buffer)) ; needed to make args line up
   (advice-add 'pdf-annot-edit-contents-commit :after 'zjn/save-buffer-no-args))
-#+end_src

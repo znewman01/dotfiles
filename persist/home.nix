@@ -36,8 +36,6 @@ in {
       ".cache/mu"
       ".cache/Tectonic"
       "Maildir"
-      ".emacs.d"
-      ".emacs.d.template"
       ".mozilla"
       ".local/share/Anki"
       ".local/share/Anki2"

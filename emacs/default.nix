@@ -6,11 +6,17 @@ let
 in {
   home.packages = with pkgs; [ emacs-all-the-icons-fonts ];
 
-  programs.emacs = {
-    package = pkgs.emacs;
-    extraPackages = epkgs: [ epkgs.use-package ];
+  programs.doom-emacs = {
     enable = true;
+    doomPrivateDir = ./doom.d;
+
+    emacsPackagesOverlay = self: super: {
+      # fixes https://github.com/vlaci/nix-doom-emacs/issues/394
+      gitignore-mode = pkgs.emacsPackages.git-modes;
+      gitconfig-mode = pkgs.emacsPackages.git-modes;
+    };
   };
+
   services.emacs = {
     enable = true;
     socketActivation.enable = true;
@@ -68,35 +74,6 @@ in {
     Keywords=Text;Editor;
   '';
 
-  home.file.".emacs.d.template/emacs.d" = let
-    # git ls-remote https://github.com/hlissner/doom-emacs/ develop
-    rev = "bc47e72984f9e6eb89a19e9560185188575b10c1";
-  in {
-    source = pkgs.fetchFromGitHub {
-      owner = "hlissner";
-      repo = "doom-emacs";
-      rev = rev;
-      sha256 = "0qhm5qrr2753xbrhvnb29rww36ln51z4skycrd5l4pqn3x3va7y1";
-    };
-    onChange = ''
-      DST="$HOME/.emacs.d"
-      mkdir -p "$DST"
-      # Hack to prevent re-syncing unless doom is updated.
-      # .emacs.d gets e.g., compiled files in it, so it's not expected to
-      # match the source.
-      if [ "$(cat ~/.emacs.d/.rev)" != "${rev}" ]; then
-        rsync \
-            --itemize-changes \
-            --links \
-            --recursive \
-            --checksum \
-            ~/.emacs.d.template/emacs.d/ "$DST"
-        echo ${rev} > ~/.emacs.d/.rev
-        $DST/bin/doom sync
-      fi
-    '';
-  };
-
   home.file."bin/emacsmail" = {
     text = ''
       #!/usr/bin/env bash
@@ -105,12 +82,5 @@ in {
     executable = true;
   };
 
-  programs.bash.sessionVariables."EMACSDIR" = "~/.emacs.d";
-
-  systemd.user.tmpfiles.rules = [
-    "L %h/notes - - - - %h/Sync/notes"
-    # Use a link rather than home.files because we probably want to be able to
-    # hack on this pretty sloppily
-    "L %h/.doom.d - - - - %h/git/dotfiles/emacs/doom.d"
-  ];
+  systemd.user.tmpfiles.rules = [ "L %h/notes - - - - %h/Sync/notes" ];
 }
