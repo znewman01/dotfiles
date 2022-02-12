@@ -1,18 +1,8 @@
 { config, pkgs, ... }:
 
-let
-  home-manager = builtins.fetchGit {
-    url = "https://github.com/nix-community/home-manager.git";
-    rev = "697cc8c68ed6a606296efbbe9614c32537078756";
-    ref = "release-21.11";
-  };
-  hosts = [ "zjn@zjn-x1prime" "zjn@zjn-home" "zjn@zjn-work" "zjn-cloud" ];
+let hosts = [ "zjn@zjn-x1prime" "zjn@zjn-home" "zjn@zjn-work" "zjn-cloud" ];
 in {
-  imports = [
-    (import "${home-manager}/nixos")
-    ./desktop/system.nix
-    ./persist/system.nix
-  ];
+  imports = [ ./desktop/system.nix ./persist/system.nix ];
 
   nix.trustedUsers = [ "@wheel" ];
 
@@ -52,7 +42,6 @@ in {
       "$6$O1ia1YA5iKh9m$SVD17ySqqyicSpo2tzqTw4xRHm8C50.vMuoQPaLxTA9hsfJ7HQ/neioEYhOjZvPT..HNclbjd4JX4ydBcMvC7.";
   };
   users.groups.zjn = { };
-  home-manager.verbose = true;
   # TODO: move to home.nix when rycee/home-manager#1087 resolved
   # https://github.com/rycee/home-manager/issues/1087
   programs.ssh.startAgent = true;
