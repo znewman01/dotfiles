@@ -1,4 +1,4 @@
-{ home-manager, ... }:
+{ ... }:
 
 {
   zjn-x1prime = { config, pkgs, lib, ... }: {
