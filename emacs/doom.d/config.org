@@ -843,7 +843,7 @@ Common views (combined inbox, unread, all recent):
 
 Misc:
 #+begin_src emacs-lisp :tangle no
-(setq mu4e-attachment-dir "/home/zjn/Downloads")
+(setq mu4e-attachment-dir (expand-file-name "~/zjn/Downloads"))
 (mkdir mu4e-attachment-dir t)
 (setq mu4e-view-show-addresses t)
 (setq mu4e-change-filenames-when-moving t)
@@ -974,7 +974,7 @@ And let me pick my context every time:
         :n "o" #'elfeed-search-browse-url
         :n "i" #'add-elfeed-entry-to-instapaper
         :n "u" #'elfeed-update
-        :n "s" #'elfeed-db-save
+        :n "s" (cmd! (elfeed-db-save))
 
         :mode 'elfeed-show-mode
         :n "I" #'add-elfeed-shown-to-paper-queue-iacr
