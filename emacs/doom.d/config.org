@@ -39,6 +39,7 @@ Nice imports:
 
 #+begin_src emacs-lisp
 (require 'url)
+(require 'cl-lib)
 (require 'f)
 (require 's)
 (require 'dash)
@@ -692,7 +693,12 @@ Eventually will sort through this.
 :END:
 I use [[https://www.djcbsoftware.nl/code/mu/][mu]] for mail, and "~mu~ for Emacs" (~mu4e~) for mail for Emacs:
 #+begin_src emacs-lisp :noweb-ref nil
-(after! mu4e
+(eval-and-compile
+  (defun mu4e-load-path ()
+    (f-join (string-trim (shell-command-to-string "nix-store -r $(which mu) 2> /dev/null")) "share/emacs/site-lisp/mu4e")))
+(use-package! mu4e
+  :load-path (lambda () (list (mu4e-load-path)))
+  :config
   <<mu4e>>)
 #+end_src
 
@@ -841,6 +847,7 @@ Misc:
 (mkdir mu4e-attachment-dir t)
 (setq mu4e-view-show-addresses t)
 (setq mu4e-change-filenames-when-moving t)
+(setq nsm-settings-file (expand-file-name "~/.local/doom/network-security.data"))
 #+end_src
 
 Move to trash, don't just delete ([[http://cachestocaches.com/2017/3/complete-guide-email-emacs-using-mu-and-/][source]]):
