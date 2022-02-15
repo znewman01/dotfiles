@@ -172,6 +172,7 @@ I like to search using DDG always:
   (require 'evil-org-agenda)
   (org-super-agenda-mode)
   (setq org-super-agenda-header-map evil-org-agenda-mode-map) ; https://github.com/alphapapa/org-super-agenda/issues/50
+  (setq org-super-agenda-header-map (make-sparse-keymap))
   (setq org-agenda-prefix-format '((agenda . " %?-12t% s")
                                    (timeline . "  % s")
                                    (todo . "")
