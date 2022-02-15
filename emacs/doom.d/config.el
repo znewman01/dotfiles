@@ -13,6 +13,7 @@
 (setq enable-local-variables t)
 
 (require 'url)
+(require 'cl-lib)
 (require 'f)
 (require 's)
 (require 'dash)
@@ -231,6 +232,7 @@
   (require 'evil-org-agenda)
   (org-super-agenda-mode)
   (setq org-super-agenda-header-map evil-org-agenda-mode-map) ; https://github.com/alphapapa/org-super-agenda/issues/50
+  (setq org-super-agenda-header-map (make-sparse-keymap))
   (setq org-agenda-prefix-format '((agenda . " %?-12t% s")
                                    (timeline . "  % s")
                                    (todo . "")
@@ -566,7 +568,12 @@
   (map! :mode biblio-selection-mode
         "RET" #'zjn/bib-add))
 
-(after! mu4e
+(eval-and-compile
+  (defun mu4e-load-path ()
+    (f-join (string-trim (shell-command-to-string "nix-store -r $(which mu) 2> /dev/null")) "share/emacs/site-lisp/mu4e")))
+(use-package! mu4e
+  :load-path (lambda () (list (mu4e-load-path)))
+  :config
   (setq mail-user-agent 'mu4e-user-agent)
   (setq message-send-mail-function 'smtpmail-send-it)
   (setq mu4e-root-maildir "~/Maildir")
@@ -678,10 +685,11 @@
                       :query ,(funcall skip-trash-and-sent "date:7d..now")
                       :key ?w)))))
   (setq mu4e-headers-sort-field :date)
-  (setq mu4e-attachment-dir "/home/zjn/Downloads")
+  (setq mu4e-attachment-dir (expand-file-name "~/zjn/Downloads"))
   (mkdir mu4e-attachment-dir t)
   (setq mu4e-view-show-addresses t)
   (setq mu4e-change-filenames-when-moving t)
+  (setq nsm-settings-file (expand-file-name "~/.local/doom/network-security.data"))
   (require 'mu4e-mark)
   (setf
     (alist-get 'trash mu4e-marks)
@@ -784,7 +792,7 @@
         :n "o" #'elfeed-search-browse-url
         :n "i" #'add-elfeed-entry-to-instapaper
         :n "u" #'elfeed-update
-        :n "s" #'elfeed-db-save
+        :n "s" (cmd! (elfeed-db-save))
 
         :mode 'elfeed-show-mode
         :n "I" #'add-elfeed-shown-to-paper-queue-iacr
