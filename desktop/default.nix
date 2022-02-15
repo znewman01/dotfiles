@@ -52,7 +52,11 @@ in {
     '';
     executable = true;
   };
-  programs.bash.shellAliases.beep = ''notify-send -t 2000 "done"'';
+  programs.bash.shellAliases = {
+    beep = ''notify-send -t 2000 "done"'';
+    s = "systemctl";
+    j = "journalctl";
+  };
   services.dunst = {
     enable = true;
     settings = {
