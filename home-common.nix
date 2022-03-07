@@ -38,11 +38,6 @@ in {
   ];
   home.keyboard.options = [ "caps:swapescape" "compose:ralt" ];
 
-  services.keybase.enable = true;
-  services.kbfs.enable = true;
-
-  services.syncthing.enable = true;
-
   programs.ssh.enable = true;
 
   programs.direnv = {
