@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ confi, lib, pkgs, ... }:
 
 with lib;
 
@@ -35,11 +35,6 @@ in {
       autorandr -c &
     '';
     scriptPath = ".hm-xsession";
-  };
-
-  home.file."bin/extra-monitor.sh" = {
-    text = builtins.readFile ./extra-monitor.sh;
-    executable = true;
   };
 
   home.file."notification.wav".source = ./notification.wav;
