@@ -48,14 +48,8 @@ let hosts = [ "zjn@zjn-x1prime" "zjn@zjn-home" "zjn@zjn-work" "zjn-cloud" ];
       "libvirtd"
       "systemd-journal"
     ];
-    openssh.authorizedKeys.keyFiles = (import ./net/keys.nix);
     hashedPassword =
       "$6$O1ia1YA5iKh9m$SVD17ySqqyicSpo2tzqTw4xRHm8C50.vMuoQPaLxTA9hsfJ7HQ/neioEYhOjZvPT..HNclbjd4JX4ydBcMvC7.";
   };
   users.groups.zjn = { };
-
-  # TODO: move to home.nix when rycee/home-manager#1087 resolved
-  # https://github.com/rycee/home-manager/issues/1087
-  programs.ssh.startAgent = true;
-  services.openssh.permitRootLogin = "no";
 }

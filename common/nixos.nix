@@ -1,19 +1,17 @@
 { config, pkgs, ... }:
 
 {
-  imports = [ ./default.nix ./tailscale/nixos.nix];
+  imports = [ 
+    ./default.nix
+    ./tailscale/nixos.nix
+    ./ssh/nixos.nix
+  ];
 
   boot.cleanTmpDir = true;
 
   i18n.defaultLocale = "en_US.UTF-8";
 
   environment.systemPackages = with pkgs; [ manpages ];
-
-  services.openssh = {
-    enable = true;
-    passwordAuthentication = false;
-  };
-  users.users.root.openssh.authorizedKeys.keyFiles = (import ./net/keys.nix);
 
   virtualisation.docker.enable = true;
 
