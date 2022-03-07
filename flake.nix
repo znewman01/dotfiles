@@ -15,13 +15,23 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.emacs-overlay.follows = "emacs-overlay";
     };
+    darwin = {
+      url = "github:lnl7/nix-darwin/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
-  outputs = inputs@{ nixpkgs, home-manager, impermanence, doom-emacs, ... }: {
+  outputs = inputs@{ nixpkgs, home-manager, impermanence, doom-emacs, darwin, ... }: {
     colmena = {
       meta.nixpkgs = import nixpkgs { system = "x86_64-linux"; };
       defaults = { ... }: {
         imports = [ home-manager.nixosModule impermanence.nixosModule ];
       };
     } // import ./machines { inherit inputs; };
+    
+    darwinConfigurations."zjn-mac" = darwin.lib.darwinSystem {
+      system = "aarch64-darwin";
+      modules = [ ./machines/zjn-mac ];
+    };
+
   };
 }
