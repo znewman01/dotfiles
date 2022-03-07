@@ -1,7 +1,10 @@
 { config, pkgs, lib, inputs, ... }:
 
 {
-  imports = [ ../../common.nix ../../common-darwin.nix ];
+  imports = [
+    ../../common/darwin.nix
+    ../../desktop/darwin.nix
+  ];
 
   networking.hostName = "zjn-mac";
   system.stateVersion = 4;

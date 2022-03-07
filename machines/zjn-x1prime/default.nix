@@ -2,10 +2,9 @@
 
 {
   imports = [
-    ../../common.nix
-    ../../common-nixos.nix
     ./hardware-configuration.nix
-    ../../desktop.nix
+    ../../common/nixos.nix
+    ../../desktop/nixos.nix
   ];
   home-manager.users.zjn.imports = [ ./home.nix inputs.doom-emacs.hmModule ];
 

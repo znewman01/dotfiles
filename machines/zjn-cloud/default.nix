@@ -2,8 +2,7 @@
 
 {
   imports = [
-    ../../common.nix
-    ../../common-nixos.nix
+    ../../common/nixos.nix
     ./hardware-configuration.nix
     ../../services/syncthing.nix
     ../../services/acme.nix

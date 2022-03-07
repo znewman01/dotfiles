@@ -2,9 +2,8 @@
 
 {
   imports = [
-    ../../common.nix
-    ../../common-nixos.nix
-    ../../desktop.nix
+    ../../common/nixos.nix
+    ../../desktop/nixos.nix
     ./hardware-configuration.nix
     ../../desktop/work.nix
   ];
