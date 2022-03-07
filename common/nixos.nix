@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 {
-  imports = [ ./default.nix ./tailscale.nix];
+  imports = [ ./default.nix ./tailscale/nixos.nix];
 
   boot.cleanTmpDir = true;
 
