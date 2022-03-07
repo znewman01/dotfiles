@@ -30,19 +30,6 @@ if [ "$FIREFOX" = "y" ]; then
         key --clearmodifiers --delay 200 Tab Tab d
 fi
 
-read -p "Set up MIT certificates? BROKEN RIGHT NOW [y/N] " MIT
-
-if [ "$MIT" = "y" ]; then
-    echo "Setting up MIT certificate."
-    python3 browser_auto/mit_cert.py
-    CERTDIR=$(dirname $(find "$HOME/.mozilla" -name "cert9.db"))
-    curl -s -o /tmp/mitca.crt https://ca.mit.edu/mitca.crt
-    certutil -A -n "MIT" -t "TC,," -i /tmp/mitca.crt -d "$CERTDIR"
-    rm /tmp/mitca.crt
-
-fi
-
-
 read -p "Initialize email (might take a while, multiple attempts)? [y/N] " EMAIL
 
 if [ "$EMAIL" = "y" ]; then
@@ -52,11 +39,4 @@ if [ "$EMAIL" = "y" ]; then
     done
 
     mu index
-fi
-
-read -p "Set up CSAIL WiFi? [y/N] " WIFI
-
-if [ "$WIFI" = "y" ]; then
-    ./net/CSAILPrivate.nmconnection.sh | sudo tee /etc/NetworkManager/system-connections/CSAILPrivate.nmconnection > /dev/null
-    echo "You may need to reload your network connection."
 fi

@@ -40,27 +40,7 @@ in {
 
   services.syncthing.enable = true;
 
-  programs.ssh = {
-    enable = true;
-    matchBlocks = {
-      "jump.csail.mit.edu" = {
-        extraOptions = {
-          "GSSAPIAuthentication" = "yes";
-          # "GSSAPIKeyExchange" = "yes";
-          "VerifyHostKeyDNS" = "yes";
-        };
-      };
-      "*.csail.mit.edu !jump.csail.mit.edu 128.52.* 128.30.* 128.31.* !128.31.26.*" =
-        dag.entryAfter [ "jump.csail.mit.edu" ] {
-          extraOptions = {
-            "ProxyJump" = "zjn@jump.csail.mit.edu";
-            "GSSAPIAuthentication" = "yes";
-            "GSSAPIDelegateCredentials" = "yes";
-            # "GSSAPIKeyExchange" = "yes";
-          };
-        };
-    };
-  };
+  programs.ssh.enable = true;
 
   programs.direnv = {
     enable = true;
