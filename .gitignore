@@ -1,5 +1,3 @@
-configuration.nix
-home.nix
 .direnv
 .gcroots
 result

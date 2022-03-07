@@ -5,7 +5,7 @@
     ../../home-common.nix
     ../../code.nix
     ./autorandr.nix
-    ./../../email
+    ./../../desktop/email
     ./../../desktop/chat.nix
   ];
   home.stateVersion = "21.05";
