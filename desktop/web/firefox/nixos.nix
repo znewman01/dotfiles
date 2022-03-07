@@ -4,6 +4,13 @@ let colors = (import ./../desktop/colors) { lib = lib; };
 {
   imports = [ ./default.nix ];
 
+  programs.firefox = {
+    enable = true;
+    profiles.zjn = {
+      name = "Zachary Newman";
+    };
+  };
+
   xdg.configFile."tridactyl/themes/base16.css".text = ''
     :root {    /* Unikitty-light by Chris Kempson (http://chriskempson.com) */
         --base00: #${colors.base00};

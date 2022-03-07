@@ -1,13 +1,6 @@
-{ config, lib, pkgs, ... }:
+{ config, pkgs, ... }:
 
-let colors = (import ./../desktop/colors) { lib = lib; };
-in {
-  programs.firefox = {
-    enable = true;
-    profiles.zjn = {
-      name = "Zachary Newman";
-  };
-
+{
   xdg.configFile."tridactyl/tridactylrc".source = ./tridactylrc;
   home.file.".mozilla/native-messaging-hosts/tridactyl.json".text = ''
     {
@@ -19,5 +12,5 @@ in {
     }
   '';
 
-  home.packages = [ pkgs.google-chrome pkgs.tridactyl-native ];
+  home.packages = [ pkgs.tridactyl-native ];
 }
