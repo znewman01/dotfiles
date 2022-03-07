@@ -38,8 +38,6 @@ in {
   ];
   home.keyboard.options = [ "caps:swapescape" "compose:ralt" ];
 
-  programs.ssh.enable = true;
-
   programs.direnv = {
     enable = true;
     enableBashIntegration = true;
