@@ -30,7 +30,10 @@
     
     darwinConfigurations."zjn-mac" = darwin.lib.darwinSystem {
       system = "aarch64-darwin";
-      modules = [ ./machines/zjn-mac ];
+      modules = [
+        home-manager.darwinModules.home-manager
+        ./machines/zjn-mac
+      ];
     };
 
   };
