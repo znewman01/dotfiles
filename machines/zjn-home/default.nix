@@ -3,6 +3,7 @@
 {
   imports = [
     ../../common.nix
+    ../../common-nixos.nix
     ../../desktop.nix
     ./hardware-configuration.nix
     ./../../desktop/work.nix
