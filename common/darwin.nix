@@ -3,6 +3,14 @@
 {
   imports = [ ./default.nix ];
 
+  programs.zsh.enable = true;
+
+  homebrew = {
+    enable = true;
+    cleanup = "zap";
+  };
+  programs.zsh.shellInit = ''eval "$(/opt/homebrew/bin/brew shellenv)"'';
+
   services.nix-daemon.enable = true;
   nix.useDaemon = true;
 

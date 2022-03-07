@@ -6,7 +6,7 @@
     ../../code.nix
     ./autorandr.nix
     ./../../desktop/email
-    ./../../desktop/chat.nix
+    ./../../desktop/chat/nixos.nix
   ];
   home.stateVersion = "21.05";
   home.packages = [ pkgs.anki ];

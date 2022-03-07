@@ -4,6 +4,10 @@
     home-manager.url = "github:nix-community/home-manager/release-21.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/master";
+    home-manager-unstable.url = "github:nix-community/home-manager/master";
+    home-manager-unstable.inputs.nixpkgs.follows = "nixpkgs-unstable";
+
     impermanence.url = "github:nix-community/impermanence";
 
     emacs-overlay = {
@@ -17,10 +21,10 @@
     };
     darwin = {
       url = "github:lnl7/nix-darwin/master";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
   };
-  outputs = inputs@{ nixpkgs, home-manager, impermanence, doom-emacs, darwin, ... }: {
+  outputs = inputs@{ nixpkgs, home-manager, impermanence, doom-emacs, darwin, nixpkgs-unstable, home-manager-unstable, ... }: {
     colmena = {
       meta.nixpkgs = import nixpkgs { system = "x86_64-linux"; };
       defaults = { ... }: {
@@ -31,7 +35,7 @@
     darwinConfigurations."zjn-mac" = darwin.lib.darwinSystem {
       system = "aarch64-darwin";
       modules = [
-        home-manager.darwinModules.home-manager
+        home-manager-unstable.darwinModules.home-manager
         ./machines/zjn-mac
       ];
     };

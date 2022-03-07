@@ -11,5 +11,4 @@
 
   home-manager.users.zjn = import ./home.nix;
   home-manager.useUserPackages = true;
-
 }

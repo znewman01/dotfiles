@@ -15,6 +15,8 @@ in {
     ./emacs
     ./desktop/firefox/nixos.nix
     ./persist/home.nix
+    ./common/vim.nix
+    ./common/git.nix
   ];
   programs.home-manager.enable = true;
   nixpkgs.config.allowUnfree = true;
@@ -67,20 +69,10 @@ in {
     # enableScDaemon = false;
   };
 
-  programs.git = {
-    enable = true;
-    ignores = [ "*~" "*.swp" ];
-    userEmail = "z@znewman.net";
-    userName = "Zachary Newman";
-    extraConfig.pull.rebase = "true";
-    extraConfig.github.user = "znewman01";
-    extraConfig.init.defaultBranch = "main";
-  };
 
   programs.bash = {
     enable = true;
     sessionVariables = {
-      EDITOR = "vim";
       PATH = "$HOME/bin:$PATH";
     };
   };
