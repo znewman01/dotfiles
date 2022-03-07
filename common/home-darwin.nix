@@ -3,6 +3,7 @@
 {
   imports = [
     ./home.nix
+    ./ssh/darwin-home.nix
   ];
 }
 
