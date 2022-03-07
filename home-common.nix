@@ -17,6 +17,7 @@ in {
     ./persist/home.nix
     ./common/vim.nix
     ./common/git.nix
+    ./desktop/gpg/nixos.nix
   ];
   programs.home-manager.enable = true;
   nixpkgs.config.allowUnfree = true;
@@ -59,16 +60,6 @@ in {
       eamodio.gitlens
     ];
   };
-
-  programs.gpg.enable = true;
-  services.gpg-agent = {
-    enable = true;
-    defaultCacheTtl = 86400; # 24 hrs.
-    maxCacheTtl = 86400; # 24 hrs.
-    pinentryFlavor = "gtk2";
-    # enableScDaemon = false;
-  };
-
 
   programs.bash = {
     enable = true;
