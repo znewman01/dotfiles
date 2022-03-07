@@ -13,7 +13,7 @@ in {
     # Config
     ./desktop
     ./emacs
-    ./web
+    ./desktop/firefox/nixos.nix
     ./persist/home.nix
   ];
   programs.home-manager.enable = true;

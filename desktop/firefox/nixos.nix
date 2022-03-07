@@ -1,28 +1,8 @@
 { config, lib, pkgs, ... }:
 
 let colors = (import ./../desktop/colors) { lib = lib; };
-in {
-  programs.firefox = {
-    enable = true;
-    profiles.zjn = {
-      name = "Zachary Newman";
-      # settings = {
-      #   "browser.aboutConfig.showWarning" = false;
-      #   "general.warnOnAboutConfig" = false;
-      #   # "browser.startup.homepage" = "about:blank";
-      #   "browser.newtabpage.enabled" = false;
-      #   "browser.tabs.closeWindowWithLastTab" = true;
-      #   "ui.key.menuAccessKeyFocuses" = false;
-      #   "browser.link.open_newwindow" = 3;
-      #   "extensions.screenshots.disabled" = true;
-      #   # For Tridactyl support in more places
-      #   "privacy.resistFingerprinting.block_mozAddonManager" = true;
-      #   "extensions.webextensions.restrictedDomains" = "";
-      #   "tridactyl.unfixedamo2" = true;
-      #   "systemUsesDarkTheme" = if colors.mode == "dark" then 1 else 0;
-      # };
-    };
-  };
+{
+  imports = [ ./default.nix ];
 
   xdg.configFile."tridactyl/themes/base16.css".text = ''
     :root {    /* Unikitty-light by Chris Kempson (http://chriskempson.com) */
@@ -172,16 +152,5 @@ in {
         color: var(--base00);
     }
   '';
-  xdg.configFile."tridactyl/tridactylrc".source = ./tridactylrc;
-  home.file.".mozilla/native-messaging-hosts/tridactyl.json".text = ''
-    {
-        "name": "tridactyl",
-        "description": "Tridactyl native command handler",
-        "path": "${pkgs.tridactyl-native}/share/tridactyl/native_main.py",
-        "type": "stdio",
-        "allowed_extensions": [ "tridactyl.vim@cmcaine.co.uk","tridactyl.vim.betas@cmcaine.co.uk", "tridactyl.vim.betas.nonewtab@cmcaine.co.uk" ]
-    }
-  '';
-
-  home.packages = [ pkgs.google-chrome pkgs.tridactyl-native ];
 }
+
