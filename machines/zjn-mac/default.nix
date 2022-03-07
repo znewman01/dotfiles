@@ -9,6 +9,7 @@
   networking.hostName = "zjn-mac";
   system.stateVersion = 4;
 
+  users.users.zjn.home = "/Users/zjn";
   home-manager.users.zjn = import ./home.nix;
   home-manager.useUserPackages = true;
 }

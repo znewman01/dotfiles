@@ -5,6 +5,8 @@
     ./home.nix
     ./ssh/darwin-home.nix
   ];
+
+  home.username = "zjn";
 }
 
 

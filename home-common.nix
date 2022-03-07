@@ -62,24 +62,4 @@ in {
       PATH = "$HOME/bin:$PATH";
     };
   };
-
-  home.file."bin/pdftogray" = {
-    executable = true;
-    text = ''
-      #!/usr/bin/env nix-shell
-      #!nix-shell -i bash -p ghostscript
-      if [ -z "$2" ]; then echo "Usage: $0 <in-file> <out-file>"; exit 1; fi
-      gs -sDEVICE=pdfwrite -sProcessColorModel=DeviceGray -sColorConversionStrategy=Gray -dOverrideICC -o $2 -f $1
-    '';
-  };
-
-  systemd.user.tmpfiles.rules = [
-    "L %h/.password-store - - - - %h/Sync/passwords"
-    "L %h/.authinfo.gpg - - - - %h/Sync/passwords/authinfo.gpg"
-  ];
-
-  home.file.".cups/lpoptions".text = ''
-    Default 00-dev_null
-    Dest xerox8/twoside Duplex=DuplexNoTumble sides=two-sided-long-edge'';
-
 }
