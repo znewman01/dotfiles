@@ -8,5 +8,5 @@
     ./syncthing/darwin.nix
   ];
 
-  homebrew.casks = [ "iterm2" ];
+  homebrew.casks = [ "iterm2" "alfred" ];
 }
