@@ -3,7 +3,7 @@
 {
   imports = [
     ./pass.nix
-    ./tex.nix
+    # ./tex.nix
     ./tools
   ];
 
