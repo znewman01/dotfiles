@@ -568,145 +568,146 @@
   (map! :mode biblio-selection-mode
         "RET" #'zjn/bib-add))
 
-(eval-and-compile
-  (defun mu4e-load-path ()
-    (f-join (string-trim (shell-command-to-string "nix-store -r $(which mu) 2> /dev/null")) "share/emacs/site-lisp/mu4e")))
-(use-package! mu4e
-  :load-path (lambda () (list (mu4e-load-path)))
-  :config
-  (setq mail-user-agent 'mu4e-user-agent)
-  (setq message-send-mail-function 'smtpmail-send-it)
-  (setq mu4e-root-maildir "~/Maildir")
-  (setq mu4e-get-mail-command "mbsync -a")
-  (setq mu4e-index-cleanup t      ;; don't do a full cleanup check
-        mu4e-index-lazy-check nil)
-  (setq mu4e-completing-read-function 'completing-read)
-  (setq mu4e-confirm-quit nil)
-  (setq auth-source-save-behavior nil)
-  (setq mu4e-context-policy 'pick-first)
-  (defmacro zjn--make-match (folder)
-    `(lambda (msg)
-        (when msg
-            (string-prefix-p ,(concat "/" folder)
-                          (mu4e-message-field msg :maildir)))))
-  (require 'mu4e-context)
-  (setq mu4e-contexts
-        `(
-          ,(make-mu4e-context
-            :name "Fastmail"
-            :match-func (zjn--make-match "fastmail")
-            :vars '((mu4e-trash-folder . "/fastmail/Trash")
-                    (mu4e-sent-folder . "/fastmail/Sent")
-                    (mu4e-drafts-folder . "/fastmail/Drafts")
-                    (mu4e-refile-folder . "/fastmail/Archive")
-                    (user-mail-address . "z@znewman.net")
-                    (user-full-name . "Zachary Newman")
-                    (smtpmail-local-domain . "znewman.net")
-                    (smtpmail-smtp-server . "smtp.fastmail.com")
-                    (smtpmail-stream-type . ssl)
-                    (smtpmail-smtp-service . 465)))
-          ,(make-mu4e-context
-            :name "MIT"
-            :match-func (zjn--make-match "mit")
-            :vars '((mu4e-trash-folder . "/mit/Deleted")
-                    (mu4e-sent-folder . "/mit/Sent")
-                    (mu4e-drafts-folder . "/mit/Drafts")
-                    (mu4e-refile-folder . "/mit/Archive")
-                    (user-mail-address . "zjn@mit.edu")
-                    (user-full-name . "Zachary Newman")
-                    (smtpmail-local-domain . "mit.edu")
-                    (smtpmail-smtp-server . "outgoing.mit.edu")
-                    (smtpmail-stream-type . ssl)
-                    (smtpmail-smtp-service . 465)))
-          ,(make-mu4e-context
-            :name "oCSAIL"
-            :match-func (zjn--make-match "csail")
-            :vars '((mu4e-trash-folder . "/csail/Trash")
-                    (mu4e-sent-folder . "/csail/Sent")
-                    (mu4e-drafts-folder . "/csail/Drafts")
-                    (mu4e-refile-folder . "/csail/Archive")
-                    (user-mail-address . "zjn@csail.mit.edu")
-                    (user-full-name . "Zachary Newman")
-                    (smtpmail-local-domain . "csail.mit.edu")
-                    (smtpmail-smtp-server . "outgoing.csail.mit.edu")
-                    (smtpmail-stream-type . starttls)
-                    (smtpmail-smtp-service . 587)))
-          ,(make-mu4e-context
-            :name "Gmail"
-            :match-func (zjn--make-match "gmail")
-            :vars '((mu4e-trash-folder . "/gmail/[Gmail]/Trash")
-                    (mu4e-sent-folder . "/gmail/[Gmail]/SentMail")
-                    (mu4e-drafts-folder . "/gmail/[Gmail]/Drafts")
-                    (mu4e-refile-folder . "/gmail/[Gmail]/AllMail")
-                    (user-mail-address . "znewman01@gmail.com")
-                    (smtpmail-smtp-user "znewman01@gmail.com")
-                    (user-full-name . "Zachary Newman")
-                    (smtpmail-local-domain . "gmail.com")
-                    (smtpmail-smtp-server . "smtp.gmail.com")
-                    (smtpmail-stream-type . starttls)
-                    (smtpmail-smtp-service . 587)))
-          ,(make-mu4e-context
-            :name "Chainguard"
-            :match-func (zjn--make-match "chainguard")
-            :vars '((mu4e-trash-folder . "/chainguard/[Gmail]/Trash")
-                    (mu4e-sent-folder . "/chainguard/[Gmail]/SentMail")
-                    (mu4e-drafts-folder . "/chainguard/[Gmail]/Drafts")
-                    (mu4e-refile-folder . "/chainguard/[Gmail]/AllMail")
-                    (user-mail-address . "zjn@chainguard.dev")
-                    (user-full-name . "Zachary Newman")
-                    (smtpmail-local-domain . "gmail.com")
-                    (smtpmail-smtp-user "zjn@chainguard.dev")
-                    (smtpmail-smtp-server . "smtp.gmail.com")
-                    (smtpmail-stream-type . starttls)
-                    (smtpmail-smtp-service . 587)))))
-  (defun zjn--get-mu4e-vars (var)
-    "Get mu4e vars /in current mu4e context/"
-    (mapcar (lambda (context)
-              (alist-get var (mu4e-context-vars context)))
-            mu4e-contexts))
-  (let* ((trash-folders (zjn--get-mu4e-vars 'mu4e-trash-folder))
-         (sent-folders (zjn--get-mu4e-vars 'mu4e-sent-folder))
-         (query-skipping
-          (lambda (query maildirs)
-            (s-join " AND "
-                    (cons query
-                          (mapcar (apply-partially #'concat "NOT maildir:") maildirs)))))
-         (skip-trash-and-sent
-           (lambda (query) (funcall query-skipping query (-concat trash-folders sent-folders '("/mit/Junk" "/gmail/[Gmail]/Spam" "/chainguard/[Gmail]/Spam"))))))
-      (setq mu4e-bookmarks
-          (mapcar (apply-partially #'apply #'make-mu4e-bookmark)
-                  `((:name "All Inboxes"
-                      :query "maildir:/gmail/Inbox OR maildir:/mit/INBOX OR maildir:/fastmail/INBOX OR maildir:/csail/INBOX OR maildir:/chainguard/Inbox"
-                      :key ?i)
-                      (:name "Unread messages"
-                      :query ,(funcall skip-trash-and-sent "flag:unread AND NOT flag:trashed")
-                      :key ?u)
-                      (:name "Last 7 days"
-                      :query ,(funcall skip-trash-and-sent "date:7d..now")
-                      :key ?w)))))
-  (setq mu4e-headers-sort-field :date)
-  (setq mu4e-attachment-dir (expand-file-name "~/zjn/Downloads"))
-  (mkdir mu4e-attachment-dir t)
-  (setq mu4e-view-show-addresses t)
-  (setq mu4e-change-filenames-when-moving t)
-  (setq nsm-settings-file (expand-file-name "~/.local/doom/network-security.data"))
-  (require 'mu4e-mark)
-  (setf
-    (alist-get 'trash mu4e-marks)
-    (plist-put (cdr (assq 'trash mu4e-marks))
-               :action
-               (lambda (docid msg target)
-                 (mu4e~proc-move docid (mu4e~mark-check-target target) "-N"))))
-  (setq mu4e-alert-interesting-mail-query "flag:unread AND NOT flag:trashed AND (maildir:/gmail/Inbox OR maildir:/mit/INBOX OR maildir:/fastmail/INBOX OR maildir:/csail/INBOX OR maildir:/chainguard/Inbox)")
-  (require 'org-mu4e)
-  (defun zjn--confirm-empty-subject ()
-    "Allow user to quit when current message subject is empty."
-    (or (message-field-value "Subject")
-        (yes-or-no-p "Really send without Subject? ")
-        (keyboard-quit)))
-  (add-hook 'message-send-hook #'zjn--confirm-empty-subject)
-  (setq mu4e-compose-context-policy 'ask)
-  (setq send-mail-function 'smtpmail-send-it))
+(when (executable-find mbsync)
+  (eval-and-compile
+    (defun mu4e-load-path ()
+      (f-join (string-trim (shell-command-to-string "nix-store -r $(which mu) 2> /dev/null")) "share/emacs/site-lisp/mu4e")))
+  (use-package! mu4e
+    :load-path (lambda () (list (mu4e-load-path)))
+    :config
+    (setq mail-user-agent 'mu4e-user-agent)
+    (setq message-send-mail-function 'smtpmail-send-it)
+    (setq mu4e-root-maildir "~/Maildir")
+    (setq mu4e-get-mail-command "mbsync -a")
+    (setq mu4e-index-cleanup t      ;; don't do a full cleanup check
+          mu4e-index-lazy-check nil)
+    (setq mu4e-completing-read-function 'completing-read)
+    (setq mu4e-confirm-quit nil)
+    (setq auth-source-save-behavior nil)
+    (setq mu4e-context-policy 'pick-first)
+    (defmacro zjn--make-match (folder)
+      `(lambda (msg)
+          (when msg
+              (string-prefix-p ,(concat "/" folder)
+                            (mu4e-message-field msg :maildir)))))
+    (require 'mu4e-context)
+    (setq mu4e-contexts
+          `(
+            ,(make-mu4e-context
+              :name "Fastmail"
+              :match-func (zjn--make-match "fastmail")
+              :vars '((mu4e-trash-folder . "/fastmail/Trash")
+                      (mu4e-sent-folder . "/fastmail/Sent")
+                      (mu4e-drafts-folder . "/fastmail/Drafts")
+                      (mu4e-refile-folder . "/fastmail/Archive")
+                      (user-mail-address . "z@znewman.net")
+                      (user-full-name . "Zachary Newman")
+                      (smtpmail-local-domain . "znewman.net")
+                      (smtpmail-smtp-server . "smtp.fastmail.com")
+                      (smtpmail-stream-type . ssl)
+                      (smtpmail-smtp-service . 465)))
+            ,(make-mu4e-context
+              :name "MIT"
+              :match-func (zjn--make-match "mit")
+              :vars '((mu4e-trash-folder . "/mit/Deleted")
+                      (mu4e-sent-folder . "/mit/Sent")
+                      (mu4e-drafts-folder . "/mit/Drafts")
+                      (mu4e-refile-folder . "/mit/Archive")
+                      (user-mail-address . "zjn@mit.edu")
+                      (user-full-name . "Zachary Newman")
+                      (smtpmail-local-domain . "mit.edu")
+                      (smtpmail-smtp-server . "outgoing.mit.edu")
+                      (smtpmail-stream-type . ssl)
+                      (smtpmail-smtp-service . 465)))
+            ,(make-mu4e-context
+              :name "oCSAIL"
+              :match-func (zjn--make-match "csail")
+              :vars '((mu4e-trash-folder . "/csail/Trash")
+                      (mu4e-sent-folder . "/csail/Sent")
+                      (mu4e-drafts-folder . "/csail/Drafts")
+                      (mu4e-refile-folder . "/csail/Archive")
+                      (user-mail-address . "zjn@csail.mit.edu")
+                      (user-full-name . "Zachary Newman")
+                      (smtpmail-local-domain . "csail.mit.edu")
+                      (smtpmail-smtp-server . "outgoing.csail.mit.edu")
+                      (smtpmail-stream-type . starttls)
+                      (smtpmail-smtp-service . 587)))
+            ,(make-mu4e-context
+              :name "Gmail"
+              :match-func (zjn--make-match "gmail")
+              :vars '((mu4e-trash-folder . "/gmail/[Gmail]/Trash")
+                      (mu4e-sent-folder . "/gmail/[Gmail]/SentMail")
+                      (mu4e-drafts-folder . "/gmail/[Gmail]/Drafts")
+                      (mu4e-refile-folder . "/gmail/[Gmail]/AllMail")
+                      (user-mail-address . "znewman01@gmail.com")
+                      (smtpmail-smtp-user "znewman01@gmail.com")
+                      (user-full-name . "Zachary Newman")
+                      (smtpmail-local-domain . "gmail.com")
+                      (smtpmail-smtp-server . "smtp.gmail.com")
+                      (smtpmail-stream-type . starttls)
+                      (smtpmail-smtp-service . 587)))
+            ,(make-mu4e-context
+              :name "Chainguard"
+              :match-func (zjn--make-match "chainguard")
+              :vars '((mu4e-trash-folder . "/chainguard/[Gmail]/Trash")
+                      (mu4e-sent-folder . "/chainguard/[Gmail]/SentMail")
+                      (mu4e-drafts-folder . "/chainguard/[Gmail]/Drafts")
+                      (mu4e-refile-folder . "/chainguard/[Gmail]/AllMail")
+                      (user-mail-address . "zjn@chainguard.dev")
+                      (user-full-name . "Zachary Newman")
+                      (smtpmail-local-domain . "gmail.com")
+                      (smtpmail-smtp-user "zjn@chainguard.dev")
+                      (smtpmail-smtp-server . "smtp.gmail.com")
+                      (smtpmail-stream-type . starttls)
+                      (smtpmail-smtp-service . 587)))))
+    (defun zjn--get-mu4e-vars (var)
+      "Get mu4e vars /in current mu4e context/"
+      (mapcar (lambda (context)
+                (alist-get var (mu4e-context-vars context)))
+              mu4e-contexts))
+    (let* ((trash-folders (zjn--get-mu4e-vars 'mu4e-trash-folder))
+           (sent-folders (zjn--get-mu4e-vars 'mu4e-sent-folder))
+           (query-skipping
+            (lambda (query maildirs)
+              (s-join " AND "
+                      (cons query
+                            (mapcar (apply-partially #'concat "NOT maildir:") maildirs)))))
+           (skip-trash-and-sent
+             (lambda (query) (funcall query-skipping query (-concat trash-folders sent-folders '("/mit/Junk" "/gmail/[Gmail]/Spam" "/chainguard/[Gmail]/Spam"))))))
+        (setq mu4e-bookmarks
+            (mapcar (apply-partially #'apply #'make-mu4e-bookmark)
+                    `((:name "All Inboxes"
+                        :query "maildir:/gmail/Inbox OR maildir:/mit/INBOX OR maildir:/fastmail/INBOX OR maildir:/csail/INBOX OR maildir:/chainguard/Inbox"
+                        :key ?i)
+                        (:name "Unread messages"
+                        :query ,(funcall skip-trash-and-sent "flag:unread AND NOT flag:trashed")
+                        :key ?u)
+                        (:name "Last 7 days"
+                        :query ,(funcall skip-trash-and-sent "date:7d..now")
+                        :key ?w)))))
+    (setq mu4e-headers-sort-field :date)
+    (setq mu4e-attachment-dir (expand-file-name "~/zjn/Downloads"))
+    (mkdir mu4e-attachment-dir t)
+    (setq mu4e-view-show-addresses t)
+    (setq mu4e-change-filenames-when-moving t)
+    (setq nsm-settings-file (expand-file-name "~/.local/doom/network-security.data"))
+    (require 'mu4e-mark)
+    (setf
+      (alist-get 'trash mu4e-marks)
+      (plist-put (cdr (assq 'trash mu4e-marks))
+                 :action
+                 (lambda (docid msg target)
+                   (mu4e~proc-move docid (mu4e~mark-check-target target) "-N"))))
+    (setq mu4e-alert-interesting-mail-query "flag:unread AND NOT flag:trashed AND (maildir:/gmail/Inbox OR maildir:/mit/INBOX OR maildir:/fastmail/INBOX OR maildir:/csail/INBOX OR maildir:/chainguard/Inbox)")
+    (require 'org-mu4e)
+    (defun zjn--confirm-empty-subject ()
+      "Allow user to quit when current message subject is empty."
+      (or (message-field-value "Subject")
+          (yes-or-no-p "Really send without Subject? ")
+          (keyboard-quit)))
+    (add-hook 'message-send-hook #'zjn--confirm-empty-subject)
+    (setq mu4e-compose-context-policy 'ask)
+    (setq send-mail-function 'smtpmail-send-it)))
 
 (after! elfeed
   (setq elfeed-db-directory (expand-file-name "~/Sync/elfeed"))
@@ -801,18 +802,20 @@
 (map! :leader (:prefix-map ("o" . "open")
                :desc "RSS" "e" #'=rss))
 
-(add-to-list 'custom-theme-load-path "~/.doom-themes")
-(setq doom-theme nil)
-(load-theme 'base16-zjn t)
+(when (file-directory-p "~/.doom-themes")
+  (add-to-list 'custom-theme-load-path "~/.doom-themes")
+  (setq doom-theme nil)
+  (load-theme 'base16-zjn t)
+  ; I want to be able to see which workspace is selected; the default highlighting is too weak.
+  (set-face-background '+workspace-tab-selected-face (plist-get base16-zjn-colors :base02))
+  (set-face-foreground '+workspace-tab-selected-face (plist-get base16-zjn-colors :base0D)))
 
-(set-face-background '+workspace-tab-selected-face (plist-get base16-zjn-colors :base02))
-(set-face-foreground '+workspace-tab-selected-face (plist-get base16-zjn-colors :base0D))
-
-(setq zjn--mono "Roboto Mono")
-(setq zjn--sans "Bitstream Vera Sans")
-(setq zjn--serif "TeX Gyre Pagella")
-(setq doom-font (font-spec :family zjn--mono :height 80 :weight 'semi-light))
-(setq doom-variable-pitch-font (font-spec :family zjn--serif :height 60))
+(when (eq system-type 'gnu/linux)
+  (setq zjn--mono "Roboto Mono")
+  (setq zjn--sans "Bitstream Vera Sans")
+  (setq zjn--serif "TeX Gyre Pagella")
+  (setq doom-font (font-spec :family zjn--mono :height 80 :weight 'semi-light))
+  (setq doom-variable-pitch-font (font-spec :family zjn--serif :height 60)))
 
 (setq-default left-margin-width 1
               right-margin-width 1)

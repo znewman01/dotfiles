@@ -12,6 +12,8 @@
     ./desktop/home-common.nix
   ];
 
+  home.enableNixpkgsReleaseCheck = true;
+
   xdg.enable = true;
 
   home.keyboard.options = [ "caps:swapescape" "compose:ralt" ];
@@ -28,8 +30,6 @@
 
   programs.bash = {
     enable = true;
-    sessionVariables = {
-      PATH = "$HOME/bin:$PATH";
-    };
+    sessionVariables = { PATH = "$HOME/bin:$PATH"; };
   };
 }

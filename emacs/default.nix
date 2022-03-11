@@ -1,7 +1,7 @@
-{ config, lib, pkgs, ... }:
+{ config, pkgs, ... }:
 
 {
-  home.packages = with pkgs; [ emacs-all-the-icons-fonts ];
+  home.packages = with pkgs; [ emacs-all-the-icons-fonts ispell ];
 
   programs.doom-emacs = {
     enable = true;
@@ -30,5 +30,5 @@
     executable = true;
   };
 
-  home.file."notes" = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/Sync/notes";
+  home.file."notes".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/Sync/notes";
 }

@@ -8,7 +8,7 @@ let hosts = [ "zjn@zjn-x1prime" "zjn@zjn-home" "zjn@zjn-work" "zjn-cloud" ];
     ./system.nix
     ../persist/system.nix
     ./gpg/nixos.nix
-    ./emacs/nixos.nix
+    ../emacs/nixos.nix
   ];
 
   nix.trustedUsers = [ "@wheel" ];

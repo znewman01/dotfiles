@@ -6,5 +6,6 @@
     ./web/darwin-home.nix
     ./gpg
     ./home.nix
+    ../emacs
   ];
 }

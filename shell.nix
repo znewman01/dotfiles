@@ -1,5 +1,5 @@
 with import <nixpkgs> { };
 
 pkgs.mkShell rec {
-  buildInputs = with pkgs; [ stdenv nixfmt git-crypt terraform colmena ];
+  buildInputs = with pkgs; [ stdenv nixfmt git-crypt terraform ];
 }
