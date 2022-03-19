@@ -3,7 +3,7 @@
 {
   programs.git = {
     enable = true;
-    ignores = [ "*~" "*.swp" ];
+    ignores = [ "*~" "*.swp" ".DS_Store" ];
     userEmail = "z@znewman.net";
     userName = "Zachary Newman";
     extraConfig.pull.rebase = "true";
