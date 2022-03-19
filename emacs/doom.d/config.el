@@ -287,6 +287,8 @@
                                                                  :tag "chainguard")
                                                           (:name "Errands:" :order 1
                                                                  :tag "@errand")
+                                                          (:name "Home:" :order 1
+                                                                 :tag "@home")
                                                           (:discard (:tag "yak"))
                                                           (:name "Other tasks:"
                                                                  :anything t)))
@@ -568,7 +570,7 @@
   (map! :mode biblio-selection-mode
         "RET" #'zjn/bib-add))
 
-(when (executable-find mbsync)
+(when (executable-find "mbsync")
   (eval-and-compile
     (defun mu4e-load-path ()
       (f-join (string-trim (shell-command-to-string "nix-store -r $(which mu) 2> /dev/null")) "share/emacs/site-lisp/mu4e")))

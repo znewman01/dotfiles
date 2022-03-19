@@ -227,6 +227,8 @@ I like to search using DDG always:
                                                                  :tag "chainguard")
                                                           (:name "Errands:" :order 1
                                                                  :tag "@errand")
+                                                          (:name "Home:" :order 1
+                                                                 :tag "@home")
                                                           (:discard (:tag "yak"))
                                                           (:name "Other tasks:"
                                                                  :anything t)))
@@ -694,7 +696,7 @@ Eventually will sort through this.
 :END:
 I use [[https://www.djcbsoftware.nl/code/mu/][mu]] for mail, and "~mu~ for Emacs" (~mu4e~) for mail for Emacs:
 #+begin_src emacs-lisp :noweb-ref nil
-(when (executable-find mbsync)
+(when (executable-find "mbsync")
   (eval-and-compile
     (defun mu4e-load-path ()
       (f-join (string-trim (shell-command-to-string "nix-store -r $(which mu) 2> /dev/null")) "share/emacs/site-lisp/mu4e")))
