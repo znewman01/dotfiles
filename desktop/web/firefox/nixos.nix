@@ -1,8 +1,8 @@
 { config, lib, pkgs, ... }:
 
-let colors = (import ./../desktop/colors) { lib = lib; };
-{
-  imports = [ ./default.nix ];
+let colors = (import ../../colors) { lib = lib; };
+in {
+  imports = [ ./. ];
 
   programs.firefox = {
     enable = true;

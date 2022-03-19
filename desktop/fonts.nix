@@ -7,7 +7,7 @@
     hack-font
     eb-garamond
     fira-code
-    font-awesome-ttf
+    font-awesome
     iosevka
     liberation_ttf
     libertine

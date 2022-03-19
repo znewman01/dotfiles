@@ -1,14 +1,12 @@
 { config, pkgs, ... }:
 
 let hosts = [ "zjn@zjn-x1prime" "zjn@zjn-home" "zjn@zjn-work" "zjn-cloud" ];
-{
+in {
   imports = [
     ./timezone.nix
     ./zfs.nix
     ./system.nix
     ../persist/system.nix
-    ./gpg/nixos.nix
-    ../emacs/nixos.nix
   ];
 
   nix.trustedUsers = [ "@wheel" ];
@@ -26,7 +24,7 @@ let hosts = [ "zjn@zjn-x1prime" "zjn@zjn-home" "zjn@zjn-work" "zjn-cloud" ];
 
 
   programs.dconf.enable = true;
-  services.dbus.packages = with pkgs; [ gnome3.dconf ];
+  services.dbus.packages = with pkgs; [ dconf ];
 
   security.pam.loginLimits = [{
     domain = "*";

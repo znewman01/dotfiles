@@ -9,5 +9,6 @@
     signal-desktop
     keybase-gui
     slack
+    zoom-us
   ];
 }

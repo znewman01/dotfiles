@@ -1,6 +1,11 @@
-{ config, pkgs, ... }:
+{ config, pkgs, doom-emacs, ... }:
 
 {
-  imports = [ ../../home-common.nix ./autorandr.nix ../../code.nix ];
+  imports = [
+    ../../common/home-nixos.nix
+    ../../desktop/nixos-home.nix
+    ./autorandr.nix
+    ../../code.nix
+  ];
   home.stateVersion = "21.11";
 }
