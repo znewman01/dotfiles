@@ -92,7 +92,7 @@ in {
               , [ Docks.manageDocks ]
               , [ title =? "emacsfloat"  --> (customFloating $ W.RationalRect (1/4) (1/8) (1/2) (3/4)) ]
               , [ title =? "doom-capture"  --> (customFloating $ W.RationalRect (1/4) (1/8) (1/2) (3/4)) ]
-              , [ title =? "colmena"  --> (customFloating $ W.RationalRect (1/4) (1/8) (1/2) (3/4)) ]
+              , [ title =? "nixos-rebuild"  --> (customFloating $ W.RationalRect (1/4) (1/8) (1/2) (3/4)) ]
               , [ title =? "htop"  --> doShift "1" ]
               , [ namedScratchpadManageHook scratchpads ]
               , [ classMatch app --> doShift "8" | app <- messageApps ]
@@ -138,7 +138,7 @@ in {
           , startupHook = composeAll
               [ Bars.dynStatusBarStartup barCreator barDestroyer
               , spawn "hsetroot -solid '#${colors.base02}'"
-              , spawnOnce "alacritty --title htop --command nix-shell -p htop --command htop"
+              , spawnOnce "alacritty --title htop --command nix run nixpkgs#htop"
               ]
           , logHook = composeAll
               [ Bars.multiPP myLogPPActive myLogPP
@@ -179,7 +179,7 @@ in {
             , ("<XF86MonBrightnessDown>", spawn "light -U 10")
             , ("<XF86ScreenSaver>", spawn "i3lock -c ${colors.base00}")
             , ("S-M-x", spawn "em-capture")
-            , ("S-M-n", spawn "alacritty --working-directory ~/git/dotfiles  --title colmena --command nix-shell --command 'colmena apply-local --sudo; beep; echo Colmena done.; read'")
+            , ("S-M-n", spawn "alacritty --working-directory ~/git/dotfiles  --title nixos-rebuild --command 'sudo nixos-rebuild switch --flake .; beep; echo nixos-rebuild done.; read'")
             ]
 
     '';
