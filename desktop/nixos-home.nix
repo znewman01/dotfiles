@@ -14,6 +14,7 @@
     ./screenlock-nixos-home.nix
     ./notifications-nixos-home.nix
     ./theme-nixos-home.nix
+    ./tools/nixos.nix
   ];
 
   home.packages = with pkgs; [

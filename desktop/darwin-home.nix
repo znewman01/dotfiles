@@ -7,6 +7,7 @@
     ./web/darwin-home.nix
     ./gpg/home.nix
     ./home.nix
+    ./tools
     ../emacs
   ];
 }
