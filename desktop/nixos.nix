@@ -2,14 +2,9 @@
 
 let hosts = [ "zjn@zjn-x1prime" "zjn@zjn-home" "zjn@zjn-work" "zjn-cloud" ];
 in {
-  imports = [
-    ./timezone.nix
-    ./zfs.nix
-    ./system.nix
-    ../persist/system.nix
-  ];
+  imports = [ ./timezone.nix ./zfs.nix ./system.nix ../persist/system.nix ];
 
-  nix.trustedUsers = [ "@wheel" ];
+  nix.settings.trusted-users = [ "@wheel" ];
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -22,7 +17,6 @@ in {
 
   users.extraGroups.vboxusers.members = [ "zjn" ];
 
-
   programs.dconf.enable = true;
   services.dbus.packages = with pkgs; [ dconf ];
 
@@ -32,7 +26,6 @@ in {
     item = "nofile";
     value = "2048"; # the default of 1024 makes some software (e.g., Rust) choke
   }];
-
 
   users.users.zjn = {
     isNormalUser = true;
