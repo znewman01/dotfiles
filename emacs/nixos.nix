@@ -1,10 +1,8 @@
 { config, pkgs, lib, ... }:
 
-let
-  colors = (import ./../desktop/colors) { lib = lib; };
+let colors = (import ./../desktop/colors) { lib = lib; };
 in {
   imports = [ ./default.nix ];
-
   services.emacs = {
     enable = true;
     socketActivation.enable = true;

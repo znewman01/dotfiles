@@ -30,5 +30,6 @@
     executable = true;
   };
 
-  home.file."notes".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/Sync/notes";
+  home.file."notes".source = config.lib.file.mkOutOfStoreSymlink
+    "${config.home.homeDirectory}/Sync/notes";
 }

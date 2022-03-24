@@ -1,11 +1,7 @@
 { config, pkgs, ... }:
 
 {
-  imports = [
-    ./default.nix
-    ./tailscale/darwin.nix
-    ./ssh/darwin.nix
-  ];
+  imports = [ ./default.nix ./tailscale/darwin.nix ./ssh/darwin.nix ];
 
   programs.zsh.enable = true;
 
