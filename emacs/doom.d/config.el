@@ -842,9 +842,17 @@
 
 (setq tramp-inline-compress-start-size 1000000)
 
+(require 'inheritenv)
+(require 'format-all)
+(inheritenv-add-advice 'call-process-region)
+(inheritenv-add-advice 'call-process)
+(inheritenv-add-advice 'shell-command)
+(inheritenv-add-advice 'format-all--buffer-thunk)
+
 (after! rustic
   (setq rustic-lsp-server 'rust-analyzer)
-
+  (inheritenv-add-advice 'rustic-format-start-process)
+  (inheritenv-add-advice 'rustic-compilation)
   (map! :map (conf-toml-mode-map rustic-mode-map)
         :localleader
         (:prefix ("c" . "cargo")
@@ -862,15 +870,30 @@
          :desc "all"          "a" #'rustic-cargo-test
          :desc "current test" "t" #'rustic-cargo-current-test)))
 
-(after! lsp-mode
-  (push "[/\\\\]\\.hypothesis" lsp-file-watch-ignored)
-  (push "[/\\\\]\\venv$" lsp-file-watch-ignored)
-  (push "[/\\\\]\\.venv$" lsp-file-watch-ignored))
+(after! python-mode
+  ; (inheritenv-add-advice ))
+  )
 
 (after! go
-  (require 'inheritenv)
-  (inheritenv-add-advice 'call-process-region)
   (inheritenv-add-advice 'gofmt-before-save))
+
+(after! lsp
+  (defun ++git-ignore-p (path)
+    (let* (; trailing / breaks git check-ignore if path is a symlink:
+           (path (directory-file-name path))
+           (default-directory (file-name-directory path))
+           (relpath (file-name-nondirectory path))
+           (cmd (format "git check-ignore '%s'" relpath))
+           (status (call-process-shell-command cmd)))
+      (eq status 0)))
+
+  (defun ++lsp--path-is-watchable-directory-a
+      (fn path dir ignored-directories)
+    (and (not (++git-ignore-p (f-join dir path)))
+         (funcall fn path dir ignored-directories)))
+
+  (advice-add 'lsp--path-is-watchable-directory
+              :around #'++lsp--path-is-watchable-directory-a))
 
 (after! latex
   (add-to-list 'TeX-command-list '("Tectonic" "tectonic --synctex %t" TeX-run-compile nil (latex-mode) :help "Run Tectonic"))
