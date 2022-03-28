@@ -30,7 +30,13 @@
     ];
   };
   outputs =
-    inputs@{ nixpkgs, home-manager, impermanence, doom-emacs, darwin, ... }: {
+    inputs@{ nixpkgs, home-manager, impermanence, doom-emacs, darwin, ... }:
+    let
+      useSystemNixpkgs = ({ ... }: {
+        nix.registry.nixpkgs.flake = nixpkgs;
+        nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
+      });
+    in {
       nixosConfigurations = {
         zjn-work = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
@@ -38,6 +44,7 @@
             home-manager.nixosModule
             impermanence.nixosModule
             ./machines/zjn-work
+            useSystemNixpkgs
           ];
           specialArgs = inputs;
         };
