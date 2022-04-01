@@ -179,7 +179,7 @@ in {
             , ("<XF86MonBrightnessDown>", spawn "light -U 10")
             , ("<XF86ScreenSaver>", spawn "i3lock -c ${colors.base00}")
             , ("S-M-x", spawn "em-capture")
-            , ("S-M-n", spawn "alacritty --working-directory ~/git/dotfiles  --title nixos-rebuild --command 'sudo nixos-rebuild switch --flake .; beep; echo nixos-rebuild done.; read'")
+            , ("S-M-n", spawn "alacritty --working-directory ~/git/dotfiles  --title nixos-rebuild --command /bin/sh -c 'sudo nixos-rebuild switch --flake .; notify-send -t 2000 done; echo nixos-rebuild done.; read'")
             ]
 
     '';
