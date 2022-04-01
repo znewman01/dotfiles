@@ -15,6 +15,7 @@
     ./notifications-nixos-home.nix
     ./theme-nixos-home.nix
     ./tools/nixos.nix
+    ./syncthing/nixos.nix
   ];
 
   home.packages = with pkgs; [
