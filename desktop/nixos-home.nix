@@ -38,16 +38,6 @@
 
   home.keyboard.options = [ "caps:swapescape" "compose:ralt" ];
 
-  programs.vscode = {
-    enable = true;
-    package = pkgs.vscodium;
-    extensions = with pkgs.vscode-extensions; [
-      vscodevim.vim
-      golang.go
-      eamodio.gitlens
-    ];
-  };
-
   programs.bash.shellAliases = {
     s = "systemctl";
     j = "journalctl";
