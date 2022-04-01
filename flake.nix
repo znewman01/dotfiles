@@ -4,6 +4,8 @@
     nixpkgs.url = "github:numtide/nixpkgs-unfree";
     nixpkgs.inputs.nixpkgs.follows = "nixpkgs-unstable";
 
+    flake-utils.url = "github:numtide/flake-utils";
+
     home-manager.url = "github:nix-community/home-manager/master";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -23,14 +25,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-  nixConfig = {
-    extra-substituters = [ "https://nixpkgs-unfree.cachix.org" ];
-    extra-trusted-public-keys = [
-      "nixpkgs-unfree.cachix.org-1:hqvoInulhbV4nJ9yJOEr+4wxhDV4xq2d1DK7S6Nj6rs="
-    ];
-  };
-  outputs =
-    inputs@{ nixpkgs, home-manager, impermanence, doom-emacs, darwin, ... }:
+
+  outputs = inputs@{ nixpkgs, home-manager, impermanence, doom-emacs, darwin
+    , flake-utils, ... }:
     let
       useSystemNixpkgs = ({ ... }: {
         nix.registry.nixpkgs.flake = nixpkgs;
@@ -57,5 +54,12 @@
         specialArgs = inputs;
       };
 
+      devShells = nixpkgs.lib.genAttrs flake-utils.lib.defaultSystems (system:
+        let pkgs = nixpkgs.legacyPackages.${system};
+        in {
+          default = pkgs.mkShell {
+            buildInputs = with pkgs; [ nixfmt git-crypt terraform ];
+          };
+        });
     };
 }
