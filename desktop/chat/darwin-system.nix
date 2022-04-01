@@ -1,5 +1,5 @@
 { config, pkgs, ... }:
 
 {
-  homebrew.casks = [ "slack" "zoom" ];
+  homebrew.casks = [ "slack" "zoom" "signal" ];
 }
