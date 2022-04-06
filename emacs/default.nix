@@ -1,11 +1,14 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   home.packages = with pkgs; [ emacs-all-the-icons-fonts ispell ];
 
   programs.doom-emacs = {
     enable = true;
-    doomPrivateDir = ./doom.d;
+    doomPrivateDir = (import ./doom.d) {
+      inherit lib;
+      inherit (pkgs) stdenv emacs;
+    };
 
     emacsPackagesOverlay = self: super: {
       # fixes https://github.com/vlaci/nix-doom-emacs/issues/394

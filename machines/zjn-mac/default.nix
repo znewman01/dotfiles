@@ -1,4 +1,4 @@
-{ config, pkgs, lib, inputs, ... }:
+{ config, pkgs, lib, doom-emacs, ... }:
 
 {
   imports = [ ../../common/darwin.nix ../../desktop/darwin.nix ];
@@ -8,6 +8,6 @@
 
   users.users.zjn.home = "/Users/zjn";
   home-manager.users.zjn = import ./home.nix;
-  home-manager.extraSpecialArgs = { inherit (inputs) doom-emacs; };
+  home-manager.extraSpecialArgs = { inherit doom-emacs; };
   home-manager.useUserPackages = true;
 }

@@ -22,16 +22,16 @@
     };
     darwin = {
       url = "github:lnl7/nix-darwin/master";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
   };
 
-  outputs = inputs@{ nixpkgs, home-manager, impermanence, doom-emacs, darwin
-    , flake-utils, ... }:
+  outputs = inputs@{ nixpkgs, darwin, flake-utils, home-manager, impermanence
+    , doom-emacs, ... }:
     let
       useSystemNixpkgs = ({ ... }: {
         nix.registry.nixpkgs.flake = nixpkgs;
-        nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
+        nix.nixPath = [ "nixpkgs=${nixpkgs}" ];
       });
     in {
       nixosConfigurations = {
