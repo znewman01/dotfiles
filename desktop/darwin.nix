@@ -9,4 +9,5 @@
   ];
 
   homebrew.casks = [ "iterm2" "alfred" ];
+  homebrew.brews = [ "ykman" ];
 }
