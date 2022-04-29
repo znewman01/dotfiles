@@ -83,3 +83,6 @@
 (package! sql-indent)
 
 (package! org-anki)
+
+; programming
+(package! protobuf-mode)
