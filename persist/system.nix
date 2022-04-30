@@ -3,10 +3,10 @@
 {
   programs.fuse.userAllowOther = true;
   boot.initrd.postDeviceCommands = lib.mkAfter ''
-    zfs destroy -R tank/local/lastroot
-    zfs rename tank/local/root tank/local/lastroot
-    zfs set mountpoint=/tank/local/lastroot tank/local/lastroot
-    zfs create -p -o mountpoint=legacy tank/local/root
+    zfs destroy -R tank/encrypt/local/lastroot
+    zfs rename tank/encrypt/local/root tank/encrypt/local/lastroot
+    zfs set mountpoint=/tank/encrypt/local/lastroot tank/encrypt/local/lastroot
+    zfs create -p -o mountpoint=/ tank/encrypt/local/root
   '';
   systemd.tmpfiles.rules = [
     "L /etc/NetworkManager/system-connections - - - - /persist/nm-system-connections"

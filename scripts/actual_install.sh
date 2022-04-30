@@ -28,16 +28,16 @@ mkfs.fat -F 32 -n boot ${PART_PREFIX}2
 zpool create -f tank ${PART_PREFIX}1
 zfs set com.sun:auto-snapshot=true tank
 zfs set compression=lz4 tank
-zfs create -p -o mountpoint=legacy tank/safe/persist
-zfs create -p -o mountpoint=legacy tank/local/root
-zfs create -p -o mountpoint=legacy tank/local/cache
-zfs create -p -o mountpoint=legacy tank/local/nix
+zfs create -p -o mountpoint=legacy tank/encrypt/safe/persist
+zfs create -p -o mountpoint=legacy tank/encrypt/local/root
+zfs create -p -o mountpoint=legacy tank/encrypt/local/cache
+zfs create -p -o mountpoint=legacy tank/encrypt/local/nix
 # 3. mount
-mount -t zfs tank/local/root /mnt
+mount -t zfs tank/encrypt/local/root /mnt
 mkdir /mnt/{boot,cache,persist,nix}
-mount -t zfs tank/local/nix /mnt/nix
-mount -t zfs tank/local/cache /mnt/cache
-mount -t zfs tank/safe/persist /mnt/persist
+mount -t zfs tank/encrypt/local/nix /mnt/nix
+mount -t zfs tank/encrypt/local/cache /mnt/cache
+mount -t zfs tank/encrypt/safe/persist /mnt/persist
 mount ${PART_PREFIX}2 /mnt/boot
 # 4. configure locally
 REPO=/mnt/persist/zjn/git/dotfiles

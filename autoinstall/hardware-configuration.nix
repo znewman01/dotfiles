@@ -11,22 +11,22 @@
   networking.hostId = "babecafe";
 
   fileSystems."/" = {
-    device = "tank/local/root";
+    device = "tank/encrypt/local/root";
     fsType = "zfs";
   };
 
   fileSystems."/nix" = {
-    device = "tank/local/nix";
+    device = "tank/encrypt/local/nix";
     fsType = "zfs";
   };
 
   fileSystems."/cache" = {
-    device = "tank/local/cache";
+    device = "tank/encrypt/local/cache";
     fsType = "zfs";
   };
 
   fileSystems."/persist" = {
-    device = "tank/safe/persist";
+    device = "tank/encrypt/safe/persist";
     fsType = "zfs";
   };
 
