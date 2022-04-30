@@ -19,15 +19,6 @@
       url = "git@github.com:znewman01/resume.git";
       exclude.enable = true;
     };
-    "spectrum-paper" = {
-      url = "git@github.com:sachaservan/spectrum-paper.git";
-      exclude.enable = true;
-      shell = ./spectrum-paper.nix;
-    };
-    "spectrum-impl" = {
-      url = "git@github.com:znewman01/spectrum-impl.git";
-      exclude.enable = true;
-    };
     "dotfiles" = { url = "git@github.com:znewman01/dotfiles.git"; };
     "scalingsnapshots" = {
       url = "git@github.com:znewman01/scalingsnapshots.git";
