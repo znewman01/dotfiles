@@ -1,8 +1,9 @@
 {
   inputs = {
-    nixpkgs-unstable.url = "github:NixOS/nixpkgs/master";
-    nixpkgs.url = "github:numtide/nixpkgs-unfree";
-    nixpkgs.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/master";
+
+    nixpkgs-unfree.url = "github:numtide/nixpkgs-unfree";
+    nixpkgs-unfree.inputs.nixpkgs.follows = "nixpkgs";
 
     flake-utils.url = "github:numtide/flake-utils";
 
@@ -10,6 +11,9 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     impermanence.url = "github:nix-community/impermanence";
+
+    kolide-launcher.url = "github:znewman01/kolide-launcher";
+    kolide-launcher.inputs.nixpkgs.follows = "nixpkgs";
 
     emacs-overlay = {
       url = "github:nix-community/emacs-overlay";
@@ -22,12 +26,12 @@
     };
     darwin = {
       url = "github:lnl7/nix-darwin/master";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
   outputs = inputs@{ nixpkgs, darwin, flake-utils, home-manager, impermanence
-    , doom-emacs, ... }:
+    , doom-emacs, kolide-launcher, ... }:
     let
       useSystemNixpkgs = ({ ... }: {
         nix.registry.nixpkgs.flake = nixpkgs;
@@ -40,6 +44,7 @@
           modules = [
             home-manager.nixosModule
             impermanence.nixosModule
+            kolide-launcher.nixosModules.x86_64-linux.default
             ./machines/zjn-work
             useSystemNixpkgs
           ];
