@@ -12,7 +12,6 @@ in {
     config = pkgs.writeText "xmonad.hs" ''
       import Data.List
       import Data.Char
-      import Data.Default
       import Data.Function (on)
       import Graphics.X11.ExtraTypes.XF86
       import Graphics.X11.Types
@@ -179,7 +178,7 @@ in {
             , ("<XF86MonBrightnessDown>", spawn "light -U 10")
             , ("<XF86ScreenSaver>", spawn "i3lock -c ${colors.base00}")
             , ("S-M-x", spawn "em-capture")
-            , ("S-M-n", spawn "alacritty --title nixos-rebuild --command /bin/sh -c 'sudo nixos-rebuild switch --flake ~/git/dotfiles; notify-send -t 2000 done; echo nixos-rebuild done.; read'")
+            , ("S-M-n", spawn "alacritty --title nixos-rebuild --command /bin/sh -c 'nix develop ~/git/dotfiles --command nixos-rebuild switch --flake ~/git/dotfiles --use-remote-sudo; notify-send -t 2000 done; echo nixos-rebuild done.; read'")
             ]
 
     '';

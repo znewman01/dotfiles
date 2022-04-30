@@ -5,7 +5,7 @@
   imports = [ ./default.nix ];
 
   home.packages = with pkgs; [
-    skype
+    skypeforlinux
     signal-desktop
     keybase-gui
     slack
