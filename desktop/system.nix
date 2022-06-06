@@ -36,5 +36,4 @@
     package = pkgs.pulseaudioFull;
   };
   nixpkgs.config.pulseaudio = true;
-
 }
