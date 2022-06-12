@@ -158,6 +158,7 @@ I like to search using DDG always:
                 "research/broadcast.org"
                 "research/accumulators.org"
                 "research/tor.org"
+                "inbox-mac.org"
                 "school.org")))
 (setq org-archive-location "archive/%s::")
 (setq org-attach-directory (org-file ".attach"))
