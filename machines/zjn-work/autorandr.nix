@@ -13,12 +13,13 @@ in {
       fingerprint = lg32 // dell24;
       config = {
         "HDMI-A-0" = {
-            position = "0x100";
+            position = "0x150";
             mode = "2560x1440";
         };
         "DisplayPort-0" = {
             position = "2560x0";
             mode = "1920x1200";
+            rotate = "left";
         };
       };
     };
