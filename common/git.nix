@@ -9,5 +9,6 @@
     extraConfig.pull.rebase = "true";
     extraConfig.github.user = "znewman01";
     extraConfig.init.defaultBranch = "main";
+    extraConfig.push.autoSetupRemote = true;
   };
 }
