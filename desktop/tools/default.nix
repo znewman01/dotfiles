@@ -7,6 +7,7 @@
     ripgrep
     sqlite
     imagemagick
+    gitsign
   ];
 }
 
