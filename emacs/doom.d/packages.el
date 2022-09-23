@@ -49,32 +49,24 @@
 ;(unpin! pinned-package another-pinned-package)
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
-(package! org-ref)
-(package! citeproc)
-(package! csv-mode)
-(package! gnuplot-mode)
 
 (package! evil-escape :disable t)  ; let me type "jk"!
 
 ; some things break due to envrc
 (package! inheritenv)
 
-; org roam etc.
-; (package! org-roam-bibtex
-;   :recipe (:host github :repo "org-roam/org-roam-bibtex"))
-;; When using org-roam via the `+roam` flag
-; (unpin! org-roam)
-;; When using bibtex-completion via the `biblio` module
-(unpin! bibtex-completion helm-bibtex ivy-bibtex)
+(unpin! bibtex-completion)
 (unpin! org-re-reveal)
 (package! org-re-reveal-ref :pin nil)
-(package! org-mime)
-(package! org-msg :disable t)
 (package! org-ql)
 (package! org-super-agenda)
+(package! citar)
+(package! citar-org-roam)
+(unpin! org-roam)
+(package! org-roam-bibtex
+  :recipe (:host github :repo "org-roam/org-roam-bibtex"))
 
 ; ~~aesthetics~~
-(package! mixed-pitch)
 (package! org-fancy-priorities :disable t)
 (package! org-fragtog)
 (package! base16-theme)

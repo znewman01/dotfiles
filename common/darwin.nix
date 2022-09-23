@@ -7,7 +7,8 @@
 
   homebrew = {
     enable = true;
-    cleanup = "zap";
+    onActivation.cleanup = "zap";
+    onActivation.upgrade = true;
   };
   programs.zsh.shellInit = ''eval "$(/opt/homebrew/bin/brew shellenv)"'';
 

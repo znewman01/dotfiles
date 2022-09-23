@@ -1,13 +1,12 @@
 # https://github.com/nix-community/nix-doom-emacs/issues/60#issuecomment-1083630633
-{ version ? "dev", lib, stdenv, emacs }:
+{ version ? "dev", lib, stdenv, emacs, coreutils }:
 
 stdenv.mkDerivation {
   pname = "emacs-config";
   inherit version;
   src = lib.sourceByRegex ./. [ "config.org" "init.el" "packages.el" ];
 
-  buildInputs = [ emacs ];
-
+  buildInputs = [ emacs coreutils ];
   buildPhase = ''
     cp $src/* .
     # Tangle org files

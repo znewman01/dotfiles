@@ -7,13 +7,7 @@
     enable = true;
     doomPrivateDir = (import ./doom.d) {
       inherit lib;
-      inherit (pkgs) stdenv emacs;
-    };
-
-    emacsPackagesOverlay = self: super: {
-      # fixes https://github.com/vlaci/nix-doom-emacs/issues/394
-      gitignore-mode = pkgs.emacsPackages.git-modes;
-      gitconfig-mode = pkgs.emacsPackages.git-modes;
+      inherit (pkgs) stdenv emacs coreutils;
     };
   };
 

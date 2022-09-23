@@ -12,6 +12,12 @@ Make the ~doom~ CLI tool work (hack due to Nix chicanery):
 (setenv "EMACSDIR" "~/.emacs.d")
 #+end_src
 
+Docs working:
+#+begin_src emacs-lisp
+(setq doom-modules-dir (car doom-modules-dirs)
+      doom-docs-dir (car doom-modules-dirs))
+#+end_src
+
 And some PII to put in my [[github:znewman01/dotfiles][dotfiles]]:
 #+begin_src emacs-lisp
 (setq user-full-name "Zachary Newman"
@@ -337,16 +343,6 @@ From a [[https://zzamboni.org/post/beautifying-org-mode-in-emacs/][blog]]:
     (setq org-cite-global-bibliography '("~/notes/lit/default.bib"))
     (org-link-set-parameters "cite" :display 'org-link))
 #+end_src
-*** org-ref
-#+begin_src emacs-lisp :noweb-ref nil
-(after! org-ref
-  (setq org-ref-default-bibliography '("~/Sync/notes/lit/default.bib")
-        org-ref-pdf-directory "~/Sync/notes/lit/"))
-#+end_src
-*** Bibtex completion
-#+begin_src emacs-lisp :tangle no
-(require 'bibtex-completion)
-#+end_src
 *** IACR
 #+begin_src emacs-lisp :tangle no
 (defun zjn--import-iacr (id)
@@ -482,214 +478,40 @@ hello
   (setq org-roam-directory "~/Sync/notes/roam"
         org-roam-completion-everywhere nil
         +org-roam-open-buffer-on-find-file nil))
-;
-; TODO: replace with org-roam-capture-templates
-;  (setq orb-templates
-;        '(("r" "ref" plain #'org-roam-capture--get-point "" :file-name "bib/${citekey}" :head "#+TITLE: ${title}\n#+ROAM_KEY: ${ref}\n" :unnarrowed t :immediate-finish t)))
-;   (org-roam-mode)
-;  (map! :mode org-mode :leader "n r n" #'orb-note-actions))
 #+end_src
 * Bibliography
 Eventually will sort through this.
 #+begin_src emacs-lisp
-(setq bibtex-completion-bibliography "~/Sync/notes/lit/default.bib"
-      bibtex-completion-library-path "~/Sync/notes/lit/"
-      bibtex-completion-notes-path "~/Sync/notes/roam/bib/")
-(after! ivy-bibtex
-  (require 'org-roam)
-  (org-roam-setup)
-  ;; Basic configuration
-  (setq reftex-default-bibliography '("~/Sync/notes/lit/default.bib")
-        biblio-crossref-user-email-address "crossref@z.znewman.net")
-  (setq bibtex-completion-fallback-options
-        '(("DBLP (computer science bibliography)      (biblio.el)"
-           . (lambda (search-expression) (biblio--lookup-1 #'biblio-dblp-backend search-expression)))
-          ("CrossRef                                  (biblio.el)"
-           . (lambda (search-expression) (biblio-lookup #'biblio-crossref-backend search-expression)))
-          ("arXiv                                     (biblio.el)"
-           . (lambda (search-expression) (biblio-lookup #'biblio-arxiv-backend search-expression)))
-          ("Google Scholar                            (web)"
-           . "https://scholar.google.com/scholar?q=%s")
-          ("IACR                                      (web)"
-           ."https://duckduckgo.com/?q=site%%3Aeprint.iacr.org+%s")))
-
-  ;; Now make it work like I want
-  ;; - if there's no match, ask where we want to search
-  ;; - if there is a match and I hit enter, ask what I want to do (abbreviated
-  ;; - to most common actions)
-  (defun zjn--bibtex-open-pdf (keys)
-    (bibtex-completion-open-pdf keys #'bibtex-completion-add-pdf-to-library))
-  (ivy-bibtex-ivify-action zjn--bibtex-open-pdf zjn--ivy-bibtex-pdf)
-
-  (defun zjn--bibtex-open-notes-and-pdf (keys)
-    (let* ((key (car keys))
-           (org-roam-find-file-function (lambda (file) (switch-to-buffer (find-file-noselect file) nil 'force-same-window)))
-           (pdf (bibtex-completion-find-pdf key)))
-      (+workspace-switch key t)
-      (delete-other-windows)
-      (when pdf
-        (let ((pdf-buffer (find-file (car pdf))))
-          (switch-to-buffer pdf-buffer nil 'force-same-window)
-          (split-window-right))
-        (windmove-right))
-      (let ((org-capture-link-is-already-stored t))
-                                        ; prevent trying to grab a link to the PDF
-        (orb-edit-notes key))))
-  (ivy-bibtex-ivify-action zjn--bibtex-open-notes-and-pdf zjn--ivy-bibtex-notes)
-
-  (setq zjn--ivy-bibtex-short-actions
-        '((?p "[p]df" zjn--ivy-bibtex-pdf)
-          (?n "[n]otes" zjn--ivy-bibtex-notes)
-          (?i "[i]nsert" ivy-bibtex-insert-citation)))
-  (defun zjn--ivy-bibtex-get-action ()
-    (let* ((actions zjn--ivy-bibtex-short-actions)
-           (names (cl-mapcar (lambda (entry) (cadr entry)) actions))
-           (chars (cl-mapcar (lambda (entry) (car entry)) actions))
-           (prompt (s-concat (s-join " " names) " "))
-           (choice (read-char-choice prompt chars))
-           (entry (cl-find-if (lambda (entry) (= (car entry) choice)) actions))
-           (action (third entry)))
-      action))
-
-  (defun zjn/ivy-bibtex-open-or-search (candidate)
-    "Dispatches to other actions, or searches using fallback options if no match found."
-    (if (listp candidate)
-        (let ((key (cdr (assoc "=key=" (cdr candidate))))
-              (action (zjn--ivy-bibtex-get-action)))
-          (funcall action candidate))
-      (ivy-bibtex-fallback candidate)))
-
-  (setq ivy-bibtex-default-action #'zjn/ivy-bibtex-open-or-search)
-
-  (defun zjn--ivy-bibtex-insert-or-search (candidate)
-    (if (listp candidate)
-        (ivy-bibtex-insert-citation candidate)
-      (ivy-bibtex-fallback candidate)))
-  (map! :mode org-mode
-        "C-c ]"
-        (cmd! (let ((ivy-bibtex-default-action #'zjn--ivy-bibtex-insert-or-search)) (ivy-bibtex))))
-
-  ;; Rename citation keys
-  (defun zjn--bibtex-rename (keys)
-    "Rename the citation key given by the first element of KEYS.
-
-  Updates the .bib file and moves the PDF and .org (notes) file.
-
-  org-roam updates back-references to the notes file, but PDF references and
-  citations are LTTR.
-  "
-    ; (org-roam-mode 1)  ; for rename-file advice
-    (cl-flet ((update (path new-key suffix)
-                      (when path
-                        (f-join (f-parent path) (concat new-key suffix)))))
-      (let* ((old-key (car keys))
-             (new-key (read-string (format "New cite key (was %s): " old-key)))
-             (old-note (caar (org-roam-db-query
-                              [:select file :from refs :where (= ref $s1)]
-                              old-key)))
-             (new-note (update old-note new-key ".org"))
-             (old-pdfs (bibtex-completion-find-pdf old-key))
-             (old-pdf (car old-pdfs))
-             (new-pdf (update old-pdf new-key ".pdf")))
-        ;; 1. BibTeX entry
-        (save-excursion
-          (bibtex-completion-show-entry (list old-key))
-          (zjn--bib-replace-key new-key)
-          (bibtex-reformat)
-          (bibtex-sort-buffer)
-          (save-buffer))
-        ;; 2. PDF
-        (when (> (length old-pdfs) 1)
-          (error "Cannot rename when there's supplemental PDFs."))
-        (rename-file old-pdf new-pdf)
-                                        ; eventually might have to fix up org-noter or something...
-        ;; 3. org-roam
-        (when old-note
-          (rename-file old-note new-note)
-          (bibtex-completion-clear-cache)
-          (org-roam-build-cache)))))
-  (ivy-bibtex-ivify-action zjn--bibtex-rename zjn--ivy-bibtex-rename)
-  (let ((ivy-actions (copy-alist (plist-get ivy--actions-list 'ivy-bibtex))))
-    (setf (alist-get "m" ivy-actions nil nil #'equal)
-          (list #'zjn--ivy-bibtex-rename "Rename (move) the citation key."))
-    (ivy-set-actions 'ivy-bibtex ivy-actions)))
-
-
-; TODO: handle author names in "Last, First" format.
-(defun zjn--default-key-name ()
-  (bibtex-beginning-of-entry)
-  (let* ((entry (bibtex-parse-entry))
-         (author-string (cdr (assoc-string "author" entry)))
-         (authors (s-split " and " (s-collapse-whitespace author-string)))
-         (year (cdr (assoc-string "year" entry))))
-    (concat
-     (cond ((= (length authors) 1) (substring (car (last (s-split " " (car authors)))) 0 3))
-           ((> (length authors) 4) (concat (apply 'concat (mapcar (lambda (a) (substring (car (last (s-split " " a))) 0 1)) (subseq authors 0 3))) "+"))
-           (t (apply 'concat (mapcar (lambda (a) (substring (car (last (s-split " " a))) 0 1)) authors))))
-     (substring year -2))))
-(defun zjn--bib-get-key (entry)
-  "The key we want to use by default."
-  (bibtex-beginning-of-entry)
-  (while (save-excursion
-           (s-equals? (cdr (assoc-string "=type=" (bibtex-parse-entry)))
-                      "proceedings"))
-    (bibtex-previous-entry)
-    (bibtex-beginning-of-entry))
-  (read-string "Key: " (zjn--default-key-name)))
-(defun zjn--bib-replace-key (new-key)
-  "Replace the bibtex key of the current entry."
-                                        ; cribbed from bibtex-clean-entry
-  (save-excursion
-    (re-search-forward bibtex-entry-maybe-empty-head)
-    (if (match-beginning bibtex-key-in-head)
-        (delete-region (match-beginning bibtex-key-in-head)
-                       (match-end bibtex-key-in-head)))
-    (insert new-key)))
-(defun zjn--bib-replace-last-key (new-key)
-  (goto-char (point-max))
-  (bibtex-beginning-of-entry)
-  (while (save-excursion
-           (s-equals? (cdr (assoc-string "=type=" (bibtex-parse-entry)))
-                      "proceedings"))
-    (bibtex-previous-entry))
-  (zjn--bib-replace-key new-key))
-(defun zjn--bib-get-url (entry)
-  (let ((url (alist-get 'url entry))
-        (direct-url (alist-get 'direct-url entry)))
-    (cond
-     (direct-url)
-     ((s-starts-with? "https://eprint.iacr.org/" url) (s-concat url ".pdf"))
-     (t (read-string "URL (blank for none): ")))))
-(defun zjn--bib-add (bibtex entry)
-  "Add BIBTEX (from ENTRY) to end of a user-specified bibtex file."
-  (with-temp-file bibtex-completion-bibliography
-    (bibtex-set-dialect)
-    (insert-file-contents bibtex-completion-bibliography)
-    (goto-char (point-max))
-    (insert (s-concat "\n\n" bibtex))
-    (goto-char (point-max))
-    (let ((key (zjn--bib-get-key entry)))
-      (zjn--bib-replace-last-key key)
-      (bibtex-reformat)
-      (bibtex-sort-buffer)
-      (let ((url (zjn--bib-get-url entry)))
-        (when (s-present? url)
-          (let* ((fname (s-concat key ".pdf"))
-                 (dest (f-join bibtex-completion-library-path fname)))
-            (url-copy-file url dest t))))))
-  (message "Inserted bibtex entry for %S."
-           (biblio--prepare-title (biblio-alist-get 'title entry))))
-(defun zjn/bib-add ()
-  "Insert BibTeX of current entry at the end of user-specified bibtex file and go there."
-  (interactive)
-  (biblio--selection-forward-bibtex #'zjn--bib-add t))
-(after! biblio
-  (setq biblio-crossref-user-email-address "crossref@z.znewman.net")
-  (setq bibtex-autokey-year-length 4)
-  (setq bibtex-autokey-titleword-length 100)
-  (setq bibtex-autokey-titlewords 2)
-  (map! :mode biblio-selection-mode
-        "RET" #'zjn/bib-add))
+(use-package! org-roam-bibtex
+  :after org-roam oc
+  :config
+    (setq orb-roam-ref-format 'org-cite)
+    (setq bibtex-completion-bibliography "~/Sync/notes/lit/default.bib"
+        bibtex-completion-library-path "~/Sync/notes/lit/"
+        bibtex-completion-notes-path "~/Sync/notes/roam/bib/")
+    (require 'citar-org-roam)
+    (citar-register-notes-source
+     'orb-citar-source (list :name "Org-Roam Notes"
+                             :category 'org-roam-node
+                             :items #'citar-org-roam--get-candidates
+                             :hasitems #'citar-org-roam-has-notes
+                             :open #'citar-org-roam-open-note
+                             :create #'orb-citar-edit-note
+                             :annotate #'citar-org-roam--annotate))
+    (setq citar-notes-source 'orb-citar-source))
+(use-package! citar
+  :after org-roam oc
+  :config
+  (setq org-cite-insert-processor 'citar
+        org-cite-follow-processor 'citar
+        org-cite-activate-processor 'citar
+        citar-bibliography org-cite-global-bibliography
+        citar-library-paths '("~/Sync/notes/lit"))
+  (map!
+   :leader
+   "n b" #'citar-open
+   :mode org
+   "C-c b" #'org-cite-insert))
 #+end_src
 * Mail
 :PROPERTIES:
