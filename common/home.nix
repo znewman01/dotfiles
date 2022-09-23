@@ -9,5 +9,5 @@
     sessionVariables = { PATH = "$HOME/bin:$PATH"; };
   };
 
-  imports = [ ./vim.nix ./git.nix ];
+  imports = [ ./vim.nix ./git.nix ../modules/code.nix ];
 }

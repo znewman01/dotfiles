@@ -5,7 +5,7 @@
     ../../common/home-nixos.nix
     ../../desktop/nixos-home.nix
     ./autorandr.nix
-    ../../code.nix
+    ../../code
   ];
   home.stateVersion = "21.11";
 }

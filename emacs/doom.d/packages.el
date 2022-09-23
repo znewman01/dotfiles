@@ -56,8 +56,6 @@
 (package! inheritenv)
 
 (unpin! bibtex-completion)
-(unpin! org-re-reveal)
-(package! org-re-reveal-ref :pin nil)
 (package! org-ql)
 (package! org-super-agenda)
 (package! citar)
@@ -68,13 +66,7 @@
 
 ; ~~aesthetics~~
 (package! org-fancy-priorities :disable t)
-(package! org-fragtog)
 (package! base16-theme)
-
-; https://news.ycombinator.com/item?id=26359043
-(package! sql-indent)
-
-(package! org-anki)
 
 ; programming
 (package! protobuf-mode)

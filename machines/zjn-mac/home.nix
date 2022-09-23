@@ -4,6 +4,7 @@
   imports = [
     ../../desktop/darwin-home.nix
     ../../common/home-darwin.nix
+    ../../code
     doom-emacs.hmModule
   ];
   home.stateVersion = "21.11";

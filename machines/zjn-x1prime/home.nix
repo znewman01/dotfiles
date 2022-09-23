@@ -3,7 +3,7 @@
 {
   imports = [
     ../../home-common.nix
-    ../../code.nix
+    ../../code
     ./autorandr.nix
     ./../../desktop/email
     ./../../desktop/chat/nixos.nix

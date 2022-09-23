@@ -5,126 +5,43 @@ with lib;
 let
 
   dag = config.lib.dag;
+  # file-type = config.lib.file-type;
   cfg = config.code;
-
-  storeFileName = path:
-    let
-      # All characters that are considered safe. Note "-" is not
-      # included to avoid "-" followed by digit being interpreted as a
-      # version.
-      safeChars = [ "+" "." "_" "?" "=" ] ++ lowerChars ++ upperChars
-        ++ stringToCharacters "0123456789";
-
-      empties = l: genList (x: "") (length l);
-
-      unsafeInName =
-        stringToCharacters (replaceStrings safeChars (empties safeChars) path);
-
-      safeName = replaceStrings unsafeInName (empties unsafeInName) path;
-    in "hm_" + safeName;
-
-  # TODO: use home-manager/modules/lib/file-type.nix directly
-  fileType = types.submodule ({ name, config, ... }: {
-    options = {
-      target = mkOption {
-        type = types.str;
-        description = "Path to target file relative to repo root.";
-      };
-
-      text = mkOption {
-        type = types.lines;
-        description = "Text of the file.";
-      };
-
-      executable = mkOption {
-        type = types.nullOr types.bool;
-        default = null;
-        description = ''
-          Set the execute bit. If <literal>null</literal>, defaults to the mode
-          of the <varname>source</varname> file or to <literal>false</literal>
-          for files created through the <varname>text</varname> option.
-        '';
-      };
-
-      source = mkOption {
-        type = types.path;
-        description = ''
-          Path of the source file. The file name must not start
-          with a period since Nix will not allow such names in
-          the Nix store.
-          </para><para>
-          This may refer to a directory.
-        '';
-      };
-    };
-
-    config = {
-      target = mkDefault name;
-      source = mkIf (config.text != null) (mkDefault (pkgs.writeTextFile {
-        inherit (config) executable text;
-        name = storeFileName name;
-      }));
-    };
-  });
-
-  excludeSubmodule = types.submodule {
-    options = {
-
-      enable = mkEnableOption ''
-        Manage .git/info/exclude.
-
-        If enabled, include any files that we drop in.
-      '';
-
-      text = mkOption {
-        type = types.lines;
-        example = ''
-          .envrc
-          shell.nix
-        '';
-        default = "";
-        description = "TODO";
-      };
-
-    };
-  };
 
   repoSubmodule = types.submodule {
     options = {
-
       url = mkOption {
         type = types.str;
         example = "git@github.com:tensorflow/tensorflow.git";
-        description = "The Git URL to use for the remote.";
+        description = "The Git URL to use for the origin remote.";
       };
 
-      shell = mkOption {
-        type = types.nullOr types.path;
-        example = ./foo.nix;
-        default = null;
-        description = ''
-          A .nix file to use as the `shell.nix` in this repository.
-
-          Intended use case: repositories where you're the only Nix user. If
-          provided, will link in the file in and populate a .envrc file in the
-          repository root.
-        '';
+      extraRemotes = mkOption {
+        type = types.attrsOf types.str;
+        default = { };
+        example = { "upstream" = "git@github.com:user/repo"; };
       };
 
-      exclude = mkOption {
-        type = types.nullOr excludeSubmodule;
-        default = { enable = false; };
-        # TODO: example
-        description = "TODO";
+      extraExcludes = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
+      };
+
+      config = mkOption {
+        type = types.attrsOf types.str;
+        default = { };
       };
 
       extraFiles = mkOption {
-        type = types.loaOf fileType;
+        type = types.attrsOf types.anything;
         default = { };
-        description = "TODO";
       };
 
-      # TODO: more git config?
+      extraFilesDir = mkOption {
+        type = types.nullOr types.path;
+        default = null;
+        description = "Path to directory containing extra files.";
+      };
     };
   };
 
@@ -156,49 +73,63 @@ in {
 
     getDirname = name: repo: "${cfg.baseDir}/${name}";
 
-    cloneRepoSh = name: repo:
-      (let
+    configureRepoSh = name: repo:
+      let
         dirname = getDirname name repo;
-        manageExcludes = if repo.exclude.enable then "1" else "0";
         # TODO: should probably make sure remotes etc. are correct
       in ''
         if [ ! -d "${dirname}" ]; then
-          ${pkgs.git}/bin/git clone ${repo.url} "${dirname}"
-          if [ "${manageExcludes}" -eq 1 ]; then
-            rm "${dirname}/.git/info/exclude"
-          fi
+          mkdir -p "${dirname}"
+          ${pkgs.git}/bin/git init "${dirname}"
         fi
-      '');
+      '';
 
     additionalFiles = name: repo:
-      (let
+      let
         dirname = getDirname name repo;
-        shell = repo.shell;
-        shellNixFiles = optionalAttrs (repo.shell != null) {
-          "${dirname}/shell.nix".source = repo.shell;
-          "${dirname}/.envrc" = {
-            text = "use_nix";
-            onChange = "${pkgs.direnv}/bin/direnv allow ${dirname}";
+        configFile = let
+          filesToExclude = repo.extraExcludes ++ (attrNames repo.extraFiles);
+          excludeFile = pkgs.writeText "exclude"
+            ((concatStringsSep "\n" filesToExclude) + "\n");
+          makeRemote = name: url:
+            nameValuePair ''remote "${name}"'' {
+              inherit url;
+              fetch = "+refs/heads/*:refs/remotes/${name}/*";
+            };
+          allRemotes = { "origin" = repo.url; } // repo.extraRemotes;
+          remoteConfig = listToAttrs (mapAttrsToList makeRemote allRemotes);
+          gitconfig = repo.config // remoteConfig
+            // optionalAttrs (excludeFile != { }) {
+              core.excludesFile = excludeFile;
+            };
+        in {
+          "${dirname}/.git/config-nix" = {
+            text = generators.toINI { } gitconfig;
+            onChange = ''
+              GITCONFIG="${dirname}/.git/config"
+              grep -q "path = config-nix" $GITCONFIG \
+                || echo -e "[include]\n  path = config-nix" \
+                >> $GITCONFIG
+            '';
           };
         };
-        ourFiles = concatMapStringsSep "\n" (removePrefix "${dirname}/")
-          ((attrNames repo.extraFiles) ++ (attrNames shellNixFiles)
-            ++ [ ".direnv" ]);
-        excludeFiles = optionalAttrs (repo.exclude.enable) {
-          "${dirname}/.git/info/exclude".text =
-            concatStringsSep "\n\n" [ ourFiles repo.exclude.text ];
-        };
-        moveToRepoDir = (name: value:
-          nameValuePair "${dirname}/${name}"
-          (value // { "target" = "${dirname}/${name}"; }));
-        extraFiles = mapAttrs' moveToRepoDir repo.extraFiles;
-      in mkMerge [ shellNixFiles excludeFiles extraFiles ]);
+        # TODO: symlinking doesn't work well at all for flakes. you have to copy
+        # them in. That's going to be a pain.
+        extraFilesFromDir = optionalAttrs (repo.extraFilesDir != null)
+          (listToAttrs (map (file:
+            nameValuePair "${dirname}/${file}" {
+              source = repo.extraFilesDir + "/${file}";
+            }) (attrNames (builtins.readDir repo.extraFilesDir))));
+        extraFilesFromConfig =
+          mapAttrs' (key: value: nameValuePair "${dirname}/${key}" value)
+          repo.extraFiles;
+      in configFile // extraFilesFromDir // extraFilesFromConfig;
 
   in mkIf (cfg.baseDir != null) {
     home.activation.cloneRepos =
       dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] ''
         mkdir -p ${cfg.baseDir}
-        ${concatStringsSep "\n" (mapAttrsToList cloneRepoSh cfg.repos)}
+        ${concatStringsSep "\n" (mapAttrsToList configureRepoSh cfg.repos)}
       '';
 
     home.file = mkMerge (mapAttrsToList additionalFiles cfg.repos);

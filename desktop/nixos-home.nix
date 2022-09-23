@@ -7,7 +7,7 @@
     ./web/firefox/nixos.nix
     ./home.nix
     ../persist/home.nix
-    ../modules/code.nix
+    ../modules/code
     ./xmonad.nix
     ./fonts.nix
     ./alacritty.nix
