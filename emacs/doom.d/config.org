@@ -329,13 +329,20 @@ hello
 * Bibliography
 Eventually will sort through this.
 #+begin_src emacs-lisp
+(use-package! bibtex-completion
+  :config
+  (setq bibtex-files (list "~/Sync/notes/lit/default.bib")
+        bibtex-dialect 'biblatex)
+  (setq bibtex-completion-bibliography "~/Sync/notes/lit/default.bib"
+        bibtex-completion-library-path "~/Sync/notes/lit/"
+        bibtex-completion-notes-path "~/Sync/notes/roam/bib/"))
+(use-package! org
+  :after bibtex-completion
+  (setq org-cite-global-bibliography bibtex-completion-bibliography))
 (use-package! org-roam-bibtex
-  :after org-roam oc
+  :after org-roam org
   :config
     (setq orb-roam-ref-format 'org-cite)
-    (setq bibtex-completion-bibliography "~/Sync/notes/lit/default.bib"
-        bibtex-completion-library-path "~/Sync/notes/lit/"
-        bibtex-completion-notes-path "~/Sync/notes/roam/bib/")
     (require 'citar-org-roam)
     (citar-register-notes-source
      'orb-citar-source (list :name "Org-Roam Notes"
@@ -347,13 +354,13 @@ Eventually will sort through this.
                              :annotate #'citar-org-roam--annotate))
     (setq citar-notes-source 'orb-citar-source))
 (use-package! citar
-  :after org-roam oc
+  :after org bibtex-completion
   :config
   (setq org-cite-insert-processor 'citar
         org-cite-follow-processor 'citar
         org-cite-activate-processor 'citar
-        citar-bibliography org-cite-global-bibliography
-        citar-library-paths '("~/Sync/notes/lit"))
+        citar-bibliography bibtex-completion-bibliography
+        citar-library-paths '(,bibtex-completion-library-path))
   (map!
    :leader
    "n b" #'citar-open
