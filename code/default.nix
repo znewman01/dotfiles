@@ -8,7 +8,7 @@
       "dotfiles".url = "git@github.com:znewman01/dotfiles.git";
       "scalingsnapshots" = {
         url = "git@github.com:znewman01/scalingsnapshots.git";
-        extraFiles = { "analysis/.projectile".text = ""; };
+        extraFiles."analysis/.projectile".text = "";
       };
       fulcio.url = "git@github.com:sigstore/fulcio.git";
       rekor.url = "git@github.com:sigstore/rekor.git";
@@ -18,6 +18,13 @@
         url = "git@github.com:znewman01/go-tuf";
         extraRemotes.upstream = "git@github.com:theupdateframework/go-tuf";
         extraFilesDir = ./go-tuf;
+      };
+      nix-doom-emacs = {
+        url = "git@github.com:znewman01/nix-doom-emacs.git";
+        extraRemotes.upstream =
+          "git@github.com:nix-community/nix-doom-emacs.git";
+        extraFiles.".envrc".text = "use_flake";
+        extraExcludes = [ ".direnv/" ];
       };
     };
   };
