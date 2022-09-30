@@ -10,7 +10,7 @@
     extraConfig.github.user = "znewman01";
     extraConfig.init.defaultBranch = "main";
     extraConfig.push.autoSetupRemote = true;
-    extraConfig.commit.gpgsign = true;
+    extraConfig.commit.gpgsign = false;
     extraConfig.tag.gpgsign = true;
     extraConfig.gpg.x509.program = "gitsign";
     extraConfig.gpg.format = "x509";
