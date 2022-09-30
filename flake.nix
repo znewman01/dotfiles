@@ -15,21 +15,9 @@
     kolide-launcher.url = "github:znewman01/kolide-launcher";
     kolide-launcher.inputs.nixpkgs.follows = "nixpkgs";
 
-    emacs-overlay = {
-      url =
-        "github:nix-community/emacs-overlay/70e241d5b189982dabc1fe55829475c5c483c89d";
-      flake = false;
-    };
-    doom-emacs-upstream = {
-      url =
-        "github:doomemacs/doomemacs/c44bc81a05f3758ceaa28921dd9c830b9c571e61";
-      flake = false;
-    };
     doom-emacs = {
-      url = "github:nix-community/nix-doom-emacs";
+      url = "github:znewman01/nix-doom-emacs/reuse-straight";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.doom-emacs.follows = "doom-emacs-upstream";
-      inputs.emacs-overlay.follows = "emacs-overlay";
     };
     darwin = {
       url = "github:lnl7/nix-darwin/master";
