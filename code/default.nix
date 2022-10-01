@@ -1,31 +1,64 @@
-{ config, ... }:
+{ config, lib, pkgs, ... }:
 
-{
+let
+  forWork = p: { config.user.email = "zjn@chainguard.dev"; } // p;
+  withEnvrc = p:
+    {
+      extraFiles."envrc".text = "use_flake";
+      extraExcludes = [ ".direnv/" ];
+    } // p;
+  gh = x: "git@github.com:${x}";
+  myGH = name: gh "znewman01/${name}";
+
+  withDco = p:
+    let
+      email = p.config.user.email || "z@znewman.net";
+      gitTemplate = pkgs.writeText ''
+
+
+        Signed-off-by: Zachary Newman <${email}>
+      '';
+    in { config.commit.template = "${gitTemplate}"; } // p;
+
+  # a code repo with my znewman01/ fork as origin and the original URL as upstream
+  myFork = url: {
+    url = let
+      # git@github.com : <user or org> / repo
+      # 0              1 2             3 4
+      parts = (builtins.split "[:/]" url);
+      repo = builtins.elemAt parts 4;
+    in myGH repo;
+    extraRemotes.upstream = url;
+  };
+  withExtraFiles = dir: (p: { extraFilesDir = dir; } // p);
+in {
   code = {
     baseDir = "${config.home.homeDirectory}/git";
     repos = {
-      "resume".url = "git@github.com:znewman01/resume.git";
-      "dotfiles".url = "git@github.com:znewman01/dotfiles.git";
+      "resume".url = myGH "resume";
+      "dotfiles".url = myGH "dotfiles";
       "scalingsnapshots" = {
-        url = "git@github.com:znewman01/scalingsnapshots.git";
+        url = myGH "scalingsnapshots";
         extraFiles."analysis/.projectile".text = "";
       };
-      fulcio.url = "git@github.com:sigstore/fulcio.git";
-      rekor.url = "git@github.com:sigstore/rekor.git";
-      sigstore.url = "git@github.com:sigstore/sigstore.git";
-      cosign.url = "git@github.com:sigstore/cosign.git";
-      go-tuf = {
-        url = "git@github.com:znewman01/go-tuf";
-        extraRemotes.upstream = "git@github.com:theupdateframework/go-tuf";
-        extraFilesDir = ./go-tuf;
-      };
-      nix-doom-emacs = {
-        url = "git@github.com:znewman01/nix-doom-emacs.git";
-        extraRemotes.upstream =
-          "git@github.com:nix-community/nix-doom-emacs.git";
-        extraFiles.".envrc".text = "use_flake";
-        extraExcludes = [ ".direnv/" ];
-      };
+      fulcio = lib.pipe (gh "sigstore/fulcio") [ myFork forWork ];
+      rekor = lib.pipe (gh "sigstore/rekor") [ myFork forWork ];
+      sigstore = lib.pipe (gh "sigstore/sigstore") [ myFork forWork ];
+      cosign = lib.pipe (gh "sigstore/cosign") [ myFork forWork ];
+      go-tuf = lib.pipe (gh "theupdateframework/go-tuf") [
+        myFork
+        forWork
+        withEnvrc
+        (withExtraFiles ./go-tuf)
+      ];
+      securesystemslib = lib.pipe (gh "secure-systems-lab/securesystemslib") [
+        myFork
+        forWork
+        withEnvrc
+        (withExtraFiles ./securesystemslib)
+      ];
+      nix-doom-emacs =
+        lib.pipe (gh "nix-community/nix-doom-emacs") [ myFork withEnvrc ];
     };
   };
 }

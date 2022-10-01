@@ -28,7 +28,7 @@ let
       };
 
       config = mkOption {
-        type = types.attrsOf types.str;
+        type = types.attrsOf types.anything;
         default = { };
       };
 
