@@ -84,7 +84,7 @@ in {
         # symlinking doesn't work well at all for flakes. you have to copy
         # them in.
         maybeCopyExtraFilesFromDir =
-          lib.optionalString (repo.extraFilesDir != null) ''
+          optionalString (repo.extraFilesDir != null) ''
             ${pkgs.rsync}/bin/rsync --perms --recursive --chmod=u+w ${repo.extraFilesDir}/ ${dirname}/
           '';
       in ''
@@ -102,11 +102,11 @@ in {
         dirname = getDirname name repo;
         configFile = let
           filesToExclude = repo.extraExcludes ++ (attrNames repo.extraFiles)
-            ++ (lib.optionals (repo.extraFilesDir != null)
+            ++ (optionals (repo.extraFilesDir != null)
             # Add files from extraFilesDir to git excludes
-              (map (lib.removePrefix (builtins.toString repo.extraFilesDir))
+              (map (removePrefix (builtins.toString repo.extraFilesDir))
                 (map builtins.toString
-                  (lib.filesystem.listFilesRecursive repo.extraFilesDir))));
+                  (filesystem.listFilesRecursive repo.extraFilesDir))));
           excludeFile = pkgs.writeText "exclude"
             ((concatStringsSep "\n" filesToExclude) + "\n");
           makeRemote = name: url:
@@ -114,12 +114,16 @@ in {
               inherit url;
               fetch = "+refs/heads/*:refs/remotes/${name}/*";
             };
-          allRemotes = { "origin" = repo.url; } // repo.extraRemotes;
+          allRemotes =
+            recursiveUpdate { "origin" = repo.url; } repo.extraRemotes;
           remoteConfig = listToAttrs (mapAttrsToList makeRemote allRemotes);
-          gitconfig = repo.config // remoteConfig
-            // optionalAttrs (excludeFile != { }) {
+          gitconfig = foldr recursiveUpdate { } [
+            repo.config
+            remoteConfig
+            (optionalAttrs (excludeFile != { }) {
               core.excludesFile = excludeFile;
-            };
+            })
+          ];
         in {
           "${dirname}/.git/config-nix" = {
             text = generators.toINI { } gitconfig;
@@ -134,7 +138,7 @@ in {
         extraFilesFromConfig =
           mapAttrs' (key: value: nameValuePair "${dirname}/${key}" value)
           repo.extraFiles;
-      in configFile // extraFilesFromConfig;
+      in recursiveUpdate configFile extraFilesFromConfig;
 
   in mkIf (cfg.baseDir != null) {
     home.activation.cloneRepos = dag.entryAfter [ "writeBoundary" ] ''

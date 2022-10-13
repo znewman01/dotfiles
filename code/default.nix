@@ -1,24 +1,25 @@
 { config, lib, pkgs, ... }:
 
+with lib;
+
 let
-  forWork = p: { config.user.email = "zjn@chainguard.dev"; } // p;
-  withEnvrc = p:
-    {
-      extraFiles."envrc".text = "use_flake";
-      extraExcludes = [ ".direnv/" ];
-    } // p;
+  forWork = recursiveUpdate { config.user.email = "zjn@chainguard.dev"; };
+  withEnvrc = recursiveUpdate {
+    extraFiles.".envrc".text = "use_flake";
+    extraExcludes = [ ".direnv/" ];
+  };
   gh = x: "git@github.com:${x}";
   myGH = name: gh "znewman01/${name}";
 
   withDco = p:
     let
-      email = p.config.user.email || "z@znewman.net";
-      gitTemplate = pkgs.writeText ''
+      email = p.config.user.email or "z@znewman.net";
+      gitTemplate = pkgs.writeText "git-commit-template" ''
 
 
         Signed-off-by: Zachary Newman <${email}>
       '';
-    in { config.commit.template = "${gitTemplate}"; } // p;
+    in recursiveUpdate { config.commit.template = "${gitTemplate}"; } p;
 
   # a code repo with my znewman01/ fork as origin and the original URL as upstream
   myFork = url: {
@@ -30,7 +31,7 @@ let
     in myGH repo;
     extraRemotes.upstream = url;
   };
-  withExtraFiles = dir: (p: { extraFilesDir = dir; } // p);
+  withExtraFiles = dir: recursiveUpdate { extraFilesDir = dir; };
 in {
   code = {
     baseDir = "${config.home.homeDirectory}/git";
@@ -41,26 +42,26 @@ in {
         url = myGH "scalingsnapshots";
         extraFiles."analysis/.projectile".text = "";
       };
-      fulcio = lib.pipe (gh "sigstore/fulcio") [ myFork forWork withDco ];
-      rekor = lib.pipe (gh "sigstore/rekor") [ myFork forWork withDco ];
-      sigstore = lib.pipe (gh "sigstore/sigstore") [ myFork forWork withDco ];
-      cosign = lib.pipe (gh "sigstore/cosign") [ myFork forWork withDco ];
-      go-tuf = lib.pipe (gh "theupdateframework/go-tuf") [
+      fulcio = pipe (gh "sigstore/fulcio") [ myFork forWork withDco ];
+      rekor = pipe (gh "sigstore/rekor") [ myFork forWork withDco ];
+      sigstore = pipe (gh "sigstore/sigstore") [ myFork forWork withDco ];
+      cosign = pipe (gh "sigstore/cosign") [ myFork forWork withDco ];
+      go-tuf = pipe (gh "theupdateframework/go-tuf") [
         myFork
         forWork
         withEnvrc
         withDco
         (withExtraFiles ./go-tuf)
       ];
-      securesystemslib = lib.pipe (gh "secure-systems-lab/securesystemslib") [
+      securesystemslib = pipe (gh "secure-systems-lab/securesystemslib") [
         myFork
         forWork
         withEnvrc
-        withDco
         (withExtraFiles ./securesystemslib)
+        withDco
       ];
       nix-doom-emacs =
-        lib.pipe (gh "nix-community/nix-doom-emacs") [ myFork withEnvrc ];
+        pipe (gh "nix-community/nix-doom-emacs") [ myFork withEnvrc ];
     };
   };
 }
