@@ -52,11 +52,11 @@
         "ws-butler": "ws-butler"
       },
       "locked": {
-        "lastModified": 1664570750,
-        "narHash": "sha256-e7Daf/WhflA7QHzejPa/Os4MvNl7U1HwrXu0/3dC0Yc=",
+        "lastModified": 1665704070,
+        "narHash": "sha256-+C71etJ0VCUe0Lk4JH429DWnRcBTcTp7l/N2sZb1/7Y=",
         "owner": "znewman01",
         "repo": "nix-doom-emacs",
-        "rev": "a076453f02efa5016511a0154423afd711f81d19",
+        "rev": "7b9cd4c36b22e2bbfa83cdd68b968dc429b4bf04",
         "type": "github"
       },
       "original": {
