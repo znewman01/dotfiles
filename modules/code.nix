@@ -40,7 +40,12 @@ let
       extraFilesDir = mkOption {
         type = types.nullOr types.path;
         default = null;
-        description = "Path to directory containing extra files.";
+        description = ''
+          Path to directory containing extra files.
+
+          These will be *copied* (not linked) into the cloned repository
+          directory and added to the excludes file.
+        '';
       };
     };
   };
@@ -76,19 +81,32 @@ in {
     configureRepoSh = name: repo:
       let
         dirname = getDirname name repo;
-        # TODO: should probably make sure remotes etc. are correct
+        # symlinking doesn't work well at all for flakes. you have to copy
+        # them in.
+        maybeCopyExtraFilesFromDir =
+          lib.optionalString (repo.extraFilesDir != null) ''
+            ${pkgs.rsync}/bin/rsync --perms --recursive --chmod=u+w ${repo.extraFilesDir}/ ${dirname}/
+          '';
       in ''
         if [ ! -d "${dirname}" ]; then
           mkdir -p "${dirname}"
           ${pkgs.git}/bin/git init "${dirname}"
         fi
+        # TODO: should probably make sure remotes etc. are correct if directory
+        # already exists
+        ${maybeCopyExtraFilesFromDir}
       '';
 
     additionalFiles = name: repo:
       let
         dirname = getDirname name repo;
         configFile = let
-          filesToExclude = repo.extraExcludes ++ (attrNames repo.extraFiles);
+          filesToExclude = repo.extraExcludes ++ (attrNames repo.extraFiles)
+            ++ (lib.optionals (repo.extraFilesDir != null)
+            # Add files from extraFilesDir to git excludes
+              (map (lib.removePrefix (builtins.toString repo.extraFilesDir))
+                (map builtins.toString
+                  (lib.filesystem.listFilesRecursive repo.extraFilesDir))));
           excludeFile = pkgs.writeText "exclude"
             ((concatStringsSep "\n" filesToExclude) + "\n");
           makeRemote = name: url:
@@ -113,24 +131,16 @@ in {
             '';
           };
         };
-        # TODO: symlinking doesn't work well at all for flakes. you have to copy
-        # them in. That's going to be a pain.
-        extraFilesFromDir = optionalAttrs (repo.extraFilesDir != null)
-          (listToAttrs (map (file:
-            nameValuePair "${dirname}/${file}" {
-              source = repo.extraFilesDir + "/${file}";
-            }) (attrNames (builtins.readDir repo.extraFilesDir))));
         extraFilesFromConfig =
           mapAttrs' (key: value: nameValuePair "${dirname}/${key}" value)
           repo.extraFiles;
-      in configFile // extraFilesFromDir // extraFilesFromConfig;
+      in configFile // extraFilesFromConfig;
 
   in mkIf (cfg.baseDir != null) {
-    home.activation.cloneRepos =
-      dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] ''
-        mkdir -p ${cfg.baseDir}
-        ${concatStringsSep "\n" (mapAttrsToList configureRepoSh cfg.repos)}
-      '';
+    home.activation.cloneRepos = dag.entryAfter [ "writeBoundary" ] ''
+      mkdir -p ${cfg.baseDir}
+      ${concatStringsSep "\n" (mapAttrsToList configureRepoSh cfg.repos)}
+    '';
 
     home.file = mkMerge (mapAttrsToList additionalFiles cfg.repos);
   };

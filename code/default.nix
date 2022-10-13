@@ -41,20 +41,22 @@ in {
         url = myGH "scalingsnapshots";
         extraFiles."analysis/.projectile".text = "";
       };
-      fulcio = lib.pipe (gh "sigstore/fulcio") [ myFork forWork ];
-      rekor = lib.pipe (gh "sigstore/rekor") [ myFork forWork ];
-      sigstore = lib.pipe (gh "sigstore/sigstore") [ myFork forWork ];
-      cosign = lib.pipe (gh "sigstore/cosign") [ myFork forWork ];
+      fulcio = lib.pipe (gh "sigstore/fulcio") [ myFork forWork withDco ];
+      rekor = lib.pipe (gh "sigstore/rekor") [ myFork forWork withDco ];
+      sigstore = lib.pipe (gh "sigstore/sigstore") [ myFork forWork withDco ];
+      cosign = lib.pipe (gh "sigstore/cosign") [ myFork forWork withDco ];
       go-tuf = lib.pipe (gh "theupdateframework/go-tuf") [
         myFork
         forWork
         withEnvrc
+        withDco
         (withExtraFiles ./go-tuf)
       ];
       securesystemslib = lib.pipe (gh "secure-systems-lab/securesystemslib") [
         myFork
         forWork
         withEnvrc
+        withDco
         (withExtraFiles ./securesystemslib)
       ];
       nix-doom-emacs =
