@@ -13,5 +13,5 @@
   programs.home-manager.enable = true;
   programs.zsh.enable = pkgs.stdenv.isDarwin;
 
-  imports = [ ./vim.nix ./git.nix ../modules/code.nix ];
+  imports = [ ./vim.nix ./git.nix ../modules/code.nix ./ssh/home.nix ];
 }
