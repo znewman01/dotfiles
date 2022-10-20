@@ -1,8 +1,5 @@
-{ config, lib, pkgs, ... }:
-
-let colors = (import ./colors) { lib = lib; };
-in {
-  programs.alacritty = {
+{ pkgs, lib, ... }: {
+  programs.alacritty = lib.optionalAttrs pkgs.stdenv.isLinux {
     enable = true;
     settings.font = {
       size = 12;
@@ -18,7 +15,8 @@ in {
       x = 8;
       y = 0;
     };
-    settings.colors = {
+    settings.colors = let colors = (import ./colors) { inherit lib; };
+    in {
       primary = {
         background = "0x${colors.base00}";
         foreground = "0x${colors.base05}";

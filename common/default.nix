@@ -1,6 +1,8 @@
 { config, pkgs, doom-emacs, nixpkgs, ... }:
 
 {
+  imports = [ ./tailscale ];
+
   nix.settings = {
     substituters = [ "https://nix-community.cachix.org" ];
     trusted-public-keys = [

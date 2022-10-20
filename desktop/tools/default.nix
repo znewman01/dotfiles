@@ -13,5 +13,6 @@
     tree-sitter
     fzf
     anystyle-cli
+    gist
   ];
 }

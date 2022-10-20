@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 {
-  imports = [ ./default.nix ./tailscale/nixos.nix ./ssh/nixos.nix ];
+  imports = [ ./default.nix ./ssh/nixos.nix ];
 
   boot.cleanTmpDir = true;
 

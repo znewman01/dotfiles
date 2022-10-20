@@ -20,7 +20,6 @@
     xclip
     xdotool
     pinentry-gtk2
-    gist
     xcompmgr
   ];
 
@@ -35,11 +34,6 @@
   xdg.enable = true;
 
   home.keyboard.options = [ "caps:swapescape" "compose:ralt" ];
-
-  programs.bash.shellAliases = {
-    s = "systemctl";
-    j = "journalctl";
-  };
 
   programs.autorandr.enable = true;
 }
