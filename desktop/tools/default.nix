@@ -8,7 +8,6 @@
     gh
     sqlite
     imagemagick
-    gitsign
     fd
     tree-sitter
     fzf
