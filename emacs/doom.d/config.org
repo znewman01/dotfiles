@@ -45,13 +45,6 @@ And make an insert-mode leader that doesn't conflict with XMonad:
 (setq doom-leader-alt-key "s-SPC")
 (setq doom-localleader-alt-key "s-SPC m")
 #+end_src
-
-Live dangerously (I like to put as much config as possible locally):
-
-#+begin_src emacs-lisp
-(setq enable-local-variables t)
-#+end_src
-
 * Searching
 I like to search using DDG always:
 #+begin_src emacs-lisp
@@ -338,7 +331,8 @@ Eventually will sort through this.
         bibtex-completion-notes-path "~/Sync/notes/roam/bib/"))
 (use-package! org
   :after bibtex-completion
-  (setq org-cite-global-bibliography bibtex-completion-bibliography))
+  :config
+  (setq org-cite-global-bibliography (list bibtex-completion-bibliography)))
 (use-package! org-roam-bibtex
   :after org-roam org
   :config
@@ -360,7 +354,7 @@ Eventually will sort through this.
         org-cite-follow-processor 'citar
         org-cite-activate-processor 'citar
         citar-bibliography bibtex-completion-bibliography
-        citar-library-paths '(,bibtex-completion-library-path))
+        citar-library-paths (list bibtex-completion-library-path))
   (map!
    :leader
    "n b" #'citar-open
@@ -410,6 +404,7 @@ Now that that's all out of the way, we can get to actual work.
 #+begin_src emacs-lisp
 (after! company
   (setq company-idle-delay 0.2))
+(remove-hook 'doom-first-buffer-hook #'smartparens-global-mode)
 #+end_src
 *** Inheritenv
 #+begin_src emacs-lisp
