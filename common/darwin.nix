@@ -5,6 +5,8 @@
 
   programs.zsh.enable = true;
 
+  users.users.zjn.home = "/Users/zjn";
+
   homebrew = {
     enable = true;
     onActivation.cleanup = "zap";

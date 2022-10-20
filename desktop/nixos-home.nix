@@ -3,8 +3,6 @@
 {
   imports = [
     ../emacs/nixos.nix
-    ./gpg/nixos-home.nix
-    ./web/firefox/nixos.nix
     ./home.nix
     ../persist/home.nix
     ../modules/code.nix

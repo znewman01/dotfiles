@@ -2,12 +2,13 @@
 
 {
   home.enableNixpkgsReleaseCheck = true;
-  nixpkgs.config.allowUnfree = true;
 
   programs.bash = {
     enable = true;
     sessionVariables = { PATH = "$HOME/bin:$PATH"; };
   };
+
+  programs.home-manager.enable = true;
 
   imports = [ ./vim.nix ./git.nix ../modules/code.nix ];
 }

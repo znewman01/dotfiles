@@ -1,12 +1,5 @@
 { config, pkgs, ... }:
 
 {
-  imports = [
-    ./chat/darwin.nix
-    ./web/darwin-home.nix
-    ./gpg/home.nix
-    ./home.nix
-    ./tools
-    ../emacs
-  ];
+  imports = [ ./chat/darwin.nix ./home.nix ./tools ../emacs ];
 }

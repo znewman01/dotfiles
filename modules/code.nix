@@ -107,8 +107,8 @@ in {
               (map (removePrefix (builtins.toString repo.extraFilesDir))
                 (map builtins.toString
                   (filesystem.listFilesRecursive repo.extraFilesDir))));
-          excludeFile = pkgs.writeText "exclude"
-            ((concatStringsSep "\n" filesToExclude) + "\n");
+          excludeText = (concatStringsSep "\n" filesToExclude) + "\n";
+          excludeFile = pkgs.writeText "exclude" excludeText;
           makeRemote = name: url:
             nameValuePair ''remote "${name}"'' {
               inherit url;
@@ -120,9 +120,9 @@ in {
           gitconfig = foldr recursiveUpdate { } [
             repo.config
             remoteConfig
-            (optionalAttrs (excludeFile != { }) {
-              core.excludesFile = excludeFile;
-            })
+            # (optionalAttrs (excludeFile != { }) {
+            #   core.excludesFile = excludeFile;
+            # })
           ];
         in {
           "${dirname}/.git/config-nix" = {
@@ -134,6 +134,7 @@ in {
                 >> $GITCONFIG
             '';
           };
+          "${dirname}/.git/info/excludes" = { text = excludeText; };
         };
         extraFilesFromConfig =
           mapAttrs' (key: value: nameValuePair "${dirname}/${key}" value)
