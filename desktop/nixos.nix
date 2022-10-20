@@ -2,7 +2,7 @@
 
 let hosts = [ "zjn@zjn-x1prime" "zjn@zjn-home" "zjn@zjn-work" "zjn-cloud" ];
 in {
-  imports = [ ./timezone.nix ./zfs.nix ./system.nix ../persist/system.nix ];
+  imports = [ ./zfs.nix ./system.nix ../persist/system.nix ];
 
   nix.settings.trusted-users = [ "@wheel" ];
 

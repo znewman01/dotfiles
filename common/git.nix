@@ -1,9 +1,10 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   programs.git = {
     enable = true;
-    ignores = [ "*~" "*.swp" ];
+    ignores = [ "*~" "*.swp" ]
+      ++ lib.optionals pkgs.stdenv.isDarwin [ ".DS_Store" ];
     userEmail = "z@znewman.net";
     userName = "Zachary Newman";
     extraConfig.pull.rebase = true;

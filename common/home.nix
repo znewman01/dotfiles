@@ -1,6 +1,8 @@
 { config, pkgs, ... }:
 
 {
+  home.username = "zjn";
+
   home.enableNixpkgsReleaseCheck = true;
 
   programs.bash = {
@@ -9,6 +11,7 @@
   };
 
   programs.home-manager.enable = true;
+  programs.zsh.enable = pkgs.stdenv.isDarwin;
 
   imports = [ ./vim.nix ./git.nix ../modules/code.nix ];
 }

@@ -1,7 +1,6 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
-  home.packages = with pkgs; [
-    element-desktop
-  ];
+  homebrew.casks =
+    lib.optionals pkgs.stdenv.isDarwin [ "slack" "zoom" "signal" ];
 }

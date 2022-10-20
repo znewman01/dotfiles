@@ -59,19 +59,21 @@
           home-manager.darwinModules.home-manager
           ./machines/zjn-mac
           ./common/darwin.nix
-          ./desktop/darwin.nix
-            ({ ... }: {
-              home-manager.users.zjn = {
-                imports = [
-                  ./machines/zjn-mac/home.nix
-                  ./desktop/darwin-home.nix
-                  ./common/home-darwin.nix
-                  ./code
-                  ./work/home.nix
-                  doom-emacs.hmModule
-                ];
-              };
-            })
+          ./desktop
+          ./desktop/chat
+          ({ ... }: {
+            home-manager.users.zjn = {
+              imports = [
+                ./machines/zjn-mac/home.nix
+                ./desktop/home.nix
+                ./desktop/chat/home.nix
+                ./common/home.nix
+                ./code
+                ./work/home.nix
+                doom-emacs.hmModule
+              ];
+            };
+          })
         ];
         specialArgs = inputs;
       };
