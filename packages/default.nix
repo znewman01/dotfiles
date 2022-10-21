@@ -1,5 +1,7 @@
-inputs:
+{ callPackage }:
 
 {
-  chainctl = (import ./chainctl.nix) inputs;
+  chainctl = callPackage /chainctl.nix { };
+  osquery = callPackage /osquery.nix { };
+  kolide = callPackage /kolide { };
 }

@@ -1,19 +1,19 @@
-{ pkgs ? import <nixpkgs> { }, ... }:
+{ fetchurl, stdenv, lib }:
 
 let
-  srcDarwin = pkgs.fetchurl {
+  srcDarwin = fetchurl {
     url = "https://dl.enforce.dev/chainctl_Darwin_arm64";
     sha256 = "sha256-BXQupzzEu7zexSNTAEzcqEYRzC8XIoP8vi7Yzj7qdpk";
   };
-  srcX86_64 = pkgs.fetchurl {
-    url = "https://dl.enforce.dev/chainctl_Darwin_x86_64";
-    sha256 = "0000000000000000000000000000000000000000000000000000";
+  srcX86_64 = fetchurl {
+    url = "https://dl.enforce.dev/chainctl_Linux_x86_64";
+    sha256 = "sha256-QR403ady15toU8/ytsdesf12n+3M89/7ngznQV0L54k=";
   };
-in pkgs.stdenv.mkDerivation {
+in stdenv.mkDerivation {
   pname = "chainctl";
   version = "2edb4df";
 
-  src = if pkgs.stdenv.isDarwin then srcDarwin else srcX86_64;
+  src = if stdenv.isDarwin then srcDarwin else srcX86_64;
 
   unpackPhase = "true";
 
@@ -25,7 +25,7 @@ in pkgs.stdenv.mkDerivation {
     chmod +x $out/bin/chainctl
   '';
 
-  meta = with pkgs.lib; {
+  meta = with lib; {
     homepage =
       "https://edu.chainguard.dev/chainguard/chainguard-enforce/chainctl-docs/";
     description = "CLI tool for Chainguard Enforce";
