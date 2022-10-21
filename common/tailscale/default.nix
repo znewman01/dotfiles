@@ -1,6 +1,11 @@
 { config, pkgs, lib, ... }:
 
-{
+let
+  darwinOptions = lib.optionalAttrs pkgs.stdenv.isDarwin {
+    homebrew.masApps = { Tailscale = 1475387142; };
+    homebrew.brews = [ "tailscale" ];
+  };
+in {
   networking = lib.optionalAttrs pkgs.stdenv.isLinux {
     firewall.trustedInterfaces = [ "tailscale0" ];
     firewall.allowedUDPPorts = [
@@ -10,10 +15,4 @@
   services.tailscale.enable = pkgs.stdenv.isLinux;
   environment.systemPackages =
     lib.optionals pkgs.stdenv.isLinux [ pkgs.tailscale ];
-
-  homebrew = lib.optionalAttrs pkgs.stdenv.isDarwin {
-    masApps = { Tailscale = 1475387142; };
-    brews = [ "tailscale" ];
-  };
 }
-

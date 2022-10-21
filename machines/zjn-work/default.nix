@@ -13,8 +13,6 @@
     doom-emacs.hmModule
     impermanence.nixosModules.home-manager.impermanence
   ];
-  home-manager.useGlobalPackages = true;
-  home-manager.useUserPackages = true;
 
   networking.hostName = "zjn-work";
   system.stateVersion = "21.11";
