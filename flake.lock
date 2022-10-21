@@ -256,21 +256,6 @@
         "type": "github"
       }
     },
-    "flake-utils_3": {
-      "locked": {
-        "lastModified": 1649676176,
-        "narHash": "sha256-OWKJratjt2RW151VUlJPRALb7OU2S5s+f0vLj4o1bHM=",
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "rev": "a4b154ebbdc88c8498a5c7b01589addc9e9cb678",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "type": "github"
-      }
-    },
     "format-all": {
       "flake": false,
       "locked": {
@@ -285,29 +270,6 @@
         "owner": "lassik",
         "repo": "emacs-format-all-the-code",
         "rev": "47d862d40a088ca089c92cd393c6dca4628f87d3",
-        "type": "github"
-      }
-    },
-    "gomod2nix": {
-      "inputs": {
-        "nixpkgs": [
-          "kolide-launcher",
-          "nixpkgs"
-        ],
-        "utils": "utils_2"
-      },
-      "locked": {
-        "lastModified": 1647031991,
-        "narHash": "sha256-Sp+dTICdTo2olKiAUKplEBjLKAQYKGH5sbVsW6GPkBk=",
-        "owner": "matthewpi",
-        "repo": "gomod2nix",
-        "rev": "cbc478102816a0227df2469824fd46c2625db06f",
-        "type": "github"
-      },
-      "original": {
-        "owner": "matthewpi",
-        "ref": "matthewpi",
-        "repo": "gomod2nix",
         "type": "github"
       }
     },
@@ -345,44 +307,6 @@
       "original": {
         "owner": "nix-community",
         "repo": "impermanence",
-        "type": "github"
-      }
-    },
-    "kolide-launcher": {
-      "inputs": {
-        "flake-utils": "flake-utils_3",
-        "gomod2nix": "gomod2nix",
-        "nix-filter": "nix-filter",
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1651345644,
-        "narHash": "sha256-2ydXrpIg/RfT16QaKJGMUC2h3ZsnIZoYgqqiJlRTGq4=",
-        "owner": "znewman01",
-        "repo": "kolide-launcher",
-        "rev": "c48b577d814c17a3aaeb1b89288c9c1509b87cf9",
-        "type": "github"
-      },
-      "original": {
-        "owner": "znewman01",
-        "repo": "kolide-launcher",
-        "type": "github"
-      }
-    },
-    "nix-filter": {
-      "locked": {
-        "lastModified": 1649838635,
-        "narHash": "sha256-P1h48+l9vUvMz4JwHBgkTXiX6mE8oYR75vBVUbe6Cuc=",
-        "owner": "numtide",
-        "repo": "nix-filter",
-        "rev": "40a58baa248a8b335e2d66ca258a74248af9d834",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "nix-filter",
         "type": "github"
       }
     },
@@ -537,7 +461,6 @@
         "flake-utils": "flake-utils_2",
         "home-manager": "home-manager",
         "impermanence": "impermanence",
-        "kolide-launcher": "kolide-launcher",
         "nixpkgs": "nixpkgs"
       }
     },
@@ -596,21 +519,6 @@
         "owner": "numtide",
         "repo": "flake-utils",
         "rev": "5aed5285a952e0b949eb3ba02c12fa4fcfef535f",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "type": "github"
-      }
-    },
-    "utils_2": {
-      "locked": {
-        "lastModified": 1623875721,
-        "narHash": "sha256-A8BU7bjS5GirpAUv4QA+QnJ4CceLHkcXdRp4xITDB0s=",
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "rev": "f7e004a55b120c02ecb6219596820fcd32ca8772",
         "type": "github"
       },
       "original": {

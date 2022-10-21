@@ -9,13 +9,11 @@
 
     impermanence.url = "github:nix-community/impermanence";
 
-    kolide-launcher.url = "github:znewman01/kolide-launcher";
-    kolide-launcher.inputs.nixpkgs.follows = "nixpkgs";
-
     doom-emacs = {
       url = "github:nix-community/nix-doom-emacs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     darwin = {
       url = "github:lnl7/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -23,7 +21,7 @@
   };
 
   outputs = inputs@{ nixpkgs, darwin, flake-utils, home-manager, impermanence
-    , doom-emacs, kolide-launcher, ... }:
+    , doom-emacs, ... }:
     let
       systemOutputs = flake-utils.lib.eachDefaultSystem (system:
         let pkgs = nixpkgs.legacyPackages.${system};
@@ -31,7 +29,7 @@
           devShells.default = pkgs.mkShell {
             buildInputs = with pkgs; [ nixfmt git-crypt terraform ];
           };
-          packages = import ./packages { inherit pkgs; };
+          packages = import ./packages { inherit (pkgs) callPackage; };
           legacyPackages = import nixpkgs {
             inherit system;
             config.allowUnfree = true;
@@ -39,14 +37,16 @@
           };
         });
     in systemOutputs // rec {
+      modules = import ./modules;
       nixosConfigurations = {
-        zjn-work = nixpkgs.lib.nixosSystem {
+        zjn-work = let flakeModules = modules;
+        in nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           pkgs = systemOutputs.legacyPackages."x86_64-linux";
           modules = [
             home-manager.nixosModule
             impermanence.nixosModule
-            kolide-launcher.nixosModules.x86_64-linux.default
+            flakeModules.kolide
             ./machines/zjn-work
           ];
           specialArgs = inputs;
@@ -68,7 +68,7 @@
                 ./desktop/home.nix
                 ./desktop/chat/home.nix
                 ./common/home.nix
-                ./code
+                modules.code
                 ./work/home.nix
                 doom-emacs.hmModule
               ];
