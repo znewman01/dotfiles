@@ -13,7 +13,7 @@
     kolide-launcher.inputs.nixpkgs.follows = "nixpkgs";
 
     doom-emacs = {
-      url = "github:znewman01/nix-doom-emacs/reuse-straight";
+      url = "github:nix-community/nix-doom-emacs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     darwin = {
