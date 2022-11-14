@@ -7,9 +7,9 @@ in with myLib; {
   code = {
     baseDir = "${config.home.homeDirectory}/git";
     repos = {
-      "resume".url = myGH "resume";
-      "dotfiles".url = myGH "dotfiles";
-      "scalingsnapshots" = {
+      resume.url = myGH "resume";
+      dotfiles.url = myGH "dotfiles";
+      scalingsnapshots = {
         url = myGH "scalingsnapshots";
         extraFiles."analysis/.projectile".text = "";
       };
@@ -17,6 +17,7 @@ in with myLib; {
       rekor = pipe (gh "sigstore/rekor") [ myFork forWork withDco ];
       sigstore = pipe (gh "sigstore/sigstore") [ myFork forWork withDco ];
       cosign = pipe (gh "sigstore/cosign") [ myFork forWork withDco ];
+      sigstore-go = pipe (gh "sigstore/sigstore-go") [ myFork forWork withDco ];
       go-tuf = pipe (gh "theupdateframework/go-tuf") [
         myFork
         forWork
