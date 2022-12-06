@@ -3,7 +3,7 @@
 let
   srcDarwin = pkgs.fetchurl {
     url = "https://dl.enforce.dev/chainctl_Darwin_arm64";
-    sha256 = "sha256-BpQufU0Yl3t5w75WiBwrfOpbPCNkHObAdWeh/WrbtjA";
+    sha256 = "sha256-BXQupzzEu7zexSNTAEzcqEYRzC8XIoP8vi7Yzj7qdpk";
   };
   srcX86_64 = pkgs.fetchurl {
     url = "https://dl.enforce.dev/chainctl_Darwin_x86_64";
