@@ -10,21 +10,14 @@
       inherit (pkgs) stdenv emacs coreutils;
     };
     # Only init/packages so we only rebuild when those change.
-    doomPackageDir = let
-      filteredPath = builtins.path {
-        path = doomPrivateDir;
-        name = "doom-private-dir-filtered";
-        filter = path: type:
-          builtins.elem (baseNameOf path) [ "init.el" "packages.el" ];
-      };
-    in pkgs.linkFarm "doom-packages-dir" [
+    doomPackageDir = pkgs.linkFarm "doom-packages-dir" [
       {
         name = "init.el";
-        path = "${filteredPath}/init.el";
+        path = ./doom.d/init.el;
       }
       {
         name = "packages.el";
-        path = "${filteredPath}/packages.el";
+        path = ./doom.d/packages.el;
       }
       {
         name = "config.el";
@@ -37,14 +30,6 @@
     text = ''
       #!/bin/sh
       emacsclient -nc $@
-    '';
-    executable = true;
-  };
-
-  home.file."bin/emacsmail" = {
-    text = ''
-      #!/usr/bin/env bash
-      emacsclient -c --eval "(browse-url-mail \"$@\")"
     '';
     executable = true;
   };

@@ -46,31 +46,11 @@ And make an insert-mode leader that doesn't conflict with XMonad:
 (setq doom-localleader-alt-key "s-SPC m")
 #+end_src
 * Searching
-I like to search using DDG always:
 #+begin_src emacs-lisp
-(defun zjn--search-in-firefox-inner (default-text force-edit-text &optional prefix)
-  (let* ((edit-text (or (s-blank? default-text) force-edit-text))
-         (initial-position (if (s-blank? prefix) (length default-text) (length prefix)))
-         (default-text (s-concat prefix default-text))
-         (search-string (if edit-text (read-string "search string: " (cons default-text initial-position)) default-text))
-         (url (s-concat "https://duckduckgo.com/?t=ffab&q=" (url-encode-url search-string))))
-    (call-process "xdg-open" nil nil nil url)))
-
-(defun zjn--current-region ()
-  (if (doom-region-active-p) (buffer-substring (mark) (point)) ""))
-
-(defun zjn--search-in-firefox (edit-text)
-  (interactive "P")
-  (zjn--search-in-firefox-inner (zjn--current-region) edit-text))
-
-(defun zjn--search-in-firefox-bang (edit-text)
-  (interactive "P")
-  (zjn--search-in-firefox-inner (zjn--current-region) edit-text "! "))
-
-(map! :leader
-      (:prefix ("s" . "search")
-       :desc "Search in DDG" "o" #'zjn--search-in-firefox
-       :desc "Search in DDG (!)" "O" #'zjn--search-in-firefox-bang))
+(map!
+  "C-;" #'embark-dwim
+  :map minibuffer-mode-map
+  "C-o" #'embark-act)
 #+end_src
 * org
 :PROPERTIES:
@@ -322,6 +302,10 @@ hello
 * Bibliography
 Eventually will sort through this.
 #+begin_src emacs-lisp
+(map!
+  :mode minibuffer-mode
+  "C-o" #'embark-act
+  "C-b" #'embark-become)
 (use-package! bibtex-completion
   :config
   (setq bibtex-files (list "~/Sync/notes/lit/default.bib")
@@ -355,11 +339,47 @@ Eventually will sort through this.
         org-cite-activate-processor 'citar
         citar-bibliography bibtex-completion-bibliography
         citar-library-paths (list bibtex-completion-library-path))
+
+  (defvar zjn-citar-embark-become-map
+    (let ((map (make-sparse-keymap)))
+        (define-key map (kbd "f") 'citar-open)
+        (define-key map (kbd "a") 'biblio-arxiv-lookup)
+        (define-key map (kbd "d") 'biblio-dblp-lookup)
+    map)
+  "Citar Embark become keymap for biblio lookup.")
   (map!
    :leader
    "n b" #'citar-open
    :mode org
    "C-c b" #'org-cite-insert))
+;; TODO: dl file?
+(after! (citar embark)
+  (add-to-list 'embark-become-keymaps 'zjn-citar-embark-become-map))
+(use-package! biblio
+  :config
+  (defun zjn--format-citekey (authors year)
+    "Mimic BibTex 'alpha' style."
+    (let* ((last-names (-map (-compose  #'-last-item #'s-split-words) authors))
+           (last-initials (-map (-partial #'s-left 1) last-names))
+           (threshold 3)
+           (author-block (cond ((= (length authors) 1) (s-left 3 (car last-names)))
+                               ((<= (length authors) threshold) (apply #'s-concat last-initials))
+                               ((> (length authors) threshold) (apply #'s-concat (append (-take threshold last-initials) '("+"))))
+                               (t error "bad author list"))))
+      (s-concat author-block (s-right 2 year))))
+  (defun zjn--add-biblio-selection-to-bibliography (bibtex entry)
+    (let* ((citekey (zjn--format-citekey (alist-get 'authors entry) (alist-get 'year entry)))
+           (bibtex-new (replace-regexp-in-string "@[[:alpha:]]*{\\(.*?\\),\\(.\\|\n\\)*\\'" citekey bibtex t t 1)))
+      (f-append-text (s-append "\n\n" bibtex-new) 'utf-8 (car bibtex-files))
+      (citar-cache--update-bibliography)
+      (message "Added: %s" citekey)))
+  (defun zjn-add-biblio-selection-to-bibliography--action ()
+    (interactive)
+    (biblio--selection-forward-bibtex #'zjn--add-biblio-selection-to-bibliography))
+  (add-to-list #'biblio-selection-mode-actions-alist '("Add to bibliography" . zjn-add-biblio-selection-to-bibliography--action))
+  (map!
+    :mode biblio-selection-mode
+    "RET" #'zjn-add-biblio-selection-to-bibliography--action))
 #+end_src
 * Theme
 Use base16 theme; this is nice because it's easy to match with the rest of my desktop.

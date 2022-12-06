@@ -4,11 +4,11 @@
 stdenv.mkDerivation {
   pname = "emacs-config";
   inherit version;
-  src = lib.sourceByRegex ./. [ "config.org" "init.el" "packages.el" ];
+  src = ./.;
 
   buildInputs = [ emacs coreutils ];
   buildPhase = ''
-    cp $src/* .
+    cp -r $src/* .
     # Tangle org files
     emacs --batch -Q \
       -l org \
@@ -19,6 +19,7 @@ stdenv.mkDerivation {
   dontUnpack = true;
 
   installPhase = ''
-    install -D -t $out *.el
+    mkdir -p $out
+    cp -r *.el snippets/ $out/
   '';
 }
