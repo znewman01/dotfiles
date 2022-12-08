@@ -25,8 +25,8 @@ Make the ~doom~ CLI tool work (hack due to Nix chicanery):
 
 Docs working:
 #+begin_src emacs-lisp
-(setq doom-modules-dir (car doom-modules-dirs)
-      doom-docs-dir (car doom-modules-dirs))
+(setq doom-modules-dir (f-join (f-dirname doom-core-dir) "modules")
+      doom-docs-dir (f-join (f-dirname doom-core-dir) "docs"))
 #+end_src
 
 And some PII to put in my [[github:znewman01/dotfiles][dotfiles]]:
@@ -50,7 +50,8 @@ And make an insert-mode leader that doesn't conflict with XMonad:
 (map!
   "C-;" #'embark-dwim
   :map minibuffer-mode-map
-  "C-o" #'embark-act)
+  "C-o" #'embark-act
+  "C-t" #'embark-become)
 #+end_src
 * org
 :PROPERTIES:
@@ -69,7 +70,7 @@ And make an insert-mode leader that doesn't conflict with XMonad:
 (setq org-log-done t)
 (setq org-log-state-notes-into-drawer t)
 (setq org-todo-keywords
-      '((sequence "NEXT(n)" "BUY" "TODO(t)" "|" "DONE(d!)")
+      '((sequence "NEXT(n)" "TODO(t)" "|" "DONE(d!)")
         (sequence "HABIT(h)" "|" "HABITDONE(H)")
         (sequence "PROJ(p)" "BLOCKEDPROJ(b)" "|" "PROJDONE(P)")
         (sequence "WAITING(w)" "SOMEDAY(s)" "|" "CANCELLED(c)")))
@@ -77,11 +78,10 @@ And make an insert-mode leader that doesn't conflict with XMonad:
 (setq org-tag-persistent-alist '((:startgroup . nil)
                                  ("@errand" . ?e)
                                  ("@home" . ?h)
-                                 ("@campus" . ?c)
                                  (:endgroup . nil)
+                                 ("SOMEDAY" . ?s)
                                  ("internet" . ?i)
-                                 ("code" . nil)
-                                 ("gradschool" . ?g)
+                                 ("chainguard" . ?c)
                                  ("personal" . ?p)
                                  ("katie" . ?k)))
 #+end_src
@@ -120,103 +120,88 @@ And make an insert-mode leader that doesn't conflict with XMonad:
                                    (search . "g%-8:e")))
 
   (setq org-agenda-custom-commands
-    (let ((agenda-common
-           '(agenda ""
-                    ((org-agenda-span 'day)
-                     (org-agenda-start-day "+0d")
-                     (org-agenda-skip-timestamp-if-done t)
-                     (org-agenda-skip-scheduled-if-done t)
-                     (org-agenda-skip-deadline-if-done t)
-                     (org-super-agenda-groups '((:discard (:not (:time-grid t)))
-                                                (:name "Agenda:" :time-grid t))))))
-          (stuck-common
-           '(org-ql-block '(and
-                            (not (tags "SOMEDAY"))
-                            (or (and (todo "PROJ")
-                                     (not (descendants (todo "NEXT"))))
-                                (and (todo "BLOCKEDPROJ")
-                                     (not (scheduled t))
-                                     (not (deadline t)))
-                                (and (todo "WAITING")
-                                     (not (or (scheduled t) (deadline t))))
-                                (and (todo "SOMEDAY")
-                                     (not (tags "SOMEDAY")))
-                                (and (todo "TODO")
-                                     (not (ancestors (todo "PROJ" "BLOCKEDPROJ"))))))
-                          ((org-ql-block-header "Stuck projects:"))))
-          (tasks-common
-           (lambda (desc)
-             `(org-ql-block '(and
-                             (or (and (todo "NEXT") (not (tags "SOMEDAY")))
-                                 (deadline auto)
-                                 (scheduled :to today))
-                             (not (done))
-                             (not (scheduled :on today :with-time t)))
-                              ((org-super-agenda-groups '((:discard (:time-grid t))
-                                                          (:name "Overdue:"
-                                                                 :deadline past)
-                                                          (:name "Upcoming:"
-                                                                 :deadline future
-                                                                 :deadline today)
-                                                          (:name "Habits"
-                                                                 :todo "HABIT")
-                                                          (:name "Scheduled:"
-                                                                 :scheduled past
-                                                                 :scheduled today)
-                                                          (:name "Work:"
-                                                                 :tag "chainguard")
-                                                          (:name "Errands:" :order 1
-                                                                 :tag "@errand")
-                                                          (:name "Home:" :order 1
-                                                                 :tag "@home")
-                                                          (:discard (:tag "yak"))
-                                                          (:name "Other tasks:"
-                                                                 :anything t)))
-                               (org-ql-block-header ,(concat desc " tasks:")))))))
-      `(("nw" "Work"
-         (,agenda-common
-          ,stuck-common
-          ,(funcall tasks-common "Chainguard"))
-         ((org-agenda-tag-filter-preset '("+chainguard"))))
-        ("na" "All"
-         (,agenda-common
-          ,stuck-common
-          ,(funcall tasks-common "All"))))))
-
-  ; https://lists.gnu.org/archive/html/emacs-orgmode/2015-06/msg00266.html
-  (defun org-agenda-delete-empty-blocks ()
-    "Remove empty agenda blocks.
-  A block is identified as empty if there are fewer than 2
-  non-empty lines in the block (excluding the line with
-  `org-agenda-block-separator' characters)."
-    (when org-agenda-compact-blocks
-      (user-error "Cannot delete empty compact blocks"))
-    (setq buffer-read-only nil)
-    (save-excursion
-      (goto-char (point-min))
-      (let* ((blank-line-re "^\\s-*$")
-             (content-line-count (if (looking-at-p blank-line-re) 0 1))
-             (start-pos (point))
-             (block-re (format "%c\\{10,\\}" org-agenda-block-separator)))
-        (while (and (not (eobp)) (forward-line))
-          (cond
-           ((looking-at-p block-re)
-            (when (< content-line-count 2)
-              (delete-region start-pos (1+ (point-at-bol))))
-            (setq start-pos (point))
-            (forward-line)
-            (setq content-line-count (if (looking-at-p blank-line-re) 0 1)))
-           ((not (looking-at-p blank-line-re))
-            (setq content-line-count (1+ content-line-count)))))
-        (when (< content-line-count 2)
-          (delete-region start-pos (point-max)))
-        (goto-char (point-min))
-        ;; The above strategy can leave a separator line at the beginning
-        ;; of the buffer.
-        (when (looking-at-p block-re)
-          (delete-region (point) (1+ (point-at-eol))))))
-    (setq buffer-read-only t))
-  (add-hook 'org-agenda-finalize-hook #'org-agenda-delete-empty-blocks))
+        (let ((stuck-common
+               '(org-ql-block '(and
+                                (not (tags "SOMEDAY"))
+                                (or (and (todo "PROJ")
+                                         (not (descendants (todo "NEXT"))))
+                                    (and (todo "BLOCKEDPROJ")
+                                         (not (scheduled t))
+                                         (not (deadline t)))
+                                    (and (todo "WAITING")
+                                         (not (or (scheduled t) (deadline t))))
+                                    (and (todo "SOMEDAY")
+                                         (not (tags "SOMEDAY")))
+                                    (and (todo "TODO")
+                                         (not (ancestors (todo "PROJ" "BLOCKEDPROJ"))))))
+                              ((org-ql-block-header "Stuck projects:")))))
+          (cl-flet*
+              ((agenda-common (priority)
+               `(agenda ""
+                        ((org-agenda-span 'day)
+                         (org-agenda-start-day "+0d")
+                         (org-agenda-skip-timestamp-if-done t)
+                         (org-agenda-skip-scheduled-if-done t)
+                         (org-agenda-skip-deadline-if-done t)
+                         (org-super-agenda-groups (quote ,(append
+                                                           (when priority
+                                                             `((:discard (:not (:priority>= ,priority)))))
+                                                           '((:discard (:not (:time-grid t)))
+                                                             (:name "Agenda:" :time-grid t))))))))
+               (tasks-common (desc priority)
+                             `(org-ql-block '(and
+                                              (or (and (todo "NEXT") (not (tags "SOMEDAY")))
+                                                  (deadline auto)
+                                                  (scheduled :to today))
+                                              ,(if priority
+                                                   `(priority >= ,priority)
+                                                 '(not (done)))
+                                              (not (done))
+                                              (not (scheduled :on today :with-time t)))
+                                            ((org-super-agenda-groups '((:discard (:time-grid t))
+                                                                        (:name "Overdue:"
+                                                                         :deadline past)
+                                                                        (:name "Upcoming:"
+                                                                         :deadline future
+                                                                         :deadline today)
+                                                                        (:name "Habits"
+                                                                         :todo "HABIT")
+                                                                        (:name "Scheduled:"
+                                                                         :scheduled past
+                                                                         :scheduled today)
+                                                                        (:name "Work:"
+                                                                         :tag "chainguard")
+                                                                        (:name "Errands:" :order 1
+                                                                         :tag "@errand")
+                                                                        (:name "Home:" :order 1
+                                                                         :tag "@home")
+                                                                        (:discard (:tag "yak"))
+                                                                        (:name "Other tasks:"
+                                                                         :anything t)))
+                                             (org-ql-block-header ,(concat desc " tasks:")))))
+               (work-with-priority (keys priority)
+                                   (let ((title (s-concat "Work (priority=" (or priority "all") ")")))
+                                     (list keys title
+                                           (list (agenda-common priority)
+                                                 stuck-common
+                                                 (tasks-common title priority))
+                                           '((org-agenda-tag-filter-preset '("+chainguard"))))))
+               (all-with-priority (keys priority)
+                                  (let ((title (s-concat "All (priority=" (or priority "all") ")")))
+                                    (list keys  title
+                                          (list (agenda-common priority)
+                                                stuck-common
+                                                (tasks-common title priority))))))
+            (list (work-with-priority "nww" "A")
+                  (work-with-priority "nwa" "A")
+                  (work-with-priority "nwb" "B")
+                  (work-with-priority "nwc" "C")
+                  (work-with-priority "nwA" nil)
+                  (all-with-priority "nn" "A")
+                  (all-with-priority "na" "A")
+                  (all-with-priority "nb" "B")
+                  (all-with-priority "nc" "C")
+                  (all-with-priority "nA" nil))))))
 #+end_src
 *** Capture
 #+begin_src emacs-lisp :tangle no
@@ -261,7 +246,9 @@ And make an insert-mode leader that doesn't conflict with XMonad:
 ** Keybindings
 Need to be global, not ~(after! org)~.
 #+begin_src emacs-lisp :noweb-ref nil
-(map! :leader "a" (cmd! (org-agenda nil "na")))
+(map! :leader
+      "a" (cmd! (org-agenda nil "nn"))
+      "A" (cmd! (org-agenda nil "nA")))
 (map! :mode org-capture-mode :localleader "s r" #'org-capture-refile)
 (map! :mode org-mode :n "t" #'org-todo)
 #+end_src
@@ -302,10 +289,6 @@ hello
 * Bibliography
 Eventually will sort through this.
 #+begin_src emacs-lisp
-(map!
-  :mode minibuffer-mode
-  "C-o" #'embark-act
-  "C-b" #'embark-become)
 (use-package! bibtex-completion
   :config
   (setq bibtex-files (list "~/Sync/notes/lit/default.bib")
@@ -339,19 +322,18 @@ Eventually will sort through this.
         org-cite-activate-processor 'citar
         citar-bibliography bibtex-completion-bibliography
         citar-library-paths (list bibtex-completion-library-path))
-
   (defvar zjn-citar-embark-become-map
     (let ((map (make-sparse-keymap)))
         (define-key map (kbd "f") 'citar-open)
         (define-key map (kbd "a") 'biblio-arxiv-lookup)
         (define-key map (kbd "d") 'biblio-dblp-lookup)
+        (define-key map (kbd "i") 'org-cite-insert)
     map)
   "Citar Embark become keymap for biblio lookup.")
   (map!
    :leader
    "n b" #'citar-open
-   :mode org
-   "C-c b" #'org-cite-insert))
+   "n B" #'org-cite-insert))
 ;; TODO: dl file?
 (after! (citar embark)
   (add-to-list 'embark-become-keymaps 'zjn-citar-embark-become-map))
@@ -371,7 +353,6 @@ Eventually will sort through this.
     (let* ((citekey (zjn--format-citekey (alist-get 'authors entry) (alist-get 'year entry)))
            (bibtex-new (replace-regexp-in-string "@[[:alpha:]]*{\\(.*?\\),\\(.\\|\n\\)*\\'" citekey bibtex t t 1)))
       (f-append-text (s-append "\n\n" bibtex-new) 'utf-8 (car bibtex-files))
-      (citar-cache--update-bibliography)
       (message "Added: %s" citekey)))
   (defun zjn-add-biblio-selection-to-bibliography--action ()
     (interactive)
