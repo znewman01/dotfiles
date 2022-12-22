@@ -9,9 +9,11 @@
 
     impermanence.url = "github:nix-community/impermanence";
 
+    emacs-overlay = { url = "github:nix-community/emacs-overlay"; };
     doom-emacs = {
       url = "github:nix-community/nix-doom-emacs";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.emacs-overlay.follows = "emacs-overlay";
     };
 
     darwin = {
@@ -21,7 +23,7 @@
   };
 
   outputs = inputs@{ nixpkgs, darwin, flake-utils, home-manager, impermanence
-    , doom-emacs, ... }:
+    , doom-emacs, emacs-overlay, ... }:
     let
       systemOutputs = flake-utils.lib.eachDefaultSystem (system:
         let pkgs = nixpkgs.legacyPackages.${system};
@@ -33,7 +35,7 @@
           legacyPackages = import nixpkgs {
             inherit system;
             config.allowUnfree = true;
-            overlays = [ (final: prev: packages) ];
+            overlays = [ (final: prev: packages) emacs-overlay.overlay ];
           };
         });
     in systemOutputs // rec {

@@ -15,9 +15,18 @@ in with myLib; {
       };
       fulcio = pipe (gh "sigstore/fulcio") [ myFork forWork withDco ];
       rekor = pipe (gh "sigstore/rekor") [ myFork forWork withDco ];
-      sigstore = pipe (gh "sigstore/sigstore") [ myFork forWork withDco ];
-      cosign = pipe (gh "sigstore/cosign") [ myFork forWork withDco ];
+      sigstore =
+        pipe (gh "sigstore/sigstore") [ myFork forWork withDco withEnvrc ];
+      cosign = pipe (gh "sigstore/cosign") [
+        myFork
+        forWork
+        withDco
+        withEnvrc
+        (withExtraFiles ./cosign)
+      ];
       sigstore-go = pipe (gh "sigstore/sigstore-go") [ myFork forWork withDco ];
+      protobuf-specs =
+        pipe (gh "sigstore/protobuf-specs") [ myFork forWork withDco ];
       go-tuf = pipe (gh "theupdateframework/go-tuf") [
         myFork
         forWork

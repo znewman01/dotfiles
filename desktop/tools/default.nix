@@ -9,7 +9,7 @@
     sqlite
     imagemagick
     fd
-    tree-sitter
+    # tree-sitter
     fzf
     anystyle-cli
     gist

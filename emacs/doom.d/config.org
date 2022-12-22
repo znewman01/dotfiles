@@ -25,8 +25,8 @@ Make the ~doom~ CLI tool work (hack due to Nix chicanery):
 
 Docs working:
 #+begin_src emacs-lisp
-(setq doom-modules-dir (f-join (f-dirname doom-core-dir) "modules")
-      doom-docs-dir (f-join (f-dirname doom-core-dir) "docs"))
+(setq doom-modules-dir (f-join (f-dirname doom-core-dir) "modules/")
+      doom-docs-dir (f-join (f-dirname doom-core-dir) "docs/"))
 #+end_src
 
 And some PII to put in my [[github:znewman01/dotfiles][dotfiles]]:
@@ -118,7 +118,7 @@ And make an insert-mode leader that doesn't conflict with XMonad:
                                    (todo . "")
                                    (tags . "")
                                    (search . "g%-8:e")))
-
+  (setf (alist-get 'agenda org-agenda-sorting-strategy) '(habit-down time-up priority-up category-keep))
   (setq org-agenda-custom-commands
         (let ((stuck-common
                '(org-ql-block '(and
@@ -137,17 +137,17 @@ And make an insert-mode leader that doesn't conflict with XMonad:
                               ((org-ql-block-header "Stuck projects:")))))
           (cl-flet*
               ((agenda-common (priority)
-               `(agenda ""
-                        ((org-agenda-span 'day)
-                         (org-agenda-start-day "+0d")
-                         (org-agenda-skip-timestamp-if-done t)
-                         (org-agenda-skip-scheduled-if-done t)
-                         (org-agenda-skip-deadline-if-done t)
-                         (org-super-agenda-groups (quote ,(append
-                                                           (when priority
-                                                             `((:discard (:not (:priority>= ,priority)))))
-                                                           '((:discard (:not (:time-grid t)))
-                                                             (:name "Agenda:" :time-grid t))))))))
+                              `(agenda ""
+                                       ((org-agenda-span 'day)
+                                        (org-agenda-start-day "+0d")
+                                        (org-agenda-skip-timestamp-if-done t)
+                                        (org-agenda-skip-scheduled-if-done t)
+                                        (org-agenda-skip-deadline-if-done t)
+                                        (org-super-agenda-groups (quote ,(append
+                                                                          (when priority
+                                                                            `((:discard (:not (:priority>= ,priority)))))
+                                                                          '((:discard (:not (:time-grid t)))
+                                                                            (:name "Agenda:" :time-grid t))))))))
                (tasks-common (desc priority)
                              `(org-ql-block '(and
                                               (or (and (todo "NEXT") (not (tags "SOMEDAY")))
@@ -202,6 +202,8 @@ And make an insert-mode leader that doesn't conflict with XMonad:
                   (all-with-priority "nb" "B")
                   (all-with-priority "nc" "C")
                   (all-with-priority "nA" nil))))))
+
+
 #+end_src
 *** Capture
 #+begin_src emacs-lisp :tangle no

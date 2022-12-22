@@ -5,9 +5,11 @@
 
   programs.doom-emacs = rec {
     enable = true;
+    emacsPackage = pkgs.emacsGit;
     doomPrivateDir = (import ./doom.d) {
       inherit lib;
-      inherit (pkgs) stdenv emacs coreutils;
+      inherit (pkgs) stdenv coreutils;
+      emacs = pkgs.emacsGit;
     };
     # Only init/packages so we only rebuild when those change.
     doomPackageDir = pkgs.linkFarm "doom-packages-dir" [
