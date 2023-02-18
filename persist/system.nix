@@ -10,12 +10,9 @@
   '';
   systemd.tmpfiles.rules = [
     "L /etc/NetworkManager/system-connections - - - - /persist/nm-system-connections"
-    # Needed for znapzend (so can SSH to other machines)
-    "C /root/.ssh - - - - /persist/zjn/.ssh"
-    "z /root/.ssh - root root - -"
   ];
   environment.persistence."/persist/root" = {
-    directories = [ "/var/lib/acme" "/var/lib/tailscale" ];
+    directories = [ "/var/lib/tailscale" ];
   };
 
   systemd.services.initdirs = {

@@ -2,7 +2,6 @@
 
 {
   home.username = "zjn";
-
   home.enableNixpkgsReleaseCheck = true;
 
   programs.bash = {

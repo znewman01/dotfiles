@@ -53,6 +53,16 @@
           ];
           specialArgs = inputs;
         };
+        zjn-x1prime = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          pkgs = systemOutputs.legacyPackages."x86_64-linux";
+          modules = [
+            home-manager.nixosModule
+            impermanence.nixosModule
+            ./machines/zjn-x1prime
+          ];
+          specialArgs = inputs;
+        };
       };
       darwinConfigurations."zjn-mac" = darwin.lib.darwinSystem rec {
         system = "aarch64-darwin";

@@ -1,13 +1,13 @@
 { config, pkgs, ... }:
 
-let hosts = [ "zjn@zjn-x1prime" "zjn@zjn-home" "zjn@zjn-work" "zjn-cloud" ];
-in {
+{
   imports = [ ./zfs.nix ./system.nix ../persist/system.nix ./timezone.nix ];
 
   nix.settings.trusted-users = [ "@wheel" ];
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
 
   console = {
     font = "Lat2-Terminus16";

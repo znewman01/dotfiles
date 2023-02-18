@@ -2,7 +2,7 @@
 
 {
   imports = [
-    ../emacs/nixos.nix
+    # ../emacs/nixos.nix
     ./home.nix
     ../persist/home.nix
     ../modules/code.nix
@@ -22,13 +22,13 @@
     xcompmgr
   ];
 
-  xsession = {
-    profileExtra = ''
-      xcompmgr &
-      autorandr -c &
-    '';
-    scriptPath = ".hm-xsession";
-  };
+  # xsession = {
+  #   profileExtra = ''
+  #     xcompmgr &
+  #     autorandr -c &
+  #   '';
+  #   scriptPath = ".hm-xsession";
+  # };
 
   xdg.enable = true;
 

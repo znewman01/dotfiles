@@ -4,41 +4,47 @@
 { config, lib, pkgs, modulesPath, ... }:
 
 {
-  imports =
-    [ (modulesPath + "/installer/scan/not-detected.nix")
-    ];
+  imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
-  boot.initrd.availableKernelModules = [ "xhci_pci" "nvme" "usb_storage" "sd_mod" ];
+  networking.hostId = "ec47a9c8";
+
+  boot.initrd.availableKernelModules =
+    [ "xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod" ];
   boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ "kvm-intel" ];
+  boot.kernelModules = [ "kvm-amd" ];
   boot.extraModulePackages = [ ];
 
-  fileSystems."/" =
-    { device = "tank/local/root";
-      fsType = "zfs";
-    };
+  fileSystems."/" = {
+    device = "tank/encrypt/local/root";
+    fsType = "zfs";
+    options = [ "zfsutil" ];
+  };
 
-  fileSystems."/nix" =
-    { device = "tank/local/nix";
-      fsType = "zfs";
-    };
+  fileSystems."/nix" = {
+    device = "tank/encrypt/local/nix";
+    fsType = "zfs";
+    options = [ "zfsutil" ];
+  };
 
-  fileSystems."/cache" =
-    { device = "tank/local/cache";
-      fsType = "zfs";
-    };
+  fileSystems."/cache" = {
+    device = "tank/encrypt/local/cache";
+    fsType = "zfs";
+    options = [ "zfsutil" ];
+  };
 
-  fileSystems."/persist" =
-    { device = "tank/safe/persist";
-      fsType = "zfs";
-    };
+  fileSystems."/persist" = {
+    device = "tank/encrypt/safe/persist";
+    fsType = "zfs";
+    options = [ "zfsutil" ];
+  };
 
-  fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/DE65-3921";
-      fsType = "vfat";
-    };
+  fileSystems."/boot" = {
+    device = "/dev/disk/by-uuid/E1D5-0F9B";
+    fsType = "vfat";
+  };
 
   swapDevices = [ ];
 
-  powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
+  hardware.cpu.amd.updateMicrocode =
+    lib.mkDefault config.hardware.enableRedistributableFirmware;
 }

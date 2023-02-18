@@ -14,7 +14,9 @@
     iwconfig wlp3s0 essid ...
     sleep 10 && ping 8.8.8.8  # repeat as needed
     ```
-  - run `scripts/actual_install.sh` from this repo (no dependencies)
+  - `curl -s https://raw.githubusercontent.com/znewman01/dotfiles/master/scripts/pre_install.sh | bash`
+  - `cd /mnt/persist/zjn/git/dotfiles`
+  - `./scripts/actual_install.sh` from this repo (no dependencies)
   - on reboot:
     - log in as `zjn`
     - deactivate root password (`sudo passwd -l root`). then proceed

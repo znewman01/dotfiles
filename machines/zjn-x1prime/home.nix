@@ -1,7 +1,12 @@
-{ pkgs, ... }:
+{ config, pkgs, doom-emacs, ... }:
 
 {
-  imports = [ ../../home-common.nix ../../code ./autorandr.nix ];
-  home.stateVersion = "21.05";
-  home.packages = [ pkgs.anki ];
+  imports = [
+    ../../common/home-nixos.nix
+    ../../desktop/nixos-home.nix
+    # ./autorandr.nix
+    # ../../code
+    # ../../work/home.nix
+  ];
+  home.stateVersion = "22.11";
 }
