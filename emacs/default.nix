@@ -1,7 +1,12 @@
 { config, pkgs, lib, ... }:
 
 {
-  home.packages = with pkgs; [ emacs-all-the-icons-fonts ispell ];
+  home.packages = with pkgs; [
+    emacs-all-the-icons-fonts
+    ispell
+    zstd
+    coreutils
+  ];
 
   programs.doom-emacs = rec {
     enable = true;

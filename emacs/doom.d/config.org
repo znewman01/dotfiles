@@ -45,6 +45,15 @@ And make an insert-mode leader that doesn't conflict with XMonad:
 (setq doom-leader-alt-key "s-SPC")
 (setq doom-localleader-alt-key "s-SPC m")
 #+end_src
+
+Emacs everywhere:
+#+begin_src emacs-lisp
+
+(setq emacs-everywhere--dir (f-join doom-cache-dir "emacs-eve       rywhere"))
+
+(mkdir emacs-everywhere--dir t)
+#+end_src
+
 * Searching
 #+begin_src emacs-lisp
 (map!
@@ -322,7 +331,7 @@ Eventually will sort through this.
   (setq org-cite-insert-processor 'citar
         org-cite-follow-processor 'citar
         org-cite-activate-processor 'citar
-        citar-bibliography bibtex-completion-bibliography
+        citar-bibliography (list bibtex-completion-bibliography)
         citar-library-paths (list bibtex-completion-library-path))
   (defvar zjn-citar-embark-become-map
     (let ((map (make-sparse-keymap)))
@@ -343,7 +352,8 @@ Eventually will sort through this.
   :config
   (defun zjn--format-citekey (authors year)
     "Mimic BibTex 'alpha' style."
-    (let* ((last-names (-map (-compose  #'-last-item #'s-split-words) authors))
+    (let* ((authors (-non-nil authors))
+           (last-names (-map (-compose  #'-last-item #'s-split-words) authors))
            (last-initials (-map (-partial #'s-left 1) last-names))
            (threshold 3)
            (author-block (cond ((= (length authors) 1) (s-left 3 (car last-names)))
