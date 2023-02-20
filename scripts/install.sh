@@ -39,6 +39,7 @@ read -p "Hook up sync thing, wait for it to finish, hit enter."
 # TODO: setup/copy ssh pubkey here
 gpg --output "$HOME/Sync/keys/${HOSTNAME}.gpg" --export z@znewman.net
 cp "$HOME/.ssh/id_ed25519.pub" "$HOME/Sync/keys/${HOSTNAME}.pub"
+cp "$HOME/.ssh/id_ed25519.pub" "net/${HOSTNAME}.pub"
 
 FINGERPRINT=$(gpg --list-keys | grep "Key fingerprint" | head -n 1 | cut -d= -f2 | sed 's/ //g')
 

@@ -15,17 +15,8 @@
   };
   fonts.fontconfig.enable = true;
 
-  users.extraGroups.vboxusers.members = [ "zjn" ];
-
   programs.dconf.enable = true;
   services.dbus.packages = with pkgs; [ dconf ];
-
-  security.pam.loginLimits = [{
-    domain = "*";
-    type = "soft";
-    item = "nofile";
-    value = "2048"; # the default of 1024 makes some software (e.g., Rust) choke
-  }];
 
   users.users.zjn = {
     isNormalUser = true;

@@ -1,0 +1,14 @@
+- [X] firefox tridactyl config
+  - https://github.com/tridactyl/tridactyl/issues/64
+- [X] pass / gpg
+- [X] dmenu pass + dmenu calc
+- [X] make i3 bars bigger
+- [X] i3 gaps
+- [ ] i3 multi-monitor
+- [ ] i3 get good at contiainers
+- [X] i3 status
+- [X] thinkpad firmware
+- [ ] qmk
+- [X] screenshot, screen record
+- [X] notifications
+- [ ] doom fixes: consult https://github.com/nix-community/nix-doom-emacs/issues/381

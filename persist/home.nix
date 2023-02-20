@@ -23,9 +23,7 @@
   # problem to lose.
   home.persistence."/cache/zjn" = {
     directories = [
-      ".cache/mu"
-      ".cache/Tectonic"
-      "Maildir"
+      ".cache/"
       ".mozilla"
       ".local/doom"
       ".local/share/Anki"
@@ -37,7 +35,6 @@
       ".config/VSCodium"
       ".vagrant.d"
       ".terraform.d"
-      ".packer.d"
     ];
     files = [ ".gist" ];
     allowOther = true;

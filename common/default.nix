@@ -1,16 +1,7 @@
-{ config, pkgs, doom-emacs, nixpkgs, ... }:
+{ config, pkgs, doom-emacs, ... }:
 
 {
-  imports = [ ./tailscale ];
-
-  nix.settings = {
-    substituters = [ "https://nix-community.cachix.org" ];
-    trusted-public-keys = [
-      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-    ];
-  };
-  nix.registry.nixpkgs.flake = nixpkgs;
-  nix.nixPath = [ "nixpkgs=${nixpkgs}" ];
+  imports = [ ./tailscale ./nix.nix ];
 
   environment.systemPackages = with pkgs; [ git vim wget ];
 

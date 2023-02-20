@@ -39,28 +39,29 @@
           };
         });
     in systemOutputs // rec {
-      modules = import ./modules;
+      homeManagerModules = (import ./modules).homeManagerModules ++ [
+        doom-emacs.hmModule
+        impermanence.nixosModules.home-manager.impermanence
+      ];
+      modules = (import ./modules).modules
+        ++ [ home-manager.nixosModule impermanence.nixosModule ];
       nixosConfigurations = {
-        zjn-work = let flakeModules = modules;
-        in nixpkgs.lib.nixosSystem {
+        zjn-work = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           pkgs = systemOutputs.legacyPackages."x86_64-linux";
           modules = [
-            home-manager.nixosModule
-            impermanence.nixosModule
-            flakeModules.kolide
             ./machines/zjn-work
-          ];
+            ({ ... }: { home-manager.users.zjn.imports = homeManagerModules; })
+          ] ++ modules;
           specialArgs = inputs;
         };
         zjn-x1prime = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           pkgs = systemOutputs.legacyPackages."x86_64-linux";
           modules = [
-            home-manager.nixosModule
-            impermanence.nixosModule
+            ({ ... }: { home-manager.users.zjn.imports = homeManagerModules; })
             ./machines/zjn-x1prime
-          ];
+          ] ++ modules;
           specialArgs = inputs;
         };
       };
@@ -74,19 +75,15 @@
           ./desktop
           ./desktop/chat
           ({ ... }: {
-            home-manager.users.zjn = {
-              imports = [
-                ./machines/zjn-mac/home.nix
-                ./desktop/home.nix
-                ./desktop/chat/home.nix
-                ./common/home.nix
-                modules.code
-                ./work/home.nix
-                doom-emacs.hmModule
-              ];
-            };
+            home-manager.users.zjn.imports = [
+              ./machines/zjn-mac/home.nix
+              ./desktop/home.nix
+              ./desktop/chat/home.nix
+              ./common/home.nix
+              ./work/home.nix
+            ] ++ homeManagerModules;
           })
-        ];
+        ] ++ modules;
         specialArgs = inputs;
       };
     };

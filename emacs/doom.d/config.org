@@ -18,12 +18,7 @@ Nice imports:
 (require 'json)
 #+end_src
 
-Make the ~doom~ CLI tool work (hack due to Nix chicanery):
-#+begin_src emacs-lisp
-(setenv "EMACSDIR" "~/.emacs.d")
-#+end_src
-
-Docs working:
+Make the ~doom~ docs work (hack due to Nix chicanery):
 #+begin_src emacs-lisp
 (setq doom-modules-dir (f-join (f-dirname doom-core-dir) "modules/")
       doom-docs-dir (f-join (f-dirname doom-core-dir) "docs/"))
@@ -48,10 +43,11 @@ And make an insert-mode leader that doesn't conflict with XMonad:
 
 Emacs everywhere:
 #+begin_src emacs-lisp
-
-(setq emacs-everywhere--dir (f-join doom-cache-dir "emacs-eve       rywhere"))
-
+(setq emacs-everywhere--dir (f-join doom-cache-dir "emacs-everywhere"))
 (mkdir emacs-everywhere--dir t)
+(when (eq system-type 'gnu/linux)
+  (setq emacs-everywhere-paste-command nil
+        emacs-everywhere-window-focus-command '("xdotool" "key" "--clearmodifiers" "--window" "%w" "Shift+Insert")))
 #+end_src
 
 * Searching
@@ -388,12 +384,8 @@ Use base16 theme; this is nice because it's easy to match with the rest of my de
 
 Some reasonable fonts:
 #+begin_src emacs-lisp
-(when (eq system-type 'gnu/linux)
-  (setq zjn--mono "Roboto Mono")
-  (setq zjn--sans "Bitstream Vera Sans")
-  (setq zjn--serif "TeX Gyre Pagella")
-  (setq doom-font (font-spec :family zjn--mono :height 80 :weight 'semi-light))
-  (setq doom-variable-pitch-font (font-spec :family zjn--serif :height 60)))
+(let ((fonts-el "~/.doom-themes/fonts.el"))
+  (when (f-exists-p fonts-el) (load-file fonts-el)))
 #+end_src
 
 And some padding:

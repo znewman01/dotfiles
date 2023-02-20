@@ -47,6 +47,7 @@ in with myLib; {
         url = (gh "znewman01/kolide-launcher");
         extraRemotes.upstream = (gh "kolide/launcher");
       } [ forWork withEnvrc ];
+      qmk = pipe "qmk/qmk_firmware" [ gh myFork ];
     };
   };
 }

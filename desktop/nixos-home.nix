@@ -1,38 +1,11 @@
 { config, pkgs, ... }:
 
 {
-  imports = [
-    # ../emacs/nixos.nix
-    ./home.nix
-    ../persist/home.nix
-    ../modules/code.nix
-    ./xmonad.nix
-    ./fonts.nix
-    ./screenlock-nixos-home.nix
-    ./notifications-nixos-home.nix
-    ./theme-nixos-home.nix
-    ./tools/nixos.nix
-  ];
+  imports = [ ./home.nix ../persist/home.nix ./i3.nix ./tools ];
 
-  home.packages = with pkgs; [
-    pavucontrol
-    xclip
-    xdotool
-    pinentry-gtk2
-    xcompmgr
-  ];
-
-  # xsession = {
-  #   profileExtra = ''
-  #     xcompmgr &
-  #     autorandr -c &
-  #   '';
-  #   scriptPath = ".hm-xsession";
-  # };
+  home.packages = with pkgs; [ xclip xdotool pinentry-gtk2 ];
 
   xdg.enable = true;
 
   home.keyboard.options = [ "caps:swapescape" "compose:ralt" ];
-
-  programs.autorandr.enable = true;
 }
