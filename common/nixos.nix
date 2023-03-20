@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 {
-  imports = [ ./default.nix ./ssh/nixos.nix ];
+  imports = [ ./default.nix ];
 
   i18n.defaultLocale = "en_US.UTF-8";
 

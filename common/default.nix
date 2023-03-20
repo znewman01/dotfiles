@@ -1,7 +1,7 @@
 { config, pkgs, doom-emacs, ... }:
 
 {
-  imports = [ ./tailscale ./nix.nix ];
+  imports = [ ./tailscale ./nix.nix ./ssh ];
 
   environment.systemPackages = with pkgs; [ git vim wget ];
 

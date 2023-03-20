@@ -1,7 +1,13 @@
 { config, pkgs, ... }:
 
 {
-  imports = [ ./zfs.nix ./system.nix ../persist/system.nix ./timezone.nix ];
+  imports = [
+    ./zfs.nix
+    ./system.nix
+    ../persist/system.nix
+    ./timezone.nix
+    ./default.nix
+  ];
 
   nix.settings.trusted-users = [ "@wheel" ];
 

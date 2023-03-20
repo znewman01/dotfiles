@@ -65,25 +65,17 @@
           specialArgs = inputs;
         };
       };
-      darwinConfigurations."zjn-mac" = darwin.lib.darwinSystem rec {
+      darwinConfigurations."zjn-mac" = darwin.lib.darwinSystem {
         system = "aarch64-darwin";
         pkgs = systemOutputs.legacyPackages."aarch64-darwin";
         modules = [
           home-manager.darwinModules.home-manager
           ./machines/zjn-mac
-          ./common/darwin.nix
-          ./desktop
-          ./desktop/chat
           ({ ... }: {
-            home-manager.users.zjn.imports = [
-              ./machines/zjn-mac/home.nix
-              ./desktop/home.nix
-              ./desktop/chat/home.nix
-              ./common/home.nix
-              ./work/home.nix
-            ] ++ homeManagerModules;
+            home-manager.users.zjn.imports = [ doom-emacs.hmModule ]
+              ++ (import ./modules).homeManagerModules;
           })
-        ] ++ modules;
+        ] ++ (import ./modules).modules;
         specialArgs = inputs;
       };
     };

@@ -2,7 +2,7 @@
 
 {
   imports = [
-    ../../common/home-nixos.nix
+    ../../common/home.nix
     ../../desktop/nixos-home.nix
     # ./autorandr.nix
     ../../code

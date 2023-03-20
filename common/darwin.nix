@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 {
-  imports = [ ./default.nix ./ssh/darwin.nix ];
+  imports = [ ./default.nix ];
 
   programs.zsh.enable = true;
 
