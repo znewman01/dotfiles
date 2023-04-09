@@ -51,7 +51,7 @@
     text = ''
       (when (eq system-type 'gnu/linux)
         (setq zjn--mono "${
-          (builtins.head config.fonts.terminalFonts).name
+          (lib.last config.fonts.terminalFonts).name
         }") ;; TODO: get these from system fonts module!
         (setq zjn--sans "Bitstream Vera Sans")
         (setq zjn--serif "TeX Gyre Pagella")

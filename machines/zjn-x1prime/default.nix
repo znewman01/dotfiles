@@ -1,4 +1,4 @@
-{ config, nixpkgs, lib, doom-emacs, impermanence, ... }:
+{ config, pkgs, lib, doom-emacs, impermanence, ... }:
 
 {
   imports = [
@@ -16,4 +16,9 @@
   system.stateVersion = "22.11";
 
   services.fwupd.enable = true;
+
+  services.udisks2 = {
+    enable = true;
+    mountOnMedia = true;
+  };
 }

@@ -42,6 +42,7 @@ in {
           format = "%statusBAT%percentageBAT";
           status_chr = "󱐋";
           status_bat = "";
+          status_full = "";
           low_threshold = "30";
         };
       };
@@ -58,7 +59,6 @@ in {
       };
     };
   };
-  home.packages = with pkgs; [ dmenu ];
   xsession = {
     enable = true;
     windowManager.i3 = {
@@ -82,10 +82,11 @@ in {
             "${modifier}+Shift+k" = "move up";
             "${modifier}+Shift+l" = "move right";
             "${modifier}+space" = "layout toggle split";
+            "${modifier}+Shift+space" = "floating toggle";
             "${modifier}+Shift+d" = "kill";
             # Scratchpad
             "${modifier}+semicolon" = "scratchpad show";
-            "${modifier}+Shift+semicolon" = "move scratchpad";
+            "${modifier}+Control+Shift+semicolon" = "move scratchpad";
             # Screenshots
             "${modifier}+Shift+r" =
               "exec --no-startup-id ${./record_screen.sh}";
@@ -210,16 +211,16 @@ in {
                           | sed  's/WIFI[67][[:digit:]]/󰤥/' \
                           | sed 's/WIFI[345][[:digit:]]/󰤢/' \
                           | sed 's/WIFI[012][[:digit:]]/󰤟/' \
-                          | sed 's/BAT9[[:digit:]].*BAT/󰁹/' \
-                          | sed 's/BAT8[[:digit:]].*BAT/󰂂/' \
-                          | sed 's/BAT7[[:digit:]].*BAT/󰂂/' \
-                          | sed 's/BAT6[[:digit:]].*BAT/󰂀/' \
-                          | sed 's/BAT5[[:digit:]].*BAT/󰁿/' \
-                          | sed 's/BAT4[[:digit:]].*BAT/󰁾/' \
-                          | sed 's/BAT3[[:digit:]].*BAT/󰁽/' \
-                          | sed 's/BAT2[[:digit:]].*BAT/󰁼/' \
-                          | sed 's/BAT1[[:digit:]].*BAT/󰁻/' \
-                          | sed 's/BAT0[[:digit:]].*BAT/󰁺/' \
+                          | sed 's/\(BAT9[[:digit:]]\).*BAT/󰁹 \1%/' \
+                          | sed 's/\(BAT8[[:digit:]]\).*BAT/󰂂 \1%/' \
+                          | sed 's/\(BAT7[[:digit:]]\).*BAT/󰂂 \1%/' \
+                          | sed 's/\(BAT6[[:digit:]]\).*BAT/󰂀 \1%/' \
+                          | sed 's/\(BAT5[[:digit:]]\).*BAT/󰁿 \1%/' \
+                          | sed 's/\(BAT4[[:digit:]]\).*BAT/󰁾 \1%/' \
+                          | sed 's/\(BAT3[[:digit:]]\).*BAT/󰁽 \1%/' \
+                          | sed 's/\(BAT2[[:digit:]]\).*BAT/󰁼 \1%/' \
+                          | sed 's/\(BAT1[[:digit:]]\).*BAT/󰁻 \1%/' \
+                          | sed 's/\(BAT0[[:digit:]]\).*BAT/󰁺 \1%/' \
                           | sed 's/MEM\([[:digit:]][[:digit:]]\).*MEM/\1%/' \
                           || exit 1
               done
