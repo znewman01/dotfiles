@@ -8,14 +8,17 @@
     enable = true;
     name = "solarized";
   };
-  fonts.enable = true;
+  fonts.enable = pkgs.stdenv.isLinux;
   menus.enable = pkgs.stdenv.isLinux;
   notifications.enable = pkgs.stdenv.isLinux;
   terminal.enable = pkgs.stdenv.isLinux;
   screenlock.enable = pkgs.stdenv.isLinux;
   programs.pass = {
     enable = true;
-    store = "/home/zjn/Sync/passwords";
+    store = if pkgs.stdenv.isDarwin then
+      "/Users/zjn/Sync/passwords"
+    else
+      "/home/zjn/Sync/passwords";
   };
   programs.home-manager.enable = true;
 }

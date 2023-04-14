@@ -6,16 +6,18 @@
     profiles.zjn = { name = "Zachary Newman"; };
   };
 
-  home.file.".mozilla/native-messaging-hosts/tridactyl.json".text = ''
-    {
-        "name": "tridactyl",
-        "description": "Tridactyl native command handler",
-        "path": "${pkgs.tridactyl-native}/bin/native_main",
-        "type": "stdio",
-        "allowed_extensions": [ "tridactyl.vim@cmcaine.co.uk","tridactyl.vim.betas@cmcaine.co.uk", "tridactyl.vim.betas.nonewtab@cmcaine.co.uk" ]
-    }
-  '';
-  xdg.configFile = {
+  home.file = lib.optionalAttrs pkgs.stdenv.isLinux {
+    ".mozilla/native-messaging-hosts/tridactyl.json".text = ''
+      {
+          "name": "tridactyl",
+          "description": "Tridactyl native command handler",
+          "path": "${pkgs.tridactyl-native}/bin/native_main",
+          "type": "stdio",
+          "allowed_extensions": [ "tridactyl.vim@cmcaine.co.uk","tridactyl.vim.betas@cmcaine.co.uk", "tridactyl.vim.betas.nonewtab@cmcaine.co.uk" ]
+      }
+    '';
+  };
+  xdg.configFile = lib.optionalAttrs pkgs.stdenv.isLinux {
     "tridactyl/tridactylrc".source = ./tridactylrc;
     "tridactyl/themes/base16.css".text = let colors = config.colorScheme.colors;
     in ''

@@ -30,25 +30,23 @@
     ];
   };
 
-  home.file."bin/em" = {
-    text = ''
-      #!/bin/sh
-      emacsclient -nc "$@"
-    '';
-    executable = true;
-  };
-
-  home.file."notes".source = config.lib.file.mkOutOfStoreSymlink
-    "${config.home.homeDirectory}/Sync/notes";
-
   services.emacs = lib.optionalAttrs pkgs.stdenv.isLinux {
     enable = true;
     socketActivation.enable = true;
   };
 
-  home.file.".doom-themes/fonts.el" = lib.optionalAttrs pkgs.stdenv.isLinux {
-
-    text = ''
+  home.file = {
+    "notes".source = config.lib.file.mkOutOfStoreSymlink
+      "${config.home.homeDirectory}/Sync/notes";
+  } // lib.optionalAttrs pkgs.stdenv.isLinux {
+    "bin/em" = {
+      text = ''
+        #!/bin/sh
+        emacsclient -nc $@
+      '';
+      executable = true;
+    };
+    ".doom-themes/fonts.el".text = ''
       (when (eq system-type 'gnu/linux)
         (setq zjn--mono "${
           (lib.last config.fonts.terminalFonts).name
@@ -58,10 +56,8 @@
         (setq doom-font (font-spec :family zjn--mono :height 80 :weight 'semi-light))
         (setq doom-variable-pitch-font (font-spec :family zjn--serif :height 60)))
     '';
-  };
-  home.file.".doom-themes/base16-zjn-theme.el" =
-    lib.optionalAttrs pkgs.stdenv.isLinux {
-      text = let colors = config.colorScheme.colors;
+    ".doom-themes/base16-zjn-theme.el".text =
+      let colors = config.colorScheme.colors;
       in ''
          (require 'base16-theme)
          (defvar base16-zjn-colors
@@ -87,7 +83,7 @@
         (provide-theme 'base16-zjn)
         (provide 'base16-zjn-theme)
       '';
-    };
+  };
 
   # xdg.mimeApps = {
   #   enable = true;

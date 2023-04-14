@@ -17,10 +17,7 @@
     } // (lib.optionalAttrs pkgs.stdenv.isDarwin {
       interval = { Day = 7; };
       user = "zjn";
-    }) // (lib.optionalAttrs pkgs.stdenv.isLinux {
-      dates = "weekly";
-    });
-  } // (lib.optionalAttrs pkgs.stdenv.isDarwin {
-    useDaemon = true;
-  });
+    }) // (lib.optionalAttrs pkgs.stdenv.isLinux { dates = "weekly"; });
+  } // (lib.optionalAttrs pkgs.stdenv.isDarwin { useDaemon = true; });
+  services.nix-daemon.enable = true;
 }
