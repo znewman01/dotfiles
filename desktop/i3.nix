@@ -7,6 +7,117 @@ let
     names = builtins.map (font: font.name) config.fonts.terminalFonts;
     size = (builtins.head config.fonts.terminalFonts).size;
   };
+  # Desired workspace switching behiavior (inspired by XMonad):
+  switch-monitors = pkgs.writeScript "i3-monitors.sh" ''
+    #!/bin/sh
+
+    I3MSG="${pkgs.i3}/bin/i3-msg"
+    JQ="${pkgs.jq}/bin/jq"
+
+    if [ $# != 2 ]; then
+        echo "Usage: $0 ACTION OFFSET"
+        echo
+        echo "Call as"
+        echo "    $0 focus -1'"
+        echo "(to focus the output left of the current one) or "
+        echo "    '$0 'move echo "container to' 1'
+        echo "(to send the current container to the output right of the current one), but "
+        echo "*without* wrapping around."
+        exit 1
+    fi
+
+    ACTION="$1"
+    OFFSET="$2"
+
+    # Get the output (name of the monitor) for the currently-focused workspace.
+    CURRENT_OUTPUT=$(
+        $I3MSG -t get_workspaces |
+        $JQ 'map(select(.focused)) | first .output'
+    )
+
+    # Figure out which workspace to move to.
+    NEW_OUTPUT=$(
+        $I3MSG -t get_outputs |
+        $JQ \
+            --argjson offset "$OFFSET" \
+            --argjson current_output "$CURRENT_OUTPUT" \
+            '
+                def saturating_add($min; $max; $addend): [$min, . + $addend, $max] | sort | .[1];
+
+                # Active workspaces, left-to-right:
+                map(select(.active))
+                | sort_by(.rect.x)
+                | . as $workspaces
+                # Index of current output:
+                | map(.name)
+                | index($current_output)
+                # Move left/right (but without going past 0 or the number of outputs:
+
+                | saturating_add(0; $workspaces | length - 1; $offset)
+                # Get output name:
+                | $workspaces[.].name
+            '
+    )
+
+    $I3MSG "$ACTION output $NEW_OUTPUT"
+  '';
+  switch-workspaces = pkgs.writeScript "i3-workspaces.sh" ''
+    #!/bin/sh
+
+    I3MSG="${pkgs.i3}/bin/i3-msg"
+    JQ="${pkgs.jq}/bin/jq"
+    if [ $# != 1 ]; then
+        echo "Usage: $0 WORKSPACE"
+        echo
+        echo "Call as '$0 5' to move to workspace 5, Xmonad-style."
+        echo
+        echo "That is:"
+        echo "- if WORKSPACE is currently focused, do nothing."
+        echo "- if WORKSPACE is visible on another monitor, steal it and put the"
+        echo "  current workspace on that monitor."
+        echo "- otherwise, show WORKSPACE on this monitor"
+        exit 1
+    fi
+
+    WORKSPACE="$1"
+
+    WORKSPACE_JSON=$(
+        $I3MSG -t get_workspaces |
+        $JQ \
+            --argjson workspace "$WORKSPACE" \
+            'map(select(.num == $workspace)) | first'
+    )
+
+    if ( echo "$WORKSPACE_JSON" | $JQ -e '.focused' > /dev/null ); then
+        # If the target workspaces was focused, nothing to do!
+        exit 0
+    fi
+
+    # Get the output (name of the monitor) for the currently-focused workspace.
+    CURRENT_OUTPUT=$(
+        $I3MSG -t get_workspaces |
+        $JQ 'map(select(.focused)) | first .output'
+    )
+
+    if ( echo "$WORKSPACE_JSON" | $JQ -e '.visible' > /dev/null ); then
+        # If the target workspace was visible, do a swap for the current workspace.
+        OTHER_OUTPUT=$(echo "$WORKSPACE_JSON" | $JQ '.output')
+        $I3MSG "
+            move workspace to output $OTHER_OUTPUT;
+            focus output $OTHER_OUTPUT;
+            workspace $WORKSPACE;
+            move workspace to output $CURRENT_OUTPUT;
+            focus output $CURRENT_OUTPUT
+        "
+    else
+        # Otherwise, steal the workspace to the current output.
+        $I3MSG "
+            workspace $WORKSPACE;
+            move workspace to output $CURRENT_OUTPUT;
+            focus output $CURRENT_OUTPUT
+        "
+    fi
+  '';
 in {
   programs.i3status = {
     enable = true;
@@ -69,10 +180,11 @@ in {
           "232" = ''exec "light -U 10"''; # XF86MonBrightnessDown
           "233" = ''exec "light -A 10"''; # XF86MonBrightnessUp
         };
+        # focus.mouseWarping = false;
         keybindings =
           let modifier = config.xsession.windowManager.i3.config.modifier;
           in lib.mkOptionDefault ({
-            # Normal
+            # Windows/layouts
             "${modifier}+h" = "focus left";
             "${modifier}+j" = "focus down";
             "${modifier}+k" = "focus up";
@@ -84,6 +196,23 @@ in {
             "${modifier}+space" = "layout toggle split";
             "${modifier}+Shift+space" = "floating toggle";
             "${modifier}+Shift+d" = "kill";
+            # Workspaces
+            "${modifier}+1" = "exec ${switch-workspaces} 1";
+            "${modifier}+2" = "exec ${switch-workspaces} 2";
+            "${modifier}+3" = "exec ${switch-workspaces} 3";
+            "${modifier}+4" = "exec ${switch-workspaces} 4";
+            "${modifier}+5" = "exec ${switch-workspaces} 5";
+            "${modifier}+6" = "exec ${switch-workspaces} 6";
+            "${modifier}+7" = "exec ${switch-workspaces} 7";
+            "${modifier}+8" = "exec ${switch-workspaces} 8";
+            "${modifier}+9" = "exec ${switch-workspaces} 9";
+            "${modifier}+0" = "exec ${switch-workspaces} 10";
+            "${modifier}+w" = "exec ${switch-monitors} 'focus' -1";
+            "${modifier}+e" = "exec ${switch-monitors} 'focus' 1";
+            "${modifier}+Shift+w" =
+              "exec ${switch-monitors} 'move container to' -1";
+            "${modifier}+Shift+e" =
+              "exec ${switch-monitors} 'move container to' 1";
             # Scratchpad
             "${modifier}+semicolon" = "scratchpad show";
             "${modifier}+Control+Shift+semicolon" = "move scratchpad";
@@ -95,11 +224,11 @@ in {
             "Print" = ''exec "${./screenshot.sh} -s"'';
             "${modifier}+Print" = ''exec "${./screenshot.sh} fullscreen"'';
           } // (lib.optionalAttrs true {
-            "${modifier}+Shift+e" =
+            "${modifier}+Control+Shift+e" =
               ''exec --no-startup-id emacsclient --eval "(emacs-everywhere)"'';
             "${modifier}+Shift+x" = "exec org-capture";
           }) // (lib.optionalAttrs config.terminal.enable {
-            "${modifier}+Shift+n" = let
+            "${modifier}+Control+Shift+n" = let
               cmd = config.terminal.spawn "nixos-rebuild"
                 "/bin/sh -c 'sudo nixos-rebuild switch --flake ~/git/dotfiles; notify-send -t 2000 done; echo nixos-rebuild done.; read'";
             in ''exec "${cmd}"'';
