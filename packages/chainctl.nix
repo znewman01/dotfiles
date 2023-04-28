@@ -7,7 +7,7 @@ let
   };
   srcX86_64 = fetchurl {
     url = "https://dl.enforce.dev/chainctl_Linux_x86_64";
-    sha256 = "sha256-h6YqxnFct9qow4OvtHX/E13G7YCyf8rwj6NksqdOKfk=";
+    sha256 = "sha256-Jg7cw6Mz0H9TxiUQNNJ9WT7EvceZu8pXb8gB9TZ7trs=";
   };
 in stdenv.mkDerivation {
   pname = "chainctl";

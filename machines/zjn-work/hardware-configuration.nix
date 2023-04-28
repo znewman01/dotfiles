@@ -6,8 +6,6 @@
 {
   imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
-  networking.hostId = "ec47a9c8";
-
   boot.initrd.availableKernelModules =
     [ "xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod" ];
   boot.initrd.kernelModules = [ ];

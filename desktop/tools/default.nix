@@ -6,7 +6,7 @@
     tree
     ripgrep
     gh
-    sqlite
+    sqlite-interactive
     imagemagick
     fd
     # tree-sitter

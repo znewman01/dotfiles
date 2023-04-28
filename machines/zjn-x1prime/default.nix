@@ -15,10 +15,6 @@
   networking.networkmanager.enable = true;
   system.stateVersion = "22.11";
 
+  # For Thinkpad firmware.
   services.fwupd.enable = true;
-
-  services.udisks2 = {
-    enable = true;
-    mountOnMedia = true;
-  };
 }

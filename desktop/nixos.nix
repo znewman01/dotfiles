@@ -18,6 +18,11 @@
   programs.dconf.enable = true;
   services.dbus.packages = with pkgs; [ dconf ];
 
+  services.udisks2 = {
+    enable = true;
+    mountOnMedia = true;
+  };
+
   users.users.zjn = {
     isNormalUser = true;
     createHome = true;

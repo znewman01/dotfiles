@@ -8,12 +8,10 @@
     ../../desktop/work.nix
     ../../work/default.nix
   ];
-  home-manager.users.zjn.imports = [
-    ./home.nix
-    doom-emacs.hmModule
-    impermanence.nixosModules.home-manager.impermanence
-  ];
+  home-manager.users.zjn.imports = [ ./home.nix ];
 
   networking.hostName = "zjn-work";
+  networking.hostId = "ec47a9c8";
+
   system.stateVersion = "21.11";
 }
