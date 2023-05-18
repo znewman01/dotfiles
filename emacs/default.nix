@@ -33,7 +33,7 @@
   home.file."bin/em" = {
     text = ''
       #!/bin/sh
-      emacsclient -nc $@
+      emacsclient -nc "$@"
     '';
     executable = true;
   };
