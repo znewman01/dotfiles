@@ -24,6 +24,7 @@ in with myLib; {
         withEnvrc
         (withExtraFiles ./cosign)
       ];
+      sig-clients = pipe (gh "sigstore/sig-clients") [ myFork forWork withDco ];
       sigstore-go = pipe (gh "sigstore/sigstore-go") [ myFork forWork withDco ];
       protobuf-specs =
         pipe (gh "sigstore/protobuf-specs") [ myFork forWork withDco ];
