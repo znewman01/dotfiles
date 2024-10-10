@@ -6,7 +6,7 @@
     ../../common/nixos.nix
     ../../desktop/nixos.nix
   ];
-  home-manager.users.zjn.imports = [ ./home.nix inputs.doom-emacs.hmModule ];
+  home-manager.users.zjn.imports = [ ./home.nix ];
 
   networking.hostName = "zjn-x1prime";
   networking.hostId = "e2102671";

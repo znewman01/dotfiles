@@ -9,6 +9,5 @@
     ./notifications.nix
     ./screenlock.nix
   ];
-  modules = [ ];
-  # modules = [ ./kolide.nix ];
+  modules = [];
 }

@@ -2,33 +2,8 @@
 
 {
   home.packages = with pkgs;
-    [ emacs-all-the-icons-fonts ispell zstd coreutils ]
+    [ emacs emacs-all-the-icons-fonts ispell zstd coreutils ]
     ++ (lib.optionals pkgs.stdenv.isLinux [ xorg.xwininfo ]);
-
-  programs.doom-emacs = rec {
-    enable = true;
-    emacsPackage = pkgs.emacs;
-    doomPrivateDir = (import ./doom.d) {
-      inherit lib;
-      inherit (pkgs) stdenv coreutils;
-      emacs = emacsPackage;
-    };
-    # Only init/packages so we only rebuild when those change.
-    doomPackageDir = pkgs.linkFarm "doom-packages-dir" [
-      {
-        name = "init.el";
-        path = ./doom.d/init.el;
-      }
-      {
-        name = "packages.el";
-        path = ./doom.d/packages.el;
-      }
-      {
-        name = "config.el";
-        path = pkgs.emptyFile;
-      }
-    ];
-  };
 
   services.emacs = lib.optionalAttrs pkgs.stdenv.isLinux {
     enable = true;
@@ -36,6 +11,8 @@
   };
 
   home.file = {
+    ".doom.d".source = config.lib.file.mkOutOfStoreSymlink
+      "${config.home.homeDirectory}/git/dotfiles/emacs/doom.d";
     "notes".source = config.lib.file.mkOutOfStoreSymlink
       "${config.home.homeDirectory}/Sync/notes";
   } // lib.optionalAttrs pkgs.stdenv.isLinux {

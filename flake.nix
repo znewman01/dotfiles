@@ -10,11 +10,6 @@
     impermanence.url = "github:nix-community/impermanence";
 
     emacs-overlay = { url = "github:nix-community/emacs-overlay"; };
-    doom-emacs = {
-      url = "github:nix-community/nix-doom-emacs";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.emacs-overlay.follows = "emacs-overlay";
-    };
 
     darwin = {
       url = "github:lnl7/nix-darwin/master";
@@ -23,26 +18,22 @@
   };
 
   outputs = inputs@{ nixpkgs, darwin, flake-utils, home-manager, impermanence
-    , doom-emacs, emacs-overlay, ... }:
+    , emacs-overlay, ... }:
     let
       systemOutputs = flake-utils.lib.eachDefaultSystem (system:
         let pkgs = nixpkgs.legacyPackages.${system};
         in rec {
-          devShells.default = pkgs.mkShell {
-            buildInputs = with pkgs; [ nixfmt git-crypt terraform ];
-          };
-          packages = import ./packages { inherit (pkgs) callPackage; };
+          devShells.default =
+            pkgs.mkShell { buildInputs = with pkgs; [ nixfmt git-crypt ]; };
           legacyPackages = import nixpkgs {
             inherit system;
             config.allowUnfree = true;
-            overlays = [ (final: prev: packages) emacs-overlay.overlay ];
+            overlays = [ emacs-overlay.overlay ];
           };
         });
     in systemOutputs // rec {
-      homeManagerModules = (import ./modules).homeManagerModules ++ [
-        doom-emacs.hmModule
-        impermanence.nixosModules.home-manager.impermanence
-      ];
+      homeManagerModules = (import ./modules).homeManagerModules
+        ++ [ impermanence.nixosModules.home-manager.impermanence ];
       modules = (import ./modules).modules
         ++ [ home-manager.nixosModule impermanence.nixosModule ];
       nixosConfigurations = {
@@ -65,15 +56,15 @@
           specialArgs = inputs;
         };
       };
-      darwinConfigurations."zjn-mac" = darwin.lib.darwinSystem {
+      darwinConfigurations."zjn-air" = darwin.lib.darwinSystem {
         system = "aarch64-darwin";
         pkgs = systemOutputs.legacyPackages."aarch64-darwin";
         modules = [
           home-manager.darwinModules.home-manager
-          ./machines/zjn-mac
+          ./machines/zjn-air
           ({ ... }: {
-            home-manager.users.zjn.imports = [ doom-emacs.hmModule ]
-              ++ (import ./modules).homeManagerModules;
+            home-manager.users.zjn.imports =
+              (import ./modules).homeManagerModules;
           })
         ] ++ (import ./modules).modules;
         specialArgs = inputs;

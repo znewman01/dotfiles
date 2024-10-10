@@ -4,12 +4,17 @@
   home.packages = [ pkgs.openssh ];
   programs.ssh.enable = true;
 
-  # Use SK for GitHub
   programs.ssh.matchBlocks = lib.optionalAttrs pkgs.stdenv.isDarwin {
+    "*" = {
+      extraOptions = {
+        IdentityAgent = "/Users/zjn/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh";
+      };
+    };
+    # Use SK for GitHub
     "github.com" = {
       hostname = "github.com";
       user = "git";
-      identityFile = "~/.ssh/id_ed25519_sk";
+      # identityFile = "~/.ssh/id_ed25519_sk";
     };
   };
 

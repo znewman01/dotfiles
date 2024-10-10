@@ -1,118 +1,102 @@
-#+TITLE: Doom Emacs Config
-#+PROPERTY: header-args:emacs-lisp :noweb yes :results none :tangle config.el
-
-* Preliminaries
-Use [[https://www.emacswiki.org/emacs/LexicalBinding][lexical binding]]:
-#+begin_src emacs-lisp
 ;;; -*- lexical-binding: t; -*-
-#+end_src
 
-Nice imports:
-
-#+begin_src emacs-lisp
 (require 'url)
 (require 'cl-lib)
 (require 'f)
 (require 's)
 (require 'dash)
 (require 'json)
-#+end_src
 
-Make the ~doom~ docs work (hack due to Nix chicanery):
-#+begin_src emacs-lisp
 (setq doom-modules-dir (f-join (f-dirname doom-core-dir) "modules/")
       doom-docs-dir (f-join (f-dirname doom-core-dir) "docs/"))
-#+end_src
 
-And some PII to put in my [[github:znewman01/dotfiles][dotfiles]]:
-#+begin_src emacs-lisp
 (setq user-full-name "Zachary Newman"
       user-mail-address "z@znewman.net")
-#+end_src
 
-Take a hint from Vim on to extra key commands (use ~,~).
-#+begin_src emacs-lisp
 (setq doom-localleader-key ",")
-#+end_src
 
-And make an insert-mode leader that doesn't conflict with XMonad:
-#+begin_src emacs-lisp
 (setq doom-leader-alt-key "s-SPC")
 (setq doom-localleader-alt-key "s-SPC m")
-#+end_src
 
-Emacs everywhere:
-#+begin_src emacs-lisp
 (setq emacs-everywhere--dir (f-join doom-cache-dir "emacs-everywhere"))
 (mkdir emacs-everywhere--dir t)
 (when (eq system-type 'gnu/linux)
   (setq emacs-everywhere-paste-command nil
         emacs-everywhere-window-focus-command '("xdotool" "key" "--clearmodifiers" "--window" "%w" "Shift+Insert")))
-#+end_src
 
-* Searching
-#+begin_src emacs-lisp
 (map!
   "C-;" #'embark-dwim
   :map minibuffer-mode-map
   "C-o" #'embark-act
   "C-t" #'embark-become)
-#+end_src
-* org
-:PROPERTIES:
-:header-args: :noweb-ref org
-:END:
-#+begin_src emacs-lisp :noweb-ref nil
+
 (after! org
   (require 'org-ql)
   (require 'org-super-agenda)
   (require 'org-attach)
   (require 'org-capture)
-  <<org>>)
-#+end_src
-** Tagging and task mgmt
-#+begin_src emacs-lisp :tangle no
-(setq org-log-done t)
-(setq org-log-state-notes-into-drawer t)
-(setq org-todo-keywords
-      '((sequence "NEXT(n)" "TODO(t)" "|" "DONE(d!)")
-        (sequence "HABIT(h)" "|" "HABITDONE(H)")
-        (sequence "PROJ(p)" "BLOCKEDPROJ(b)" "|" "PROJDONE(P)")
-        (sequence "WAITING(w)" "SOMEDAY(s)" "|" "CANCELLED(c)")))
-(setq org-enforce-todo-dependencies nil)
-(setq org-tag-persistent-alist '((:startgroup . nil)
-                                 ("@errand" . ?e)
-                                 ("@home" . ?h)
-                                 (:endgroup . nil)
-                                 ("SOMEDAY" . ?s)
-                                 ("internet" . ?i)
-                                 ("chainguard" . ?c)
-                                 ("personal" . ?p)
-                                 ("katie" . ?k)))
-#+end_src
-*** Org files+general config
-#+begin_src emacs-lisp :tangle no
-(setq org-directory "~/notes")
-(defun org-file (f)
-  (concat org-directory "/" f))
-(setq org-agenda-files
-      (mapcar #'org-file
-              '("personal.org"
-                "gtd.org"
-                "projects.org"
-                "chainguard.org"
-                "research/default.org"
-                "inbox-mac.org"
-                "school.org")))
-(setq org-archive-location "archive/%s::")
-(setq org-attach-directory (org-file ".attach"))
-(setq org-attach-id-dir (org-file ".attach"))
-(setq org-default-notes-file (org-file "gtd.org"))
-(setq org-id-locations-file (org-file ".org-id-locations"))
-#+end_src
+  (setq org-log-done t)
+  (setq org-log-state-notes-into-drawer t)
+  (setq org-todo-keywords
+        '((sequence "NEXT(n)" "TODO(t)" "|" "DONE(d!)")
+          (sequence "HABIT(h)" "|" "HABITDONE(H)")
+          (sequence "PROJ(p)" "BLOCKEDPROJ(b)" "|" "PROJDONE(P)")
+          (sequence "WAITING(w)" "SOMEDAY(s)" "|" "CANCELLED(c)")))
+  (setq org-enforce-todo-dependencies nil)
+  (setq org-tag-persistent-alist '((:startgroup . nil)
+                                   ("@errand" . ?e)
+                                   ("@home" . ?h)
+                                   (:endgroup . nil)
+                                   ("SOMEDAY" . ?s)
+                                   ("internet" . ?i)
+                                   ("chainguard" . ?c)
+                                   ("personal" . ?p)
+                                   ("katie" . ?k)))
+  (setq org-directory "~/notes")
+  (defun org-file (f)
+    (concat org-directory "/" f))
+  (setq org-agenda-files
+        (mapcar #'org-file
+                '("personal.org"
+                  "gtd.org"
+                  "projects.org"
+                  "chainguard.org"
+                  "research/default.org"
+                  "inbox-mac.org"
+                  "school.org")))
+  (setq org-archive-location "archive/%s::")
+  (setq org-attach-directory (org-file ".attach"))
+  (setq org-attach-id-dir (org-file ".attach"))
+  (setq org-default-notes-file (org-file "gtd.org"))
+  (setq org-id-locations-file (org-file ".org-id-locations"))
+  (setq org-capture-templates nil)
+  (push '("l" "Link to current file" entry
+          (file+headline "~/notes/gtd.org" "Inbox")
+          "** NEXT %?\n%a\n%i\n")
+        org-capture-templates)
+  
+  (push '("t" "Normal TODO" entry
+          (file+headline "~/notes/gtd.org" "Inbox")
+          "** NEXT %?\n")
+        org-capture-templates)
+  (add-hook 'auto-save-hook 'org-save-all-org-buffers)
+  (setq org-adapt-indentation nil)
+  (setq org-ctrl-k-protect-subtree t)
+  (setq org-catch-invisible-edits 'show-and-error)
+  (setq org-startup-indented nil)
+  (setq org-startup-folded 'fold)
+  (setq org-show-context-detail
+      (quote
+          ((agenda . ancestors)
+          (bookmark-jump . ancestors)
+          (isearch . ancestors)
+          (default . ancestors))))
+  (advice-add 'org-id-new :filter-return #'upcase)
+  (setq org-agenda-dim-blocked-tasks nil
+      org-agenda-inhibit-startup t
+      org-agenda-ignore-properties '(effort appt stat category))
+  (setq org-startup-with-latex-preview nil))
 
-*** Agenda
-#+begin_src emacs-lisp :noweb-ref nil
 (after! org-super-agenda
   (require 'evil-org-agenda)
   (org-super-agenda-mode)
@@ -208,94 +192,24 @@ Emacs everywhere:
                   (all-with-priority "nc" "C")
                   (all-with-priority "nA" nil))))))
 
-
-#+end_src
-*** Capture
-#+begin_src emacs-lisp :tangle no
-(setq org-capture-templates nil)
-(push '("l" "Link to current file" entry
-        (file+headline "~/notes/gtd.org" "Inbox")
-        "** NEXT %?\n%a\n%i\n")
-      org-capture-templates)
-
-(push '("t" "Normal TODO" entry
-        (file+headline "~/notes/gtd.org" "Inbox")
-        "** NEXT %?\n")
-      org-capture-templates)
-#+end_src
-** Global org settings
-#+begin_src emacs-lisp :tangle no
-(add-hook 'auto-save-hook 'org-save-all-org-buffers)
-(setq org-adapt-indentation nil)
-(setq org-ctrl-k-protect-subtree t)
-(setq org-catch-invisible-edits 'show-and-error)
-(setq org-startup-indented nil)
-(setq org-startup-folded 'fold)
-(setq org-show-context-detail
-    (quote
-        ((agenda . ancestors)
-        (bookmark-jump . ancestors)
-        (isearch . ancestors)
-        (default . ancestors))))
-(advice-add 'org-id-new :filter-return #'upcase)
-#+END_SRC
-*** Performance
-#+begin_src emacs-lisp :tangle no
-(setq org-agenda-dim-blocked-tasks nil
-    org-agenda-inhibit-startup t
-    org-agenda-ignore-properties '(effort appt stat category))
-#+end_src
-*** Math
-#+begin_src emacs-lisp :tangle no
-(setq org-startup-with-latex-preview nil)
-#+end_src
-
-** Keybindings
-Need to be global, not ~(after! org)~.
-#+begin_src emacs-lisp :noweb-ref nil
 (map! :leader
       "a" (cmd! (org-agenda nil "nn"))
       "A" (cmd! (org-agenda nil "nA")))
 (map! :mode org-capture-mode :localleader "s r" #'org-capture-refile)
 (map! :mode org-mode :n "t" #'org-todo)
-#+end_src
-** org-babel
-Easier NixOS and org-babel integration:
-#+begin_src emacs-lisp :noweb-ref nil
+
 (defun zjn/with-pkgs (interpreter &rest pkgs)
   (s-concat
     "#!/usr/bin/env nix-shell\n"
      "#!nix-shell -p " (s-join " " pkgs) " -i " interpreter))
 (defun zjn/with-pkgs-bash (&rest pkgs)
   (apply #'zjn/with-pkgs (cons "bash" pkgs)))
-#+end_src
 
-Use like so:
-
-#+begin_example
-#+begin_src bash :shebang (zjn/with-pkgs-bash "hello") :results verbatim
-hello
-#+end_src
-
-#+RESULTS:
-: Hello, world!
-#+end_example
-** Export
-#+begin_src
-(setq org-preview-latex-default-process 'imagemagick)
-                                      ; (plist-put org-format-latex-options :background "Transparent")
-(setq org-latex-pdf-process '("tectonic %f"))
-#+end_src
-** org-roam
-#+begin_src emacs-lisp :noweb-ref nil
 (after! org-roam
   (setq org-roam-directory "~/Sync/notes/roam"
         org-roam-completion-everywhere nil
         +org-roam-open-buffer-on-find-file nil))
-#+end_src
-* Bibliography
-Eventually will sort through this.
-#+begin_src emacs-lisp
+
 (use-package! bibtex-completion
   :config
   (setq bibtex-files (list "~/Sync/notes/lit/default.bib")
@@ -369,10 +283,7 @@ Eventually will sort through this.
   (map!
     :mode biblio-selection-mode
     "RET" #'zjn-add-biblio-selection-to-bibliography--action))
-#+end_src
-* Theme
-Use base16 theme; this is nice because it's easy to match with the rest of my desktop.
-#+begin_src emacs-lisp
+
 (when (file-directory-p "~/.doom-themes")
   (add-to-list 'custom-theme-load-path "~/.doom-themes")
   (setq doom-theme nil)
@@ -380,46 +291,29 @@ Use base16 theme; this is nice because it's easy to match with the rest of my de
   ; I want to be able to see which workspace is selected; the default highlighting is too weak.
   (set-face-background '+workspace-tab-selected-face (plist-get base16-zjn-colors :base02))
   (set-face-foreground '+workspace-tab-selected-face (plist-get base16-zjn-colors :base0D)))
-#+end_src
 
-Some reasonable fonts:
-#+begin_src emacs-lisp
 (let ((fonts-el "~/.doom-themes/fonts.el"))
   (when (f-exists-p fonts-el) (load-file fonts-el)))
-#+end_src
 
-And some padding:
-#+begin_src emacs-lisp
 (setq-default left-margin-width 1
               right-margin-width 1)
-#+end_src
 
-* Do the Work
-Now that that's all out of the way, we can get to actual work.
-** Project Management
-#+begin_src emacs-lisp
 (after! projectile
   (setq projectile-project-search-path '(("~/git" . 1)))
   (defun zjn-projectile-root-for-some-major-modes (_dir)
     (let ((modes '(org-agenda-mode)))
       (if (memq major-mode modes) "~/Sync/notes")))
   (setq +workspaces-on-switch-project-behavior t))
-#+end_src
-** Coding
-#+begin_src emacs-lisp
+
 (after! company
   (setq company-idle-delay 0.2))
 (remove-hook 'doom-first-buffer-hook #'smartparens-global-mode)
-#+end_src
-*** Inheritenv
-#+begin_src emacs-lisp
+
 (require 'inheritenv)
 (inheritenv-add-advice 'call-process-region)
 (inheritenv-add-advice 'call-process)
 (inheritenv-add-advice 'shell-command)
-#+end_src
-*** Rust
-#+begin_src emacs-lisp
+
 (after! rustic
   (setq rustic-lsp-server 'rust-analyzer)
   (inheritenv-add-advice 'rustic-format-start-process)
@@ -440,10 +334,7 @@ Now that that's all out of the way, we can get to actual work.
         (:prefix ("t" . "cargo test")
          :desc "all"          "a" #'rustic-cargo-test
          :desc "current test" "t" #'rustic-cargo-current-test)))
-#+end_src
-*** LSP
-Don't watch ~.gitignore~ files ([[https://github.com/emacs-lsp/lsp-mode/issues/713][lsp-mode#713]]):
-#+begin_src emacs-lisp
+
 (after! lsp
   (defun ++git-ignore-p (path)
     (let* (; trailing / breaks git check-ignore if path is a symlink:
@@ -461,9 +352,7 @@ Don't watch ~.gitignore~ files ([[https://github.com/emacs-lsp/lsp-mode/issues/7
 
   (advice-add 'lsp--path-is-watchable-directory
               :around #'++lsp--path-is-watchable-directory-a))
-#+end_src
-** Authoring
-#+begin_src emacs-lisp
+
 (after! latex
   (add-to-list 'TeX-command-list '("Tectonic" "tectonic --synctex %t" TeX-run-compile nil (latex-mode) :help "Run Tectonic"))
   (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
@@ -473,13 +362,9 @@ Don't watch ~.gitignore~ files ([[https://github.com/emacs-lsp/lsp-mode/issues/7
   (add-hook! LaTeX-mode
     (setq TeX-command-default "Tectonic"
           TeX-output-extension "pdf")))
-#+end_src
-** Reading
-Good readers take notes; great readers don't exit their PDFs and lose all those notes.
-#+begin_src emacs-lisp
+
 (after! pdf-view
   (require 'inheritenv)
   (inheritenv-add-advice 'pdf-annot-print-annotation)
   (defun zjn/save-buffer-no-args () (save-buffer)) ; needed to make args line up
   (advice-add 'pdf-annot-edit-contents-commit :after 'zjn/save-buffer-no-args))
-#+end_src

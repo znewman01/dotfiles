@@ -42,12 +42,6 @@ in with myLib; {
         (withExtraFiles ./securesystemslib)
         withDco
       ];
-      nix-doom-emacs =
-        pipe (gh "nix-community/nix-doom-emacs") [ myFork withEnvrc ];
-      kolide-launcher = pipe {
-        url = (gh "znewman01/kolide-launcher");
-        extraRemotes.upstream = (gh "kolide/launcher");
-      } [ forWork withEnvrc ];
       qmk = pipe "qmk/qmk_firmware" [ gh myFork ];
     };
   };

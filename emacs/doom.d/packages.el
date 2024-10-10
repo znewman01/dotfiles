@@ -63,10 +63,7 @@
 (unpin! org-roam)
 (package! org-roam-bibtex
   :recipe (:host github :repo "org-roam/org-roam-bibtex"))
-
-; ~~aesthetics~~
-(package! org-fancy-priorities :disable t)
-(package! base16-theme)
-
-; programming
-(package! protobuf-mode)
+; 
+; ; ~~aesthetics~~
+; (package! org-fancy-priorities :disable t)
+; (package! base16-theme)
