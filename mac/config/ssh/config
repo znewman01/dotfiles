@@ -1,0 +1,4 @@
+Host github.com
+    HostName github.com
+    User git
+    IdentityAgent /Users/zjn/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh

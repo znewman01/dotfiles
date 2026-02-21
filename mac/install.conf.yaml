@@ -1,0 +1,17 @@
+- defaults:
+    link:
+      create: true
+      relink: true
+
+- clean: ['~']
+
+- link:
+    ~/.gitconfig: config/gitconfig
+    ~/.gitignore_global: config/gitignore_global
+    ~/.ssh/config:
+      path: config/ssh/config
+      create: true
+    ~/.zshrc: config/zshrc
+
+- shell:
+    - [brew bundle, Installing Homebrew packages]

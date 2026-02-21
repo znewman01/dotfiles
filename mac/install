@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -e
+
+BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+export NIX_SSL_CERT_FILE=/etc/ssl/cert.pem
+
+nix --extra-experimental-features "nix-command flakes" run nixpkgs#dotbot -- -d "${BASEDIR}" -c "${BASEDIR}/install.conf.yaml" "${@}"

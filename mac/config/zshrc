@@ -1,0 +1,7 @@
+eval "$(/opt/homebrew/bin/brew shellenv)"
+export PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+export EDITOR=nvim
+export PASSWORD_STORE_DIR="$HOME/Sync/passwords"
+eval "$(direnv hook zsh)"
+export SSH_AUTH_SOCK=/Users/zjn/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh
+

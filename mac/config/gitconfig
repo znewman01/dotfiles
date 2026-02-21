@@ -1,0 +1,13 @@
+[user]
+    email = znewman01@gmail.com
+    name = Zachary Newman
+[pull]
+    rebase = true
+[github]
+    user = znewman01
+[init]
+    defaultBranch = main
+[push]
+    autoSetupRemote = true
+[core]
+    excludesFile = ~/.gitignore_global
