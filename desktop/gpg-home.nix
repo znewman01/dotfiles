@@ -7,6 +7,5 @@
   services.gpg-agent = {
     defaultCacheTtl = 86400; # 24 hrs.
     maxCacheTtl = 86400; # 24 hrs.
-    pinentryFlavor = "gtk2";
   };
 }
